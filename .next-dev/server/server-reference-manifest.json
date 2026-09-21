@@ -1,0 +1,28 @@
+{
+  "node": {
+    "7feb549e23d6c1f88e82d1e939bf6abc46b646c3ac": {
+      "workers": {
+        "app/_not-found/page": {
+          "moduleId": "(rsc)/./node_modules/.pnpm/next@15.4.2_react-dom@19.1.4_react@19.1.4__react@19.1.4/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fadmildomanuel%2FDocuments%2Fprojects%2Fcutly-site%2Fnode_modules%2F.pnpm%2F%40clerk%2Bnextjs%407.9.2_next%4015.4.2_react-dom%4019.1.4_react%4019.1.4__react%4019.1.4__react-dom%4019.1.4_react%4019.1.4__react%4019.1.4%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%7B%22id%22%3A%227feb549e23d6c1f88e82d1e939bf6abc46b646c3ac%22%2C%22exportedName%22%3A%22deleteKeylessAction%22%7D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/_not-found/page": "rsc"
+      }
+    },
+    "7f708fc923c5762583ea9f62f6fc130c33a9c4bf51": {
+      "workers": {
+        "app/_not-found/page": {
+          "moduleId": "(action-browser)/./node_modules/.pnpm/next@15.4.2_react-dom@19.1.4_react@19.1.4__react@19.1.4/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fadmildomanuel%2FDocuments%2Fprojects%2Fcutly-site%2Fnode_modules%2F.pnpm%2F%40clerk%2Bnextjs%407.9.2_next%4015.4.2_react-dom%4019.1.4_react%4019.1.4__react%4019.1.4__react-dom%4019.1.4_react%4019.1.4__react%4019.1.4%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%7B%22id%22%3A%227f708fc923c5762583ea9f62f6fc130c33a9c4bf51%22%2C%22exportedName%22%3A%22invalidateCacheAction%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/_not-found/page": "action-browser"
+      }
+    }
+  },
+  "edge": {},
+  "encryptionKey": "zHb9in6bHRkwDLis7CPIbf4C07LqU9vr+Dtn/H7BLsc="
+}

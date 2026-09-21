@@ -1,0 +1,34 @@
+{
+  "name": "cutly-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node scripts/migrate-turso.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "node --test test/**/*.test.mjs",
+    "check": "pnpm lint && pnpm test && pnpm build && pnpm audit --prod --audit-level high"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.9.2",
+    "@libsql/client": "^0.18.0",
+    "@upstash/redis": "^1.35.1",
+    "drizzle-orm": "^0.45.2",
+    "next": "15.5.24",
+    "react": "19.1.4",
+    "react-dom": "19.1.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.24",
+    "tailwindcss": "^4"
+  }
+}

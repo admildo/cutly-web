@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789219461179,
+      "tag": "0000_fuzzy_the_enforcers",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789219461180,
+      "tag": "0001_add_users",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789219461181,
+      "tag": "0002_remove_seeded_license",
+      "breakpoints": true
+    }
+  ]
+}
