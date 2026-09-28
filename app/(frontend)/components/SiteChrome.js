@@ -1,15 +1,17 @@
 import Link from 'next/link'
 
-export function SiteHeader({ children }) {
+export function SiteHeader({ children, dashboard = false }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-5">
+    <header className={`flex flex-wrap items-center justify-between gap-4 ${dashboard ? 'pb-2' : 'border-b border-black/10 pb-5'}`}>
       <div className="flex items-center gap-6">
         <Link href="/" className="text-sm font-semibold tracking-[0.22em]">CUTLY</Link>
-        <nav className="flex gap-4 text-sm text-black/55" aria-label="Primary navigation">
-          <Link href="/about">About</Link>
-          <Link href="/blog">Blog</Link>
-          <Link href="/support">Support</Link>
-        </nav>
+        {dashboard ? <span className="text-sm text-black/40">Account</span> : (
+          <nav className="flex gap-4 text-sm text-black/55" aria-label="Primary navigation">
+            <Link href="/about">About</Link>
+            <Link href="/blog">Blog</Link>
+            <Link href="/support">Support</Link>
+          </nav>
+        )}
       </div>
       {children}
     </header>

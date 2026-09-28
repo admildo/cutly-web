@@ -10,6 +10,7 @@ import { ProductStory } from '@/app/components/ProductStory'
 import { FeatureBento } from '@/app/components/FeatureBento'
 import { BuiltForWork } from '@/app/components/BuiltForWork'
 import { SiteFooter, SiteHeader } from '@/app/components/SiteChrome'
+import { RefreshLicenseStatusButton } from '@/app/components/RefreshLicenseStatusButton'
 import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
 
 export const metadata = createPageMetadata({
@@ -129,18 +130,81 @@ function MarketingPage({ downloadUrl }) {
   )
 }
 
-function AccountDashboard({ user, license, licenseError, downloadUrl, supportUrl }) {
+function LicensePanel({ license, licenseError, checkoutState }) {
+  if (licenseError) {
+    return (
+      <div className="mt-10 rounded-2xl border border-amber-600/25 bg-amber-50 p-6 sm:p-8">
+        <p className="font-medium">We couldn’t check your license.</p>
+        <p className="mt-2 text-sm leading-6 text-black/60">Your account is signed in. Please try again; we won’t ask you to buy while the status is unavailable.</p>
+      </div>
+    )
+  }
+
+  if (license?.licensed) {
+    return (
+      <div className="mt-10 overflow-hidden rounded-2xl border border-black/10 bg-white">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/10 p-6 sm:p-8">
+          <div>
+            <p className="text-sm font-medium text-black/55">Your plan</p>
+            <h2 className="mt-1 text-2xl font-medium tracking-[-0.03em]">{license.plan || 'Cutly license'}</h2>
+          </div>
+          <span className="rounded-full bg-[#eaf7ee] px-3 py-1.5 text-xs font-semibold text-[#15733a]">Active</span>
+        </div>
+        <dl className="grid divide-y divide-black/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="p-6 sm:p-8"><dt className="text-sm text-black/50">Devices in use</dt><dd className="mt-2 text-lg font-medium">{license.devicesUsed} of {license.deviceLimit}</dd></div>
+          <div className="p-6 sm:p-8"><dt className="text-sm text-black/50">License type</dt><dd className="mt-2 text-lg font-medium capitalize">{license.type || '—'}</dd></div>
+          <div className="p-6 sm:p-8"><dt className="text-sm text-black/50">Access</dt><dd className="mt-2 text-lg font-medium">{license.type === 'lifetime' ? 'Lifetime' : displayDate(license.expiresAt)}</dd></div>
+        </dl>
+      </div>
+    )
+  }
+
+  if (checkoutState === 'success') {
+    return (
+      <div className="mt-10 rounded-2xl border border-blue-900/10 bg-blue-50 p-6 sm:p-8">
+        <p className="font-medium">Payment received. Your license is being activated.</p>
+        <p className="mt-2 text-sm leading-6 text-black/60">It can take a short moment for the payment confirmation to reach your account.</p>
+        <div className="mt-5"><RefreshLicenseStatusButton /></div>
+      </div>
+    )
+  }
+
+  if (license?.status && license.status !== 'none') {
+    const state = license.status === 'expired' ? 'Expired' : license.status === 'refunded' ? 'Refunded' : 'Inactive'
+    return (
+      <div className="mt-10 rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
+        <p className="text-sm font-medium text-black/55">License {state.toLowerCase()}</p>
+        <h2 className="mt-2 text-2xl font-medium tracking-[-0.03em]">Your previous license is {state.toLowerCase()}.</h2>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-black/60">{license.message || 'Contact Cutly support if you think this status is incorrect.'}</p>
+        <Link href="/support" className="mt-5 inline-flex rounded-full border border-black/15 px-5 py-3 text-sm font-medium transition hover:border-black/35">Contact support</Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-10 rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
+      <p className="text-sm font-medium text-black/55">No license yet</p>
+      <h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Get Cutly on your account.</h2>
+      <p className="mt-3 max-w-xl text-sm leading-6 text-black/60">A one-time license includes future desktop updates and use on up to two devices.</p>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <BuyLicenseButton />
+        <Link href="/support" className="rounded-full border border-black/15 px-5 py-3 text-sm font-medium transition hover:border-black/35">Contact support</Link>
+      </div>
+      {checkoutState === 'cancelled' ? <p className="mt-4 text-sm text-black/55">Checkout was canceled. You haven’t been charged.</p> : null}
+    </div>
+  )
+}
+
+function AccountDashboard({ user, license, licenseError, checkoutState, downloadUrl }) {
   return (
     <main className="min-h-screen bg-[#f7f7f5] px-5 py-6 text-[#171717] sm:px-8 sm:py-8">
       <div className="mx-auto max-w-4xl">
-        <SiteHeader><div className="flex items-center gap-3"><Link href="/" className="text-sm text-black/55 hover:text-black">Cutly home</Link><span className="hidden text-sm text-black/55 sm:block">{user?.primaryEmailAddress?.emailAddress}</span><UserButton /></div></SiteHeader>
+        <SiteHeader dashboard><div className="flex items-center gap-3"><span className="hidden text-sm text-black/55 sm:block">{user?.primaryEmailAddress?.emailAddress}</span><UserButton /></div></SiteHeader>
         <section className="py-12 sm:py-16">
           <p className="text-xs font-semibold tracking-[0.16em] text-black/45">ACCOUNT & LICENSING</p>
           <div className="mt-4 flex flex-wrap items-end justify-between gap-6"><div><h1 className="text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Your license</h1><p className="mt-3 text-base text-black/60">A clear view of what is active on your Cutly account.</p></div><p className="text-sm text-black/45">{user?.firstName ? `Welcome back, ${user.firstName}.` : 'Cutly account'}</p></div>
-          {licenseError ? <div className="mt-10 rounded-2xl border border-amber-600/25 bg-amber-50 p-6"><p className="font-medium">Your license could not be checked right now.</p><p className="mt-2 text-sm leading-6 text-black/60">Your account is still signed in. Please try again in a moment.</p></div> : license?.licensed ? (
-            <div className="mt-10 overflow-hidden rounded-2xl border border-black/10 bg-white"><div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/10 p-6 sm:p-8"><div><p className="text-sm font-medium text-black/55">Current plan</p><h2 className="mt-1 text-2xl font-medium tracking-[-0.03em]">{license.plan || 'Cutly license'}</h2></div><span className="rounded-full bg-[#eaf7ee] px-3 py-1.5 text-xs font-semibold text-[#15733a]">Active</span></div><dl className="grid divide-y divide-black/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0"><div className="p-6 sm:p-8"><dt className="text-sm text-black/50">Devices in use</dt><dd className="mt-2 text-lg font-medium">{license.devicesUsed} of {license.deviceLimit}</dd></div><div className="p-6 sm:p-8"><dt className="text-sm text-black/50">License type</dt><dd className="mt-2 text-lg font-medium capitalize">{license.type || '—'}</dd></div><div className="p-6 sm:p-8"><dt className="text-sm text-black/50">Renews / expires</dt><dd className="mt-2 text-lg font-medium">{displayDate(license.expiresAt)}</dd></div></dl></div>
-          ) : <div className="mt-10 rounded-2xl border border-black/10 bg-white p-6 sm:p-8"><p className="text-sm font-medium text-black/55">No active license</p><h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Add a Cutly license to start creating.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-black/60">A license is linked to this account and includes up to two active devices.</p><div className="mt-6 flex flex-wrap items-center gap-3"><BuyLicenseButton />{supportUrl ? <a href={supportUrl} className="rounded-full border border-black/15 px-5 py-3 text-sm font-medium transition hover:border-black/35">Contact Cutly</a> : null}</div></div>}
-          <div className="mt-10"><AppAccess downloadUrl={downloadUrl} /></div>
+          <LicensePanel license={license} licenseError={licenseError} checkoutState={checkoutState} />
+          <div className="mt-10"><AppAccess downloadUrl={downloadUrl} licensed={Boolean(license?.licensed)} /></div>
         </section>
         <SiteFooter />
       </div>
@@ -148,8 +212,9 @@ function AccountDashboard({ user, license, licenseError, downloadUrl, supportUrl
   )
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }) {
   const { userId } = await auth()
+  const { checkout: checkoutState } = searchParams ? await searchParams : {}
   const downloadUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
   if (!userId) return <MarketingPage downloadUrl={downloadUrl} />
 
@@ -158,8 +223,9 @@ export default async function Home() {
   let licenseError = false
   try {
     license = await getLicenseStatus(userId)
-  } catch {
+  } catch (error) {
+    console.error('Could not load the dashboard license status:', error)
     licenseError = true
   }
-  return <AccountDashboard user={user} license={license} licenseError={licenseError} downloadUrl={downloadUrl} supportUrl={safeExternalUrl(process.env.NEXT_PUBLIC_SUPPORT_URL)} />
+  return <AccountDashboard user={user} license={license} licenseError={licenseError} checkoutState={checkoutState} downloadUrl={downloadUrl} />
 }

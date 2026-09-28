@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export function AppAccess({ downloadUrl, compact = false, allowReleasePage = true }) {
+export function AppAccess({ downloadUrl, compact = false, allowReleasePage = true, licensed = false }) {
   const [opening, setOpening] = useState(false)
   const openApp = () => {
     setOpening(true)
@@ -15,7 +15,7 @@ export function AppAccess({ downloadUrl, compact = false, allowReleasePage = tru
       <div>
         <p className="text-sm font-medium">Use Cutly on your desktop</p>
         <p className="mt-1 text-sm leading-6 text-black/55">
-          {compact ? 'Open the app if it is installed, or download it to get started.' : 'Your account and license are ready in the Cutly desktop app.'}
+          {licensed ? 'Your account and license are ready in the Cutly desktop app.' : 'Open the desktop app if it is installed, or download Cutly to get started.'}
         </p>
       </div>
       <div className="flex flex-wrap gap-3">

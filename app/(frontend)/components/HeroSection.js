@@ -86,7 +86,7 @@ export function HeroSection({ downloadUrl }) {
     <section ref={sectionRef} className="relative h-[260svh] max-[700px]:hidden" id="hero">
       <div ref={stageRef} className="sticky top-0 h-svh overflow-hidden bg-[#08090c]">
         <div
-          className="absolute overflow-hidden"
+          className="absolute z-0 overflow-hidden"
           style={{
             width: `${backgroundScaleX * 100}%`,
             height: `${backgroundScaleY * 100}%`,
@@ -98,7 +98,7 @@ export function HeroSection({ downloadUrl }) {
             boxShadow: `0 ${easedProgress * 36}px ${easedProgress * 100}px rgb(0 0 0 / ${easedProgress * 0.55})`,
           }}
         >
-          <div className="absolute -inset-[4%] bg-[url('/cutly-hero-pixel.png')] bg-cover bg-[position:72%_center] bg-no-repeat motion-safe:animate-pixel-scene motion-reduce:animate-none max-[700px]:bg-center" />
+          <div className="absolute -inset-[4%] bg-[url('/bg.png')] bg-cover bg-[position:72%_center] bg-no-repeat motion-safe:animate-pixel-scene motion-reduce:animate-none max-[700px]:bg-center" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgb(5_7_12/.18)_0%,_rgb(5_7_12/.3)_36%,_rgb(5_7_12/.4)_58%,_rgb(8_9_12/.62)_100%)]" />
           <div className="absolute inset-x-0 top-[24%] z-0 h-[52%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.42)_0%,_rgb(4_8_18/.24)_44%,_transparent_78%)]" />
           <div className="absolute inset-0 bg-[#08090c]" style={{ opacity: 0.05 + easedProgress * 0.4 }} />
@@ -147,6 +147,8 @@ export function HeroSection({ downloadUrl }) {
           </div>
         </div>
 
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[32svh] min-h-[180px] bg-[linear-gradient(180deg,transparent_0%,#08090c_68%,#08090c_100%)]" />
+
         <div
           className="absolute inset-0 z-[2] flex flex-col items-center justify-center px-6 pb-8 pt-[70px] text-center text-white [text-shadow:0_3px_24px_rgb(0_0_0/.42)] max-[600px]:px-5 max-[600px]:pb-4 max-[600px]:pt-[60px]"
           style={{ opacity: copyOpacity, transform: `translateY(${-easedProgress * 44}px)`, pointerEvents: copyOpacity < 0.05 ? 'none' : 'auto' }}
@@ -166,7 +168,7 @@ export function HeroSection({ downloadUrl }) {
     <div className="hidden max-[700px]:block" id="hero-mobile">
       <section ref={mobileSectionRef} className="relative h-[190svh] bg-[#08090c]">
         <div ref={mobileStageRef} className="sticky top-0 h-svh overflow-hidden bg-[#08090c] px-5 text-center text-white">
-          <div aria-hidden="true" className="absolute inset-0 bg-[url('/cutly-hero-pixel.png')] bg-cover bg-center opacity-90 motion-safe:animate-pixel-scene motion-reduce:animate-none" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center opacity-90 motion-safe:animate-pixel-scene motion-reduce:animate-none" />
           <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,_rgb(5_7_12/.28)_0%,_rgb(5_7_12/.26)_28%,_rgb(4_8_18/.48)_48%,_rgb(4_8_18/.4)_68%,_rgb(8_9_12/.76)_100%)]" />
           <div aria-hidden="true" className="absolute inset-x-0 top-[28%] z-0 h-[44%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.52)_0%,_rgb(4_8_18/.3)_45%,_transparent_78%)]" />
           <img src="/cutly-pixel-clouds.png" alt="" aria-hidden="true" draggable="false" className="pointer-events-none absolute left-[-12%] top-[12%] w-[124%] opacity-35 [image-rendering:pixelated] motion-safe:animate-pixel-clouds motion-reduce:animate-none" />
@@ -177,6 +179,7 @@ export function HeroSection({ downloadUrl }) {
             <span className="absolute left-[4%] top-[13%] h-[2px] w-[108px] origin-left rounded-full bg-[linear-gradient(90deg,transparent_0%,rgb(173_211_255/.08)_42%,rgb(218_235_255/.72)_86%,#fff_100%)] shadow-[0_0_10px_rgb(167_207_255/.7)] motion-safe:animate-pixel-meteor motion-reduce:animate-none" />
           </div>
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2] transition-[backdrop-filter,background-color,opacity] duration-500" style={{ opacity: mobileBlurProgress, backdropFilter: `blur(${mobileBlurProgress * 12}px)`, backgroundColor: `rgb(5 8 18 / ${mobileBlurProgress * 0.28})` }} />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[32svh] min-h-[180px] bg-[linear-gradient(180deg,transparent_0%,#08090c_68%,#08090c_100%)]" />
           <div className={`absolute inset-x-5 top-1/2 z-[3] mx-auto w-auto max-w-[620px] -translate-y-1/2 transition-[opacity,margin] duration-500 ${mobilePlayOpacity < 0.05 ? 'pointer-events-none opacity-0' : 'opacity-100'}`} style={{ opacity: mobilePlayOpacity, marginTop: `${(1 - mobilePlayOpacity) * 18}px` }}>
             <div className="mb-5 text-center [text-shadow:0_3px_22px_rgb(0_0_0/.5)]">
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[.2em] text-[#c5d2f1]">The Cutly workflow</p>

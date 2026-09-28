@@ -64,7 +64,7 @@ export function FloatingNav({ downloadUrl }) {
               <Link className="transition-colors hover:text-white" href="/blog">Blog</Link>
             </nav>
             <div className="flex items-center gap-1 max-[700px]:col-start-2 max-[700px]:row-start-1">
-              <SignInButton forceRedirectUrl="/"><button style={{ backgroundColor: '#fff', color: '#111' }} className="h-[36px] min-w-[72px] rounded-full border-0 px-4 text-xs font-semibold transition-opacity hover:opacity-90 max-[700px]:!h-[29px]">Log in</button></SignInButton>
+              <SignInButton forceRedirectUrl="/"><button type="button" className="h-[36px] min-w-[72px] rounded-full border-0 !bg-transparent px-4 text-xs font-semibold text-white transition-opacity hover:opacity-90 max-[700px]:!h-[29px] max-[700px]:border max-[700px]:border-white max-[700px]:!bg-white max-[700px]:!text-[#111]">Log in</button></SignInButton>
               <a className="inline-flex h-7 items-center rounded-full bg-[#f2f2ee] px-[14px] text-xs font-semibold text-[#111] no-underline max-[700px]:hidden" href={downloadUrl || '/download'}>Download</a>
             </div>
           </div>
