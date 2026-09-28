@@ -77,6 +77,14 @@ CUTLY_SITE_URL=http://localhost:3000 pnpm dev
 
 For production, set the same Clerk environment variables in the hosting provider and set `NEXT_PUBLIC_SITE_URL` to the public HTTPS site origin (for example, `https://cutly.app`). This value is used for canonical URLs, social metadata, structured data, `robots.txt`, and `sitemap.xml`. `CUTLY_SITE_URL` remains supported as a fallback for existing deployments.
 
+Production Stripe checkout also requires a canonical HTTPS origin through
+`NEXT_PUBLIC_SITE_URL` or `CUTLY_SITE_URL`; it will not derive payment return
+URLs from the incoming request host. The application uses Clerk's strict CSP
+nonce support and sends HSTS in production. On Vercel, rate limiting uses the
+platform-provided `x-vercel-forwarded-for` address. On other hosts, set
+`TRUSTED_CLIENT_IP_HEADER` to a client-IP header that the trusted ingress proxy
+overwrites; do not point it at a header clients can supply themselves.
+
 ## Public-site configuration
 
 Set `NEXT_PUBLIC_APP_DOWNLOAD_URL` to the HTTPS URL of the current signed Cutly

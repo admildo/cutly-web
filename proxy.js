@@ -26,9 +26,16 @@ const isPublicRoute = createRouteMatcher([
   '/api/cms(.*)'
 ])
 
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) await auth.protect()
-})
+export default clerkMiddleware(
+  async (auth, request) => {
+    if (!isPublicRoute(request)) await auth.protect()
+  },
+  {
+    // Use a per-request nonce and strict-dynamic instead of trusting arbitrary
+    // HTTPS script origins. Clerk's CSP integration also adds its required hosts.
+    contentSecurityPolicy: { strict: true }
+  }
+)
 
 export const config = {
   matcher: [

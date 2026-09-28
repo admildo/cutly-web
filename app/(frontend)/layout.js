@@ -84,7 +84,7 @@ export default function RootLayout({ children }) {
             ])
           }}
         />
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider dynamic>{children}</ClerkProvider>
       </body>
     </html>
   );

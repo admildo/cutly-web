@@ -1,6 +1,22 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import Stripe from 'stripe'
 
+const getCheckoutOrigin = (request) => {
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.CUTLY_SITE_URL
+  if (!configuredOrigin) {
+    return process.env.NODE_ENV === 'production' ? null : new URL(request.url).origin
+  }
+
+  try {
+    const url = new URL(configuredOrigin)
+    if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') return null
+    if (url.username || url.password) return null
+    return url.origin
+  } catch {
+    return null
+  }
+}
+
 export async function POST(request) {
   const { userId } = await auth()
   if (!userId) return Response.json({ error: 'You must be signed in to purchase Cutly.' }, { status: 401 })
@@ -11,9 +27,14 @@ export async function POST(request) {
     return Response.json({ error: 'Stripe checkout is not configured.' }, { status: 503 })
   }
 
+  const configuredOrigin = getCheckoutOrigin(request)
+  if (!configuredOrigin) {
+    console.error('Stripe checkout requires a valid canonical HTTPS site origin in production.')
+    return Response.json({ error: 'Checkout is temporarily unavailable.' }, { status: 503 })
+  }
+
   try {
     const user = await currentUser()
-    const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin
     const stripe = new Stripe(secretKey)
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
