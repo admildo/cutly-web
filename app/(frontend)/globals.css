@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  --animate-pixel-scene: pixel-scene 42s ease-in-out infinite alternate;
+  --animate-pixel-twinkle: pixel-twinkle 3.8s ease-in-out infinite;
+  --animate-pixel-clouds: pixel-clouds 56s ease-in-out infinite alternate;
+  --animate-pixel-meteor: pixel-meteor 18s ease-in-out -9.3s infinite;
+
+  @keyframes pixel-scene {
+    from { transform: translate3d(0, 0, 0) scale(1.04); }
+    to { transform: translate3d(-0.7%, 0.35%, 0) scale(1.09); }
+  }
+
+  @keyframes pixel-twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.75); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  @keyframes pixel-clouds {
+    from { transform: translate3d(-4vw, 0, 0); }
+    to { transform: translate3d(4vw, 1vh, 0); }
+  }
+
+  @keyframes pixel-meteor {
+    0%, 66% { opacity: 0; transform: translate3d(-2vw, -1vh, 0) rotate(35deg); }
+    67% { opacity: 1; }
+    75%, 100% { opacity: 0; transform: translate3d(10vw, 6vh, 0) rotate(35deg); }
+  }
+
+}

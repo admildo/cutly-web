@@ -3,7 +3,7 @@ import test from 'node:test'
 
 process.env.DESKTOP_AUTH_SIGNING_KEY = 'test-only-desktop-auth-signing-key'
 
-const { setRedisClientForTesting } = await import('../lib/redis.js')
+const { setStateStoreForTesting } = await import('../lib/state-store.js')
 const {
   consumeDesktopAuthGrantUserId,
   createDesktopAuthGrant,
@@ -12,21 +12,30 @@ const {
   revokeDesktopSession
 } = await import('../lib/desktop-auth.js')
 
-class MemoryRedis {
-  values = new Map()
+class MemoryStateStore {
+  grants = new Set()
+  sessions = new Map()
 
-  async set(key, value, options = {}) {
-    if (options.nx && this.values.has(key)) return null
-    this.values.set(key, value)
-    return 'OK'
+  async consumeDesktopGrant(jti) {
+    if (this.grants.has(jti)) return false
+    this.grants.add(jti)
+    return true
   }
 
-  async get(key) {
-    return this.values.get(key) ?? null
+  async createDesktopSession(jti, userId) {
+    this.sessions.set(jti, userId)
   }
 
-  async del(key) {
-    return this.values.delete(key) ? 1 : 0
+  async getDesktopSessionUserId(jti) {
+    return this.sessions.get(jti) ?? null
+  }
+
+  async revokeDesktopSession(jti) {
+    return this.sessions.delete(jti)
+  }
+
+  async incrementRateLimit() {
+    throw new Error('Not used by desktop-auth tests')
   }
 }
 
@@ -36,7 +45,7 @@ const requestWithToken = (token) =>
   })
 
 test('a desktop auth grant can only be exchanged once', async () => {
-  setRedisClientForTesting(new MemoryRedis())
+  setStateStoreForTesting(new MemoryStateStore())
   const grant = createDesktopAuthGrant('user_test')
 
   assert.equal(await consumeDesktopAuthGrantUserId(requestWithToken(grant)), 'user_test')
@@ -44,7 +53,7 @@ test('a desktop auth grant can only be exchanged once', async () => {
 })
 
 test('revoking a desktop session invalidates it immediately', async () => {
-  setRedisClientForTesting(new MemoryRedis())
+  setStateStoreForTesting(new MemoryStateStore())
   const session = await createDesktopSession('user_test')
   const request = requestWithToken(session)
 

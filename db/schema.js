@@ -64,3 +64,37 @@ export const paymentEvents = sqliteTable(
   },
   (table) => [uniqueIndex('payment_events_provider_event_idx').on(table.provider, table.providerEventId)]
 )
+
+// Server-side state for short-lived desktop authentication and revocable
+// desktop sessions. Tokens remain signed; these rows make them one-time and
+// revocable without a separate Redis service.
+export const desktopAuthGrants = sqliteTable(
+  'desktop_auth_grants',
+  {
+    jti: text('jti').primaryKey(),
+    expiresAt: text('expires_at').notNull(),
+    consumedAt: text('consumed_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [index('desktop_auth_grants_expiry_idx').on(table.expiresAt)]
+)
+
+export const desktopSessions = sqliteTable(
+  'desktop_sessions',
+  {
+    jti: text('jti').primaryKey(),
+    userId: text('user_id').notNull(),
+    expiresAt: text('expires_at').notNull(),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [index('desktop_sessions_expiry_idx').on(table.expiresAt)]
+)
+
+export const rateLimitBuckets = sqliteTable(
+  'rate_limit_buckets',
+  {
+    key: text('key').primaryKey(),
+    count: integer('count').notNull(),
+    expiresAt: text('expires_at').notNull()
+  },
+  (table) => [index('rate_limit_buckets_expiry_idx').on(table.expiresAt)]
+)
