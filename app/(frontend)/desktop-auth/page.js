@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
-import { SignIn } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
+import { AuthForm } from '../components/AuthForm'
+import { AuthLayout } from '../components/AuthLayout'
+import { normalizeInternalReturnPath } from '@/lib/auth-redirect'
 
 export const metadata = { title: 'Connecting to Cutly', robots: { index: false, follow: false } }
 import { createDesktopAuthGrant } from '@/lib/desktop-auth'
@@ -26,24 +28,37 @@ export default async function DesktopAuthPage({ searchParams }) {
 
   if (!callback) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-neutral-950 p-6 text-center text-white">
-        <section className="max-w-md rounded-2xl border border-white/10 bg-white/5 p-8">
-          <h1 className="text-2xl font-semibold">Open Cutly to sign in</h1>
-          <p className="mt-3 text-sm text-neutral-300">
-            Start sign-in from the Cutly desktop app so it can securely receive the result.
+      <AuthLayout>
+        <div className="rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-6 sm:p-8">
+          <div className="mb-5 grid h-11 w-11 place-items-center rounded-full bg-[#343332] text-[#cccbca]">
+            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 6.25v4.25m0 3.25h.01M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h1 className="mb-0 text-[25px] font-semibold leading-tight tracking-[-0.04em]">This link can’t connect to Cutly desktop</h1>
+          <p className="mb-0 mt-3 text-[14px] leading-6 text-[#807e7e]">
+            Close this tab and start again from the Cutly desktop app so it can receive your sign-in securely.
           </p>
-        </section>
-      </main>
+          <a href="/download" className="mt-6 inline-flex min-h-12 items-center justify-center rounded-xl bg-[#171716] px-5 text-[14px] font-semibold text-[#f2f0ef] no-underline transition-colors hover:bg-[#343332]">
+            Get Cutly for desktop
+          </a>
+        </div>
+      </AuthLayout>
     )
   }
 
   const { isAuthenticated, userId } = await auth()
 
   if (!isAuthenticated) {
-    const returnUrl = new URL('/desktop-auth', 'http://localhost')
+    const returnUrl = new URL('/desktop-auth', 'https://cutly.invalid')
     returnUrl.searchParams.set('redirect_uri', callback.toString())
     returnUrl.searchParams.set('state', state)
-    return <SignIn forceRedirectUrl={`${returnUrl.pathname}${returnUrl.search}`} routing="hash" />
+    const returnTo = normalizeInternalReturnPath(`${returnUrl.pathname}${returnUrl.search}`)
+    return (
+      <AuthLayout>
+        <AuthForm mode="sign-in" returnTo={returnTo} />
+      </AuthLayout>
+    )
   }
 
   callback.searchParams.set('token', createDesktopAuthGrant(userId))

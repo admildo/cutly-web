@@ -98,3 +98,102 @@ export const rateLimitBuckets = sqliteTable(
   },
   (table) => [index('rate_limit_buckets_expiry_idx').on(table.expiresAt)]
 )
+
+// Trial access is account based. The trial ledger stores counts and request
+// outcomes only; transcripts and source media are never persisted here.
+export const trialAccounts = sqliteTable(
+  'trial_accounts',
+  {
+    userId: text('user_id').primaryKey(),
+    status: text('status', { enum: ['active', 'blocked'] }).notNull().default('active'),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [index('trial_accounts_status_idx').on(table.status)]
+)
+
+export const trialDeviceClaims = sqliteTable(
+  'trial_device_claims',
+  {
+    deviceHash: text('device_hash').primaryKey(),
+    userId: text('user_id').notNull(),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    lastSeenAt: text('last_seen_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [index('trial_device_claims_user_idx').on(table.userId)]
+)
+
+export const trialUsageCounts = sqliteTable(
+  'trial_usage_counts',
+  {
+    userId: text('user_id').notNull(),
+    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation'] }).notNull(),
+    usedCount: integer('used_count').notNull().default(0),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [
+    uniqueIndex('trial_usage_counts_user_action_idx').on(table.userId, table.action),
+    index('trial_usage_counts_user_idx').on(table.userId)
+  ]
+)
+
+export const trialActionRequests = sqliteTable(
+  'trial_action_requests',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull(),
+    requestId: text('request_id').notNull(),
+    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation'] }).notNull(),
+    status: text('status', { enum: ['pending', 'succeeded', 'failed', 'rejected'] }).notNull(),
+    responseJson: text('response_json'),
+    errorMessage: text('error_message'),
+    dayKey: text('day_key').notNull(),
+    monthKey: text('month_key').notNull(),
+    reservedMicros: integer('reserved_micros').notNull().default(0),
+    inputTokens: integer('input_tokens').notNull().default(0),
+    outputTokens: integer('output_tokens').notNull().default(0),
+    costMicros: integer('cost_micros').notNull().default(0),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [
+    uniqueIndex('trial_action_requests_user_request_idx').on(table.userId, table.requestId),
+    index('trial_action_requests_status_created_idx').on(table.status, table.createdAt),
+    index('trial_action_requests_day_idx').on(table.dayKey)
+  ]
+)
+
+export const trialDailySpend = sqliteTable(
+  'trial_daily_spend',
+  {
+    dayKey: text('day_key').primaryKey(),
+    reservedMicros: integer('reserved_micros').notNull().default(0),
+    spentMicros: integer('spent_micros').notNull().default(0),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  }
+)
+
+export const trialMonthlySpend = sqliteTable(
+  'trial_monthly_spend',
+  {
+    monthKey: text('month_key').primaryKey(),
+    reservedMicros: integer('reserved_micros').notNull().default(0),
+    spentMicros: integer('spent_micros').notNull().default(0),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  }
+)
+
+export const trialConfig = sqliteTable(
+  'trial_config',
+  {
+    id: text('id').primaryKey(),
+    enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+    clipGenerationsMax: integer('clip_generations_max').notNull().default(2),
+    smartCleanMax: integer('smart_clean_max').notNull().default(1),
+    captionTranslationsMax: integer('caption_translations_max').notNull().default(1),
+    dailyBudgetMicros: integer('daily_budget_micros').notNull().default(1_000_000),
+    monthlyBudgetMicros: integer('monthly_budget_micros').notNull().default(10_000_000),
+    updatedBy: text('updated_by'),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  }
+)

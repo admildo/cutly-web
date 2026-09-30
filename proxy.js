@@ -14,6 +14,9 @@ const isPublicRoute = createRouteMatcher([
   '/api/stripe/webhook(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/sso-callback(.*)',
+  '/account(.*)',
+  '/api/account(.*)',
   '/desktop-auth(.*)',
   // These endpoints authenticate the Electron bearer token themselves. Clerk
   // middleware only has access to browser cookies, so protecting them here

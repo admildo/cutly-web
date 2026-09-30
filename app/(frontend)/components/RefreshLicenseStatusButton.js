@@ -12,7 +12,7 @@ export function RefreshLicenseStatusButton() {
       type="button"
       onClick={() => startTransition(() => router.refresh())}
       disabled={refreshing}
-      className="rounded-full border border-black/15 px-4 py-2.5 text-sm font-medium transition hover:border-black/35 disabled:opacity-60"
+      className="rounded-full border border-[#807e7e] px-4 py-2.5 text-sm font-medium text-[#cccbca] transition hover:border-[#cccbca] hover:text-[#f2f0ef] disabled:opacity-60"
     >
       {refreshing ? 'Checking…' : 'Check again'}
     </button>

@@ -6,8 +6,6 @@
  * and re-run `payload generate:types` to regenerate this file.
  */
 
-import 'payload'
-
 /**
  * Supported timezones in IANA format.
  *

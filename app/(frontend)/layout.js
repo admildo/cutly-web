@@ -84,7 +84,7 @@ export default function RootLayout({ children }) {
             ])
           }}
         />
-        <ClerkProvider dynamic>{children}</ClerkProvider>
+        <ClerkProvider signInUrl="/sign-in" signUpUrl="/sign-up" dynamic>{children}</ClerkProvider>
       </body>
     </html>
   );

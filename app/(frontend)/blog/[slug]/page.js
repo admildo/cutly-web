@@ -43,9 +43,9 @@ export default async function BlogPostPage({ params }) {
   if (!post) notFound()
 
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-6 py-20 sm:px-10">
-      <Link href="/blog" className="text-sm text-neutral-500 hover:text-neutral-900">← All posts</Link>
-      <article className="mt-10">
+    <main className="min-h-screen [color-scheme:dark] bg-[#171716] px-6 py-20 text-[#f2f0ef] sm:px-10">
+      <article className="mx-auto mt-10 max-w-3xl">
+      <Link href="/blog" className="text-sm text-[#a6a4a4] hover:text-[#f2f0ef]">← All posts</Link>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -63,16 +63,16 @@ export default async function BlogPostPage({ params }) {
             })
           }}
         />
-        <time className="text-sm text-neutral-500" dateTime={post.publishedAt}>
+        <time className="text-sm text-[#a6a4a4]" dateTime={post.publishedAt}>
           {new Date(post.publishedAt).toLocaleDateString('en', { dateStyle: 'long' })}
         </time>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">{post.title}</h1>
-        <p className="mt-5 text-xl leading-8 text-neutral-600">{post.excerpt}</p>
+        <p className="mt-5 text-xl leading-8 text-[#a6a4a4]">{post.excerpt}</p>
         {post.coverImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={post.coverImageUrl} alt={post.coverImageAlt || `Cover image for ${post.title}`} className="mt-10 w-full rounded-2xl object-cover" />
+          <img src={post.coverImageUrl} alt={post.coverImageAlt || `Cover image for ${post.title}`} className="mt-10 w-full rounded-2xl border border-[#807e7e]/40 object-cover" />
         ) : null}
-        <div className="prose prose-neutral mt-10 max-w-none">
+        <div className="prose prose-invert mt-10 max-w-none prose-headings:text-[#f2f0ef] prose-p:text-[#a6a4a4] prose-a:text-[#cccbca] prose-strong:text-[#f2f0ef] prose-blockquote:border-[#807e7e] prose-blockquote:text-[#a6a4a4]">
           <RichText data={post.content} />
         </div>
       </article>

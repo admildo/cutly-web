@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { SignInButton } from '@clerk/nextjs'
 
 export function FloatingNav({ downloadUrl }) {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -53,9 +52,9 @@ export function FloatingNav({ downloadUrl }) {
           <div
             className={`absolute flex h-[36px] items-center justify-between gap-5 transition-[top,inset] duration-[560ms] ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none max-[700px]:inset-x-4 max-[700px]:top-0 max-[700px]:h-full max-[700px]:grid max-[700px]:grid-cols-[minmax(0,1fr)_auto] max-[700px]:gap-3 ${isScrolled ? 'inset-x-[14px] top-[9px]' : 'inset-x-[56px] top-[7px]'}`}
           >
-            <Link href="#hero" aria-label="Cutly home" className="flex min-w-0 items-center gap-2 text-sm font-semibold tracking-[-.03em] text-white no-underline">
+            <Link href="#hero" aria-label="Noyte home" className="flex min-w-0 items-center gap-2 text-sm font-semibold tracking-[-.03em] text-white no-underline">
             
-              <b>Cutly</b>
+              <b>Noyte</b>
             </Link>
             <nav aria-label="Primary navigation" className="flex items-center justify-center gap-[25px] text-xs font-medium text-[#a5a8b1] max-[700px]:hidden">
               <a className="transition-colors hover:text-white" href="#features">Features</a>
@@ -64,7 +63,7 @@ export function FloatingNav({ downloadUrl }) {
               <Link className="transition-colors hover:text-white" href="/blog">Blog</Link>
             </nav>
             <div className="flex items-center gap-1 max-[700px]:col-start-2 max-[700px]:row-start-1">
-              <SignInButton forceRedirectUrl="/"><button type="button" className="h-[36px] min-w-[72px] rounded-full border-0 !bg-transparent px-4 text-xs font-semibold text-white transition-opacity hover:opacity-90 max-[700px]:!h-[29px] max-[700px]:border max-[700px]:border-white max-[700px]:!bg-white max-[700px]:!text-[#111]">Log in</button></SignInButton>
+              <Link href="/sign-in" className="inline-flex h-[36px] min-w-[72px] items-center justify-center rounded-full border-0 bg-transparent px-4 text-xs font-semibold text-white no-underline transition-opacity hover:opacity-90 max-[700px]:h-[29px] max-[700px]:border max-[700px]:border-white max-[700px]:bg-white max-[700px]:text-[#111]">Log in</Link>
               <a className="inline-flex h-7 items-center rounded-full bg-[#f2f2ee] px-[14px] text-xs font-semibold text-[#111] no-underline max-[700px]:hidden" href={downloadUrl || '/download'}>Download</a>
             </div>
           </div>

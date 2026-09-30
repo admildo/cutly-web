@@ -22,10 +22,10 @@ export function BuyLicenseButton() {
 
   return (
     <div>
-      <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#171717] px-5 py-3 text-sm font-medium text-white transition hover:bg-black disabled:cursor-wait disabled:opacity-60">
+      <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#f2f0ef] px-5 py-3 text-sm font-medium text-[#171716] transition hover:bg-[#cccbca] disabled:cursor-wait disabled:opacity-60">
         {loading ? 'Opening checkout…' : 'Buy Cutly Lifetime'}
       </button>
-      {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-[#cccbca]">{error}</p> : null}
     </div>
   )
 }

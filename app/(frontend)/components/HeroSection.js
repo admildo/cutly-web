@@ -103,7 +103,7 @@ export function HeroSection({ downloadUrl }) {
           <div className="absolute inset-x-0 top-[24%] z-0 h-[52%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.42)_0%,_rgb(4_8_18/.24)_44%,_transparent_78%)]" />
           <div className="absolute inset-0 bg-[#08090c]" style={{ opacity: 0.05 + easedProgress * 0.4 }} />
           <img
-            src="/cutly-pixel-clouds.png"
+            src="/noyte-pixel-clouds.png"
             alt=""
             aria-hidden="true"
             draggable="false"
@@ -124,7 +124,7 @@ export function HeroSection({ downloadUrl }) {
             }}
             inert={!isPlaying}
           >
-            <video ref={videoRef} className="absolute inset-0 block h-full w-full object-cover transition-opacity duration-500" style={{ opacity: isPlaying ? 1 : 0 }} controls={isPlaying} playsInline preload="metadata" aria-label="Cutly product demo" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)}>
+            <video ref={videoRef} className="absolute inset-0 block h-full w-full object-cover transition-opacity duration-500" style={{ opacity: isPlaying ? 1 : 0 }} controls={isPlaying} playsInline preload="metadata" aria-label="noyte product demo" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)}>
               <source src="/app-shots/demo-video.mp4" type="video/mp4" />
               Your browser does not support MP4 video playback.
             </video>
@@ -137,10 +137,10 @@ export function HeroSection({ downloadUrl }) {
           <div className="pointer-events-none absolute inset-0 z-[5] grid place-items-center transition-opacity duration-500" style={{ opacity: isPlaying || videoOpacity < 0.55 ? 0 : 1 }}>
             <div className="flex flex-col items-center gap-5 text-center [text-shadow:0_2px_16px_rgb(0_0_0/.65)]">
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[.2em] text-[#c5d2f1]">The Cutly workflow</p>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[.2em] text-[#c5d2f1]">The noyte workflow</p>
                 <h2 className="m-0 text-[clamp(30px,3vw,42px)] font-medium leading-[1.04] tracking-[-.05em] text-white">See a full video become<br />share-ready clips.</h2>
               </div>
-              <button type="button" aria-label="Play Cutly product demo" onClick={() => videoRef.current?.play().catch(() => {})} className="group pointer-events-auto grid h-[76px] w-[76px] place-items-center rounded-full border border-white/45 bg-white/20 text-white shadow-[0_12px_50px_rgb(0_0_0/.4),inset_0_1px_rgb(255_255_255/.35)] backdrop-blur-xl transition-[transform,background-color,border-color] duration-300 hover:scale-105 hover:border-white/70 hover:bg-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white max-[600px]:h-[64px] max-[600px]:w-[64px]">
+              <button type="button" aria-label="Play noyte product demo" onClick={() => videoRef.current?.play().catch(() => {})} className="group pointer-events-auto grid h-[76px] w-[76px] place-items-center rounded-full border border-white/45 bg-white/20 text-white shadow-[0_12px_50px_rgb(0_0_0/.4),inset_0_1px_rgb(255_255_255/.35)] backdrop-blur-xl transition-[transform,background-color,border-color] duration-300 hover:scale-105 hover:border-white/70 hover:bg-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white max-[600px]:h-[64px] max-[600px]:w-[64px]">
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-current transition-transform duration-300 group-hover:scale-110 max-[600px]:h-6 max-[600px]:w-6"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>
               </button>
             </div>
@@ -171,7 +171,7 @@ export function HeroSection({ downloadUrl }) {
           <div aria-hidden="true" className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center opacity-90 motion-safe:animate-pixel-scene motion-reduce:animate-none" />
           <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,_rgb(5_7_12/.28)_0%,_rgb(5_7_12/.26)_28%,_rgb(4_8_18/.48)_48%,_rgb(4_8_18/.4)_68%,_rgb(8_9_12/.76)_100%)]" />
           <div aria-hidden="true" className="absolute inset-x-0 top-[28%] z-0 h-[44%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.52)_0%,_rgb(4_8_18/.3)_45%,_transparent_78%)]" />
-          <img src="/cutly-pixel-clouds.png" alt="" aria-hidden="true" draggable="false" className="pointer-events-none absolute left-[-12%] top-[12%] w-[124%] opacity-35 [image-rendering:pixelated] motion-safe:animate-pixel-clouds motion-reduce:animate-none" />
+          <img src="/noyte-pixel-clouds.png" alt="" aria-hidden="true" draggable="false" className="pointer-events-none absolute left-[-12%] top-[12%] w-[124%] opacity-35 [image-rendering:pixelated] motion-safe:animate-pixel-clouds motion-reduce:animate-none" />
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
             <span className="absolute left-[17%] top-[15%] h-[2px] w-[2px] bg-[#dbe8ff] shadow-[0_0_8px_2px_rgb(190_213_255/.55)] motion-safe:animate-pixel-twinkle motion-reduce:animate-none" />
             <span className="absolute left-[32%] top-[24%] h-[2px] w-[2px] bg-[#dbe8ff] shadow-[0_0_8px_2px_rgb(190_213_255/.55)] [animation-delay:-1.2s] motion-safe:animate-pixel-twinkle motion-reduce:animate-none" />
@@ -182,15 +182,15 @@ export function HeroSection({ downloadUrl }) {
           <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[32svh] min-h-[180px] bg-[linear-gradient(180deg,transparent_0%,#08090c_68%,#08090c_100%)]" />
           <div className={`absolute inset-x-5 top-1/2 z-[3] mx-auto w-auto max-w-[620px] -translate-y-1/2 transition-[opacity,margin] duration-500 ${mobilePlayOpacity < 0.05 ? 'pointer-events-none opacity-0' : 'opacity-100'}`} style={{ opacity: mobilePlayOpacity, marginTop: `${(1 - mobilePlayOpacity) * 18}px` }}>
             <div className="mb-5 text-center [text-shadow:0_3px_22px_rgb(0_0_0/.5)]">
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[.2em] text-[#c5d2f1]">The Cutly workflow</p>
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[.2em] text-[#c5d2f1]">The noyte workflow</p>
               <h2 className="m-0 text-[clamp(25px,7vw,34px)] font-medium leading-[1.04] tracking-[-.05em] text-white">See a full video become<br />share-ready clips.</h2>
             </div>
             <div className="relative aspect-video overflow-hidden rounded-[18px] border border-white/20 bg-[#080a10] shadow-[0_24px_70px_rgb(0_0_0/.52),inset_0_1px_rgb(255_255_255/.08)]">
-              <video ref={mobileHeroVideoRef} className="absolute inset-0 h-full w-full object-contain" style={{ opacity: isMobilePlaying ? 1 : 0 }} controls={isMobilePlaying} playsInline preload="none" aria-label="Cutly product demo" onPlay={() => setIsMobilePlaying(true)} onEnded={() => setIsMobilePlaying(false)}>
+              <video ref={mobileHeroVideoRef} className="absolute inset-0 h-full w-full object-contain" style={{ opacity: isMobilePlaying ? 1 : 0 }} controls={isMobilePlaying} playsInline preload="none" aria-label="noyte product demo" onPlay={() => setIsMobilePlaying(true)} onEnded={() => setIsMobilePlaying(false)}>
                 <source src="/app-shots/demo-video.mp4" type="video/mp4" />
                 Your browser does not support MP4 video playback.
               </video>
-              <button type="button" aria-label="Play Cutly product demo" onClick={() => mobileHeroVideoRef.current?.play().catch(() => {})} className={`absolute inset-0 m-auto grid h-[76px] w-[76px] place-items-center rounded-full border border-white/50 bg-white/20 text-white shadow-[0_12px_50px_rgb(0_0_0/.4),inset_0_1px_rgb(255_255_255/.35)] backdrop-blur-xl transition-[opacity,transform,background-color] duration-300 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${isMobilePlaying ? 'pointer-events-none scale-90 opacity-0' : 'pointer-events-auto scale-100 opacity-100 hover:bg-white/30'}`}>
+              <button type="button" aria-label="Play noyte product demo" onClick={() => mobileHeroVideoRef.current?.play().catch(() => {})} className={`absolute inset-0 m-auto grid h-[76px] w-[76px] place-items-center rounded-full border border-white/50 bg-white/20 text-white shadow-[0_12px_50px_rgb(0_0_0/.4),inset_0_1px_rgb(255_255_255/.35)] backdrop-blur-xl transition-[opacity,transform,background-color] duration-300 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${isMobilePlaying ? 'pointer-events-none scale-90 opacity-0' : 'pointer-events-auto scale-100 opacity-100 hover:bg-white/30'}`}>
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-current"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>
               </button>
             </div>
