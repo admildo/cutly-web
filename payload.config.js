@@ -15,6 +15,9 @@ if (process.env.NODE_ENV === 'production' && !payloadSecret) {
 }
 
 const config = buildConfig({
+  typescript: {
+    postProcess: [({ compiledTypes }) => compiledTypes.replace(/(\* DO NOT MODIFY IT BY HAND\.[\s\S]*?\*\/\n)/, "$1import type {} from 'payload'\n")]
+  },
   admin: {
     user: 'users'
   },

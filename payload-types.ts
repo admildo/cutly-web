@@ -5,6 +5,7 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify your source Payload config,
  * and re-run `payload generate:types` to regenerate this file.
  */
+import type {} from 'payload'
 
 /**
  * Supported timezones in IANA format.
