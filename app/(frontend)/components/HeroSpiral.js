@@ -82,12 +82,12 @@ function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) 
   const travel = progress
   const theta = angle + orbitRotation + travel * Math.PI * 2
   const radiusX = width * (mobile ? 0.42 : 0.36) * (1 + travel * 0.04)
-  const verticalSpan = Math.min(height * (mobile ? 0.82 : 0.84), mobile ? 700 : 760)
+  const verticalSpan = Math.min(height * (mobile ? 0.64 : 0.84), mobile ? 700 : 760)
   const radiusZ = mobile ? 240 : 430
   const baseY = (position - 0.5) * verticalSpan
   const x = Math.cos(theta) * radiusX
   const rise = height * (mobile ? 0.62 : 0.82)
-  const y = baseY - travel * rise
+  const y = baseY - travel * rise + (mobile ? height * 0.1 : 0)
   const z = Math.sin(theta) * radiusZ + travel * 30
   const depthScale = 0.72 + ((Math.sin(theta) + 1) / 2) * 0.42
   const faceCenterY = mobile ? -height * 0.03 : -height * 0.1
@@ -162,8 +162,8 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
     }, ({ conditions }) => {
       const mobile = conditions.mobile
       const reducedMotion = conditions.reducedMotion
-      let width = window.innerWidth
-      let height = window.innerHeight
+      let width = sceneRef.current?.clientWidth || window.innerWidth
+      let height = sceneRef.current?.clientHeight || window.innerHeight
       const cardNodes = cardRefs.current.filter(Boolean)
       const idleNodes = idleRefs.current.filter(Boolean)
       const parallaxNodes = parallaxRefs.current.filter(Boolean)
@@ -388,10 +388,13 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: () => `+=${window.innerHeight * (mobile ? 2.4 : 2.8)}`,
-          pin: sceneRef.current,
-          pinSpacing: true,
-          scrub: 0.35,
+          end: () => `+=${(sceneRef.current?.clientHeight || height) * (mobile ? 1.9 : 2.8)}`,
+          // Safari changes its visual viewport as browser chrome collapses.
+          // A native sticky scene avoids ScrollTrigger's fixed-pixel pin state
+          // on mobile while the section's CSS height supplies the scroll runway.
+          pin: mobile ? false : sceneRef.current,
+          pinSpacing: !mobile,
+          scrub: mobile ? 0.18 : 0.35,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onRefresh: (trigger) => {
@@ -448,7 +451,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       }, 0.72)
       timeline.to(subjectMotion, {
         scale: mobile ? 0.48 : 0.4,
-        y: () => -window.innerHeight * (mobile ? 0.12 : 0.15),
+        y: () => -(sceneRef.current?.clientHeight || height) * (mobile ? 0.12 : 0.15),
         opacity: 0,
         duration: 0.28,
         ease: 'power2.inOut',
@@ -594,10 +597,10 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       window.addEventListener('scroll', onPageScroll, { passive: true })
 
       const onResize = () => {
-        width = window.innerWidth
-        height = window.innerHeight
+        width = sceneRef.current?.clientWidth || window.innerWidth
+        height = sceneRef.current?.clientHeight || window.innerHeight
         syncBackdropDimensions()
-        ScrollTrigger.refresh()
+        if (!mobile) ScrollTrigger.refresh()
         renderSpiral(getSpiralProgress())
       }
       window.addEventListener('resize', onResize, { passive: true })
