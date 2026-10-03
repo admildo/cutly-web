@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.2",
+    "@gsap/react": "^2.1.2",
     "@libsql/client": "^0.18.0",
     "@payloadcms/db-sqlite": "3.90.2",
     "@payloadcms/next": "3.90.2",
@@ -27,6 +28,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "drizzle-orm": "^0.45.2",
     "graphql": "^16.14.2",
+    "gsap": "^3.15.0",
     "next": "16.3.6",
     "payload": "3.90.2",
     "react": "19.1.4",

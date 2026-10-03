@@ -14,7 +14,18 @@ if (process.env.NODE_ENV === 'production') {
 
 const nextConfig = {
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }]
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      {
+        source: '/catalogs/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60, s-maxage=300, stale-while-revalidate=300'
+          }
+        ]
+      }
+    ]
   }
 }
 

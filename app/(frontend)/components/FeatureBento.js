@@ -65,7 +65,7 @@ function CardVisual({ feature }) {
 
 export function FeatureBento() {
   return (
-    <section className="bg-[#080808] px-[clamp(28px,6vw,100px)] py-[112px] max-[900px]:py-[90px] max-[600px]:px-5 max-[600px]:py-[72px]" aria-labelledby="feature-bento-title">
+    <section className="bg-[#080808] px-[clamp(28px,6vw,100px)] py-[78px] max-[900px]:py-[66px] max-[600px]:px-5 max-[600px]:py-[52px]" aria-labelledby="feature-bento-title">
       <div className="mx-auto max-w-[1480px]">
         <header className="mb-10 max-w-[680px] max-[600px]:mb-7">
           <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">Cutly, from first import to finished clip</span>

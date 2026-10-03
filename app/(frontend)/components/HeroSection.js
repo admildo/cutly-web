@@ -98,7 +98,7 @@ export function HeroSection({ downloadUrl }) {
             boxShadow: `0 ${easedProgress * 36}px ${easedProgress * 100}px rgb(0 0 0 / ${easedProgress * 0.55})`,
           }}
         >
-          <div className="absolute -inset-[4%] bg-[url('/bg.png')] bg-cover bg-[position:72%_center] bg-no-repeat motion-safe:animate-pixel-scene motion-reduce:animate-none max-[700px]:bg-center" />
+          <div className="absolute -inset-[4%] bg-[url('/bgt1.png')] bg-cover bg-[position:72%_center] bg-no-repeat motion-safe:animate-pixel-scene motion-reduce:animate-none max-[700px]:bg-center" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgb(5_7_12/.18)_0%,_rgb(5_7_12/.3)_36%,_rgb(5_7_12/.4)_58%,_rgb(8_9_12/.62)_100%)]" />
           <div className="absolute inset-x-0 top-[24%] z-0 h-[52%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.42)_0%,_rgb(4_8_18/.24)_44%,_transparent_78%)]" />
           <div className="absolute inset-0 bg-[#08090c]" style={{ opacity: 0.05 + easedProgress * 0.4 }} />
@@ -168,7 +168,7 @@ export function HeroSection({ downloadUrl }) {
     <div className="hidden max-[700px]:block" id="hero-mobile">
       <section ref={mobileSectionRef} className="relative h-[190svh] bg-[#08090c]">
         <div ref={mobileStageRef} className="sticky top-0 h-svh overflow-hidden bg-[#08090c] px-5 text-center text-white">
-          <div aria-hidden="true" className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center opacity-90 motion-safe:animate-pixel-scene motion-reduce:animate-none" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[url('/bgt1.png')] bg-cover bg-center opacity-90 motion-safe:animate-pixel-scene motion-reduce:animate-none" />
           <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,_rgb(5_7_12/.28)_0%,_rgb(5_7_12/.26)_28%,_rgb(4_8_18/.48)_48%,_rgb(4_8_18/.4)_68%,_rgb(8_9_12/.76)_100%)]" />
           <div aria-hidden="true" className="absolute inset-x-0 top-[28%] z-0 h-[44%] bg-[radial-gradient(ellipse_at_center,_rgb(4_8_18/.52)_0%,_rgb(4_8_18/.3)_45%,_transparent_78%)]" />
           <img src="/noyte-pixel-clouds.png" alt="" aria-hidden="true" draggable="false" className="pointer-events-none absolute left-[-12%] top-[12%] w-[124%] opacity-35 [image-rendering:pixelated] motion-safe:animate-pixel-clouds motion-reduce:animate-none" />

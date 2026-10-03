@@ -3,8 +3,8 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { getLicenseStatus } from '@/lib/license'
 import { AppAccess } from '@/app/components/AppAccess'
 import { BuyLicenseButton } from '@/app/components/BuyLicenseButton'
-import { FloatingNav } from '@/app/components/FloatingNav'
-import { HeroSection } from '@/app/components/HeroSection'
+import { DynamicIslandNav } from '@/app/components/DynamicIslandNav'
+import { HeroSpiral } from '@/app/components/HeroSpiral'
 import { ProductStory } from '@/app/components/ProductStory'
 import { FeatureBento } from '@/app/components/FeatureBento'
 import { BuiltForWork } from '@/app/components/BuiltForWork'
@@ -41,7 +41,7 @@ function MarketingPage({ downloadUrl }) {
   const ctaUrl = downloadUrl || '/download'
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#08090c] text-[#f1f3fa]">
+    <main id="top" className="min-h-screen overflow-x-clip bg-[#08090c] text-[#f1f3fa]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -56,8 +56,8 @@ function MarketingPage({ downloadUrl }) {
           })
         }}
       />
-      <FloatingNav downloadUrl={ctaUrl} />
-      <HeroSection downloadUrl={ctaUrl} />
+      <DynamicIslandNav downloadUrl={ctaUrl} />
+      <HeroSpiral downloadUrl={ctaUrl} />
 
       <ProductStory />
 
@@ -65,7 +65,7 @@ function MarketingPage({ downloadUrl }) {
 
       <BuiltForWork />
 
-      <section className="mx-auto mb-[130px] w-[min(1000px,calc(100%_-_48px))] border-t border-[#252a36] px-6 py-[100px] max-[600px]:mb-[90px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0 max-[600px]:py-[70px]" id="pricing">
+      <section className="mx-auto scroll-mt-[24px] w-[min(1000px,calc(100%_-_48px))] border-t border-[#252a36] px-6 py-[80px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0 max-[600px]:py-[58px]" id="pricing">
         <div className="mx-auto mb-12 max-w-[700px] text-center max-[600px]:mb-9">
           <span className="text-sm text-[#aab7d7]">Pricing</span>
           <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[48px]">Pay once.<br />Keep creating.</h2>
@@ -93,14 +93,14 @@ function MarketingPage({ downloadUrl }) {
               {['Moment suggestions and clip editing', 'Local Whisper transcription', 'Captions and social formats', 'Use on up to two devices', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[16px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
             </ul>
             <p className="mb-0 mt-6 max-w-[590px] text-[15px] leading-[1.6] text-[#c1c3cc] max-[600px]:text-[13px]">Use bundled Whisper locally, or choose OpenRouter when a cloud transcription workflow suits you.</p>
-            <Link href="/sign-up" className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[16px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white">Get the early-bird license</Link>
+            <Link href="/sign-up" className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[16px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get the early-bird license</Link>
             <small className="mt-4 block text-center text-[13px] text-[#a9a79f]">Yours to keep. Future updates included.</small>
-            <div className="mt-3 text-center text-[12px] text-[#a9acb7]">Already have Cutly? <Link href="/sign-in" className="text-[#c5cbe0] underline underline-offset-4">Log in</Link></div>
+            <div className="mt-3 text-center text-[12px] text-[#a9acb7]">Already have Cutly? <Link href="/sign-in" className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">Log in</Link></div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto mb-[104px] w-[min(688px,calc(100%_-_48px))] pt-[48px] max-[600px]:mb-[72px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:pt-6" id="faq">
+      <section className="mx-auto scroll-mt-[24px] w-[min(688px,calc(100%_-_48px))] py-[80px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:py-[58px]" id="faq">
         <div className="mx-auto max-w-[544px] text-center">
           <h2 className="m-0 text-[clamp(34px,4.32vw,51px)] font-medium leading-[1.02] tracking-[-.06em] text-[#f0f2f8] max-[600px]:text-[34px]">Frequently asked questions</h2>
           <p className="mx-auto mb-0 mt-4 max-w-[416px] text-[13px] leading-[1.6] text-[#9398a4]">Quick answers about Cutly, transcription, licensing, and getting started.</p>
@@ -112,20 +112,20 @@ function MarketingPage({ downloadUrl }) {
             ['Which computers can run Cutly?', 'Cutly supports macOS, Windows, and Linux.'],
             ['Where are exports saved?', 'Exported clips are currently saved in your Documents folder.']
           ].map(([question, answer]) => (
-            <details className="group  px-[19px] transition-colors duration-200  max-[600px]:px-[13px]" key={question}>
-              <summary className="flex min-h-[53px] cursor-pointer list-none items-center justify-between gap-4 text-[13px] font-medium text-[#e4e6ed] marker:hidden [&::-webkit-details-marker]:hidden max-[600px]:min-h-[48px] max-[600px]:text-[12px]">
+            <details className="group overflow-hidden rounded-[12px] border border-[#252a36] bg-white/[.015] px-[19px] transition-colors duration-200 hover:border-[#3b4352] focus-within:border-[#64708a] max-[600px]:px-[13px]" key={question}>
+              <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-[15px] font-medium text-[#e4e6ed] marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#a9c4ff] max-[600px]:min-h-[52px] max-[600px]:text-[14px]">
                 {question}
                 <svg className="h-[14px] w-[14px] shrink-0 text-[white] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </summary>
-              <p className="mb-0 max-w-[560px] pb-4 pr-8 text-[12px] leading-[1.7] text-[#9298a5]">{answer}</p>
+              <p className="mb-0 max-w-[560px] pb-4 pr-8 text-[14px] leading-[1.65] text-[#9298a5]">{answer}</p>
             </details>
           ))}
         </div>
-        <p className="mb-0 mt-[22px] text-center text-[12px] text-[#858d9d]">Need more help? <Link className="text-[#a9c4ff] underline-offset-4 hover:underline" href="/support">Contact support.</Link></p>
+        <p className="mb-0 mt-[22px] text-center text-[14px] text-[#a0a7b5]">Need more help? <Link className="rounded-sm text-[#b9ceff] underline underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]" href="/support">Contact support.</Link></p>
       </section>
 
-      <section className="relative mx-auto flex min-h-[520px] w-[min(1260px,calc(100%_-_48px))] flex-col items-center justify-center overflow-hidden rounded-[30px] border border-[#2b3140] bg-[linear-gradient(rgb(3_5_9/.48),rgb(3_5_9/.48)),url('/cutly-hero-moon.png')] bg-cover bg-[position:center_35%] text-center text-white shadow-[0_40px_100px_rgb(0_0_0/.3)] max-[600px]:min-h-[420px] max-[600px]:rounded-[18px]"><h2 className="relative z-10 m-0 text-[clamp(60px,8vw,104px)] font-medium leading-[.94] tracking-[-.07em] max-[600px]:text-[54px]">Make more of<br />every recording.</h2><a className="relative z-10 mt-[30px] rounded-[10px] border border-white/15 bg-[#f2f2ee] px-[21px] py-4 text-sm font-semibold text-[#0b0b0d]" href={ctaUrl}>Try Cutly for desktop</a></section>
-      <div className="mx-auto w-[min(1120px,calc(100%_-_48px))] text-[#687083] [&_footer]:mt-[55px] [&_footer]:border-[#252a36] [&_footer_a]:text-[#8c93a2]"><SiteFooter /></div>
+      <section className="relative mx-auto flex min-h-[520px] w-[min(1260px,calc(100%_-_48px))] flex-col items-center justify-center overflow-hidden rounded-[30px] border border-[#2b3140] bg-[linear-gradient(rgb(3_5_9/.48),rgb(3_5_9/.48)),url('/cutly-hero-moon.png')] bg-cover bg-[position:center_35%] text-center text-white shadow-[0_40px_100px_rgb(0_0_0/.3)] max-[600px]:min-h-[420px] max-[600px]:rounded-[18px]"><h2 className="relative z-10 m-0 text-[clamp(60px,8vw,104px)] font-medium leading-[.94] tracking-[-.07em] max-[600px]:text-[54px]">Make more of<br />every recording.</h2><a className="relative z-10 mt-[30px] rounded-[10px] border border-white/15 bg-[#f2f2ee] px-[21px] py-4 text-sm font-semibold text-[#0b0b0d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]" href={ctaUrl}>Try Cutly for desktop</a></section>
+      <div className="mx-auto w-[min(1120px,calc(100%_-_48px))] text-[#858d9d] [&_footer]:mt-[55px] [&_footer]:border-[#252a36] [&_footer_a]:text-[#8c93a2] [&_footer_a]:transition-colors [&_footer_a]:hover:text-[#f1f3fa] [&_footer_a]:focus-visible:rounded-sm [&_footer_a]:focus-visible:outline [&_footer_a]:focus-visible:outline-2 [&_footer_a]:focus-visible:outline-offset-2 [&_footer_a]:focus-visible:outline-[#a9c4ff]"><SiteFooter dark /></div>
     </main>
   )
 }

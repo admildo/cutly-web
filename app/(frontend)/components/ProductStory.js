@@ -79,7 +79,7 @@ export function ProductStory() {
   }
 
   return (
-    <section className="relative overflow-visible bg-[#080808] px-[clamp(24px,3.2vw,64px)] pt-[90px] pb-[96px] max-[900px]:px-6 max-[900px]:pt-[88px] max-[900px]:pb-[100px] max-[600px]:px-3 max-[600px]:pt-[72px] max-[600px]:pb-[84px]" id="features">
+    <section className="relative scroll-mt-[24px] overflow-visible bg-[#080808] px-[clamp(24px,3.2vw,64px)] pt-[78px] pb-[78px] max-[900px]:px-6 max-[900px]:pt-[68px] max-[900px]:pb-[72px] max-[600px]:px-3 max-[600px]:pt-[52px] max-[600px]:pb-[58px]" id="features">
       <h2 className="mx-auto mb-[54px] max-w-[760px] text-center font-serif text-[52px] font-normal leading-[.98] tracking-[-.055em] text-[#f0efe9] max-[900px]:mb-[58px] max-[900px]:text-[clamp(40px,4.05vw,60px)] max-[600px]:mb-[38px] max-[600px]:text-[clamp(36px,8vw,46px)] max-[600px]:tracking-[-.05em]">
         Cutly reads between<br />the frames
       </h2>
@@ -92,7 +92,7 @@ export function ProductStory() {
               aria-pressed={active === index}
               aria-controls={`cutly-story-panel-${index}`}
               data-active={active === index}
-              className="group relative grid w-full shrink-0 grid-cols-[38px_minmax(0,1fr)] gap-x-2 rounded-sm py-4 text-left text-[#777] opacity-45 transition-[color,opacity] duration-500 ease-[cubic-bezier(.2,.75,.25,1)] before:absolute before:left-[-1px] before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:origin-center before:scale-y-0 before:bg-[#f0efe9] before:transition-transform before:duration-500 before:ease-[cubic-bezier(.2,.75,.25,1)] before:content-[''] data-[active=true]:text-[#f0efe9] data-[active=true]:opacity-100 data-[active=true]:before:scale-y-100 hover:text-[#f0efe9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f0efe9] max-[900px]:grid-cols-[28px_minmax(0,1fr)] max-[900px]:py-3 max-[900px]:before:left-0 max-[900px]:before:h-7 max-[600px]:gap-x-2"
+              className="group relative grid w-full shrink-0 grid-cols-[38px_minmax(0,1fr)] gap-x-2 rounded-sm py-4 text-left text-[#8c93a2] transition-colors duration-500 ease-[cubic-bezier(.2,.75,.25,1)] before:absolute before:left-[-1px] before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:origin-center before:scale-y-0 before:bg-[#f0efe9] before:transition-transform before:duration-500 before:ease-[cubic-bezier(.2,.75,.25,1)] before:content-[''] data-[active=true]:text-[#f0efe9] data-[active=true]:before:scale-y-100 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f0efe9] max-[900px]:grid-cols-[28px_minmax(0,1fr)] max-[900px]:py-3 max-[900px]:before:left-0 max-[900px]:before:h-7 max-[600px]:gap-x-2"
               key={item.number}
               onClick={() => showStory(index)}
             >
@@ -148,11 +148,11 @@ export function ProductStory() {
                 aria-label={`Show feature ${item.number}: ${item.title}`}
                 aria-pressed={active === index}
                 onClick={() => showStory(index)}
-                className="group flex min-h-10 flex-col justify-center gap-2 text-left"
+                className="group flex min-h-10 flex-col justify-center gap-2 rounded-sm text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0efe9]"
                 key={item.number}
               >
-                <span className={`h-[2px] w-full rounded-full transition-colors duration-300 ${active === index ? 'bg-[#f0efe9]' : 'bg-white/20 group-hover:bg-white/45'}`} />
-                <span className={`text-[10px] tracking-[.12em] transition-colors duration-300 ${active === index ? 'text-[#f0efe9]' : 'text-[#747986]'}`}>{item.number}</span>
+                <span className={`h-[2px] w-full rounded-full transition-colors duration-300 ${active === index ? 'bg-[#f0efe9]' : 'bg-white/40 group-hover:bg-white/60'}`} />
+                <span className={`text-[10px] tracking-[.12em] transition-colors duration-300 ${active === index ? 'text-[#f0efe9]' : 'text-[#9ba2b0]'}`}>{item.number}</span>
               </button>
             ))}
           </nav>

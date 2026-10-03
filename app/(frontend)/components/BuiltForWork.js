@@ -35,7 +35,7 @@ const tools = [
 
 export function BuiltForWork() {
   return (
-    <section className="w-full bg-[#0d0d0d] px-[clamp(24px,5vw,84px)] py-[125px] max-[900px]:py-[100px] max-[600px]:px-5 max-[600px]:py-[76px]">
+    <section className="w-full bg-[#0d0d0d] px-[clamp(24px,5vw,84px)] py-[84px] max-[900px]:py-[72px] max-[600px]:px-5 max-[600px]:py-[54px]">
       <div className="mx-auto grid max-w-[1360px] grid-cols-[minmax(0,.78fr)_minmax(0,1.22fr)] gap-[clamp(64px,9vw,140px)] max-[900px]:grid-cols-1 max-[900px]:gap-12 max-[600px]:gap-9">
         <header className="max-w-[440px]">
           <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">The Cutly toolkit</span>

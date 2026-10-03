@@ -11,6 +11,8 @@ const isPublicRoute = createRouteMatcher([
   '/download(.*)',
   '/blog(.*)',
   '/updates(.*)',
+  // Read-only public configuration fetched by the desktop app.
+  '/catalogs(.*)',
   '/api/stripe/webhook(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
@@ -42,7 +44,7 @@ export default clerkMiddleware(
 
 export const config = {
   matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|avif|mp4|m4v|mov|webm|mp3|wav|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/((?!_next|catalogs/|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|avif|mp4|m4v|mov|webm|mp3|wav|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     '/(api|trpc)(.*)',
     '/__clerk/:path*'
   ]

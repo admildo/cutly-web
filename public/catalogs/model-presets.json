@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "presets": {
+    "recommended": {
+      "label": "Recommended",
+      "description": "Best balance of speed, quality, and cost.",
+      "modelIds": [
+        "openai/gpt-6-luna"
+      ],
+      "reasoningEffort": "medium"
+    },
+    "heavy": {
+      "label": "Heavy",
+      "description": "More thorough analysis for difficult requests.",
+      "modelIds": [
+        "openai/gpt-6.1-sol"
+      ],
+      "reasoningEffort": "medium"
+    },
+    "economy": {
+      "label": "Economy",
+      "description": "Lower cost for quick iterations.",
+      "modelIds": [
+        "openai/gpt-6-luna"
+      ],
+      "reasoningEffort": "low"
+    },
+    "custom": {
+      "label": "Custom",
+      "description": "Choose a specific model from the available list.",
+      "modelIds": [],
+      "reasoningEffort": null
+    }
+  }
+}
