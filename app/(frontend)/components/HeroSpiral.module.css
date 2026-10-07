@@ -156,7 +156,8 @@
   background: #171614;
   box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
   transform-origin: center;
-  backface-visibility: hidden;
+  /* Both surfaces must remain visible through this 3D wrapper. */
+  backface-visibility: visible;
   pointer-events: inherit;
 }
 
@@ -181,6 +182,37 @@
 
 .cardSurface video { object-fit: cover; }
 .cardReverse { transform: rotateY(180deg); }
+
+/* The eight tangent planes share one texture and meet along the paper curve. */
+.paperMedia, .paperFlat, .paperCurve {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.paperCurve { visibility: hidden; pointer-events: none; }
+.paperMedia[data-bending='true'] .paperFlat { visibility: hidden; }
+.paperMedia[data-bending='true'] .paperCurve { visibility: visible; }
+.cardFace:has(.paperMedia[data-bending='true']) { background: transparent; box-shadow: none; }
+.paperStrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform-origin: center;
+  transform-style: preserve-3d;
+}
+.paperTexture {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  background-color: #171614;
+  background-size: var(--paper-width) var(--paper-height);
+  background-position: var(--paper-x) var(--paper-offset);
+  background-repeat: no-repeat;
+}
+.paperReverse { transform: rotateY(180deg); }
+.paperVideo { display: block; width: 100%; height: 100%; }
 
 .projectLabel {
   position: fixed;
@@ -509,25 +541,25 @@
      The section remains in normal flow for the full scroll-linked transition. */
   .hero {
     height: 290vh;
-    height: 290lvh;
+    height: 290svh;
     min-height: 100vh;
-    min-height: 100lvh;
+    min-height: 100svh;
   }
   .scene {
     position: sticky;
     top: 0;
     height: 100vh;
-    height: 100lvh;
+    height: 100svh;
     min-height: min(500px, 100vh);
-    min-height: min(500px, 100lvh);
+    min-height: min(500px, 100svh);
     perspective: 820px;
     perspective-origin: 50% 48%;
   }
-  .cardMotion { width: clamp(72px, 20vw, 108px); }
+  .cardMotion { width: clamp(64px, 18vw, 92px); aspect-ratio: 0.82; }
   .cardMotion, .cardIdle, .cardParallax, .cardFace { pointer-events: none; }
   .cardFace { box-shadow: 0 12px 34px rgb(0 0 0 / 48%); }
-  .subject, .subjectGaze { bottom: -4dvh; bottom: -4lvh; height: 74dvh; height: 74lvh; }
-  .lowerMask { height: min(62dvh, 580px); height: min(62lvh, 580px); }
+  .subject, .subjectGaze { bottom: -4vh; bottom: -4svh; height: 68vh; height: 68svh; }
+  .lowerMask { height: min(62vh, 580px); height: min(62svh, 580px); }
   .scrollPrompt { right: 12px; bottom: 42px; left: 12px; }
   .downloadHeading { min-height: 1.1em; font-size: clamp(20px, 6vw, 28px); }
   .downloadButton { min-height: 48px; margin-top: 16px; font-size: 13px; }

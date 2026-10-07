@@ -5,6 +5,8 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import styles from './HeroSpiral.module.css'
+import { ScrollPaperMedia } from './ScrollPaperMedia'
+import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -111,43 +113,25 @@ function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) 
   const travel = progress
   const orbitDirection = rings && ringIndex === 1 ? -1 : 1
   const theta = angle + (orbitRotation + travel * Math.PI * 1.7) * orbitDirection
-  const radiusX = width * (mobile ? (rings ? 0.37 : 0.34) : (rings ? 0.35 : 0.31))
-  // Give each turn its own vertical space so the cards read as one helix.
-  // The ends extend past the scene instead of compressing every card into it.
-  const verticalSpan = height * (mobile ? 1.55 : 2.35)
-  const radiusZ = mobile ? Math.min(width * 0.48, 210) : Math.min(width * 0.28, 440)
+  const baseRadiusX = width * (mobile ? (rings ? 0.43 : 0.42) : (rings ? 0.35 : 0.31))
+  // Keep a consistent pitch between turns, with the ends outside the viewport.
+  const verticalSpan = height * (mobile ? 1.9 : 2.35)
+  const radiusZ = mobile ? Math.min(width * 0.42, 190) : Math.min(width * 0.28, 440)
   const ringY = (ringIndex - 1) * height * (mobile ? 0.4 : 0.65)
     + (ringIndex === 1 ? height * (mobile ? 0.08 : 0.12) : 0)
   const baseY = rings ? ringY : (position - 0.5) * verticalSpan
-  const orbitX = Math.cos(theta) * radiusX
-  const y = baseY - travel * height * 0.36 + (mobile ? height * 0.08 : 0)
+  const y = baseY - travel * height * 0.36 + (mobile ? height * 0.04 : 0)
+  const radiusX = getPortraitOrbitRadius(y, width, height, mobile, baseRadiusX)
+  const x = Math.cos(theta) * radiusX
   const z = Math.sin(theta) * radiusZ
   const frontDepth = (Math.sin(theta) + 1) / 2
-  const depthScale = 0.9 + frontDepth * 0.12
-  const perspective = mobile ? 820 : 1120
-  const projection = perspective / (perspective - z)
-  const cardWidth = mobile ? clamp(width * 0.2, 72, 108) : clamp(width * 0.1, 112, 156)
-  const halfCardWidth = cardWidth * depthScale * projection * 0.5
-  const halfCardHeight = halfCardWidth / 0.72
-  const faceCenterY = mobile ? -height * 0.03 : -height * 0.1
-  const faceCrossing = (1 - smoothstep(
-    width * (mobile ? 0.22 : 0.06) + halfCardWidth,
-    width * (mobile ? 0.3 : 0.16) + halfCardWidth,
-    Math.abs(orbitX * projection),
-  )) * (1 - smoothstep(
-    height * 0.08 + halfCardHeight,
-    height * 0.15 + halfCardHeight,
-    Math.abs(y * projection - faceCenterY),
-  ))
-  // Keep tiles on the helix while fading foreground tiles across the face.
-  // Moving alternating tiles sideways breaks the continuous spiral on narrow screens.
-  const faceAvoidance = faceCrossing * smoothstep(0.38, 0.76, frontDepth)
-  const x = orbitX
-  const scale = depthScale
+  const scale = 0.9 + frontDepth * 0.12
   const rotation = Math.sin(theta + 0.3) * 2
   const rotationY = 90 - theta * (180 / Math.PI)
   const rotationX = Math.cos(theta) * 3
-  const depthOpacity = (0.62 + frontDepth * 0.38) * (1 - faceAvoidance)
+  // Opaque cards retain their 3D surfaces and pass naturally in front of/behind
+  // the portrait. Fading at the face both breaks the helix and flattens the tile.
+  const depthOpacity = 1
 
   return { x, y, z, scale, rotation, rotationX, rotationY, opacity: depthOpacity }
 }
@@ -181,6 +165,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
   const headlinePromptActiveRef = useRef(false)
   const cardRefs = useRef([])
   const cardBendRefs = useRef([])
+  const paperMediaRefs = useRef([])
   const cardVideoRefs = useRef([])
   const idleRefs = useRef([])
   const parallaxRefs = useRef([])
@@ -252,26 +237,34 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         gazeElement.dataset.gaze = nextGaze
       }
       const getCardProgress = () => clamp(scrollState.progress / 0.52, 0, 1)
-      const bendCardTo = bendNodes.map((node, index) => gsap.quickTo(node, 'rotationX', {
-        duration: 0.24 + (index % 4) * 0.05,
-        ease: 'back.out(1.55)',
+      const bendTiltSetters = bendNodes.map((node) => gsap.quickSetter(node, 'rotationX', 'deg'))
+      const bendStates = bendNodes.map(() => ({ amount: 0 }))
+      const bendCardTo = bendStates.map((state, index) => gsap.quickTo(state, 'amount', {
+        duration: 0.2 + (index % 4) * 0.025,
+        ease: 'power2.out',
+        onUpdate: () => {
+          paperMediaRefs.current[index]?.setBend(state.amount)
+          bendTiltSetters[index](state.amount * 5)
+        },
       }))
       let bendSettleCall = null
       const applyScrollBend = (velocity) => {
         if (reducedMotion || Math.abs(velocity) < 12) return
 
-        const direction = Math.sign(velocity)
-        const intensity = 0.48 + 0.52 * clamp(Math.abs(velocity) / 800, 0, 1)
-        const bend = direction * (mobile ? 8 : 10) * intensity
+        // Small scrolls stay subtle; flicks produce a pronounced elastic bow.
+        const intensity = clamp(Math.abs(velocity) / (mobile ? 1600 : 2200), 0, 1)
+        const bend = Math.sign(velocity) * intensity
         bendCardTo.forEach((quickBend, index) => {
-          const cardWeight = 0.86 + (index % 5) * 0.07
-          bendNodes[index].style.transformOrigin = direction > 0 ? 'center 14%' : 'center 86%'
-          quickBend(bend * cardWeight)
+          quickBend.tween.duration(0.2 + (index % 4) * 0.025)
+          quickBend(bend * (0.86 + (index % 5) * 0.035))
         })
 
         bendSettleCall?.kill()
         bendSettleCall = gsap.delayedCall(0.18, () => {
-          bendCardTo.forEach((quickBend) => quickBend(0))
+          bendCardTo.forEach((quickBend, index) => {
+            quickBend.tween.duration(0.65 + (index % 4) * 0.035)
+            quickBend(0)
+          })
         })
       }
       const getFinalBackdropSize = () => {
@@ -374,9 +367,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           }
         })
 
-        // All visible, front-facing video cards play. IntersectionObserver keeps
-        // offscreen cards on their lightweight static posters.
-        const playingVideoCards = new Set(videoCandidates)
+        // Keep mobile decoder work bounded; remaining tiles show their posters.
+        // IntersectionObserver keeps offscreen videos paused on all devices.
+        const playingVideoCards = new Set(mobile ? videoCandidates.slice(0, 2) : videoCandidates)
         cardVideoRefs.current.forEach((video, index) => syncCardVideo(video, playingVideoCards.has(index)))
         positionHoverLabel()
       }
@@ -418,12 +411,12 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
 
       const orbitTween = reducedMotion ? null : gsap.to(orbitState, {
         rotation: Math.PI * 2,
-        duration: 52,
+        duration: mobile ? 40 : 52,
         repeat: -1,
         ease: 'none',
         onUpdate: () => renderCards(getCardProgress()),
       })
-      const idleTweens = reducedMotion ? [] : idleNodes.map((node, index) => gsap.to(node, {
+      const idleTweens = reducedMotion || mobile ? [] : idleNodes.map((node, index) => gsap.to(node, {
         y: index % 2 === 0 ? -2 : 2,
         rotationY: index % 2 === 0 ? 0.4 : -0.4,
         duration: 8 + (index % 5) * 0.65,
@@ -451,7 +444,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           else subjectIdleTween?.pause()
         }
 
-        const shouldOrbit = shouldAnimate && hoveredCardIndexRef.current === null
+        const shouldOrbit = shouldAnimate && (!mouseEffects || hoveredCardIndexRef.current === null)
         if (shouldOrbit !== orbitActive) {
           orbitActive = shouldOrbit
           if (shouldOrbit) orbitTween?.resume()
@@ -464,6 +457,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         renderCards(getCardProgress())
       }
       document.addEventListener('visibilitychange', onDocumentVisibilityChange)
+      window.addEventListener('pageshow', onDocumentVisibilityChange)
       syncMotionActivity()
 
       const timeline = gsap.timeline({
@@ -482,7 +476,6 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           scrub: 0.35,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (trigger) => applyScrollBend(trigger.getVelocity()),
           onRefresh: (trigger) => {
             const progress = trigger.animation?.progress() ?? trigger.progress
             updateNavigationIsland(progress)
@@ -586,10 +579,12 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       timeline.to(subjectMotion, {
         scale: mobile ? 1.025 : 1.045,
         y: mobile ? -9 : -24,
-        z: mobile ? 18 : 34,
-        rotationY: mobile ? 1.5 : 3.5,
-        rotationX: mobile ? -0.8 : -2.5,
-        opacity: 0.98,
+        // Keep the portrait on the orbit axis. Tilting its wide image plane
+        // through side tiles creates visibly sliced cards as scroll changes.
+        z: 0,
+        rotationY: 0,
+        rotationX: 0,
+        opacity: 1,
         duration: 0.59,
         ease: 'none',
       }, 0)
@@ -736,7 +731,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         clearHoveredCard()
       }
       resetPointerEffects = onPointerLeave
+      let lastScrollY = window.scrollY
+      let lastScrollTime = performance.now()
       const onPageScroll = () => {
+        const now = performance.now()
+        const delta = window.scrollY - lastScrollY
+        const velocity = delta * 1000 / Math.max(16, Math.min(100, now - lastScrollTime))
+        lastScrollY = window.scrollY
+        lastScrollTime = now
+        if (scrollState.progress < CARD_FADE_END) applyScrollBend(velocity)
         if (scrollState.progress >= GAZE_SCROLL_CUTOFF) {
           setSubjectGaze('center')
         }
@@ -749,7 +752,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       const onResize = () => {
         const nextWidth = sceneRef.current.clientWidth
         const nextHeight = sceneRef.current.clientHeight
-        // Mobile browser bars can resize the viewport without resizing the lvh scene.
+        // Mobile browser bars can resize the viewport without resizing the svh scene.
         if (nextWidth === width && nextHeight === height) return
         width = nextWidth
         height = nextHeight
@@ -807,9 +810,11 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         setIsCardHovered(false)
         setSubjectGaze('center')
         bendSettleCall?.kill()
+        paperMediaRefs.current.forEach((paper) => paper?.setBend(0))
         if (pointerFrame) window.cancelAnimationFrame(pointerFrame)
         videoVisibilityObserver?.disconnect()
         document.removeEventListener('visibilitychange', onDocumentVisibilityChange)
+        window.removeEventListener('pageshow', onDocumentVisibilityChange)
         cardVideoRefs.current.forEach((video) => video?.pause())
         sceneRef.current?.removeEventListener('pointermove', onPointerMove)
         sceneRef.current?.removeEventListener('pointerleave', onPointerLeave)
@@ -862,6 +867,13 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                         className={styles.cardFace}
                         ref={(node) => { faceRefs.current[index] = node }}
                       >
+                        <ScrollPaperMedia
+                          ref={(handle) => { paperMediaRefs.current[index] = handle }}
+                          src={src}
+                          poster={poster}
+                          type={type}
+                          videoRef={() => cardVideoRefs.current[index]}
+                        >
                         {[false, true].map((reverse) => (
                           <div
                             className={`${styles.cardSurface} ${reverse ? styles.cardReverse : ''}`}
@@ -888,6 +900,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                             )}
                           </div>
                         ))}
+                        </ScrollPaperMedia>
                       </div>
                     </div>
                   </div>
