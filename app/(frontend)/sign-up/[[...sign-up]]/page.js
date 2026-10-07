@@ -6,7 +6,7 @@ export const metadata = { title: 'Create account', robots: { index: false, follo
 
 export default async function SignUpPage({ searchParams }) {
   const params = await searchParams
-  const returnTo = normalizeInternalReturnPath(params?.returnTo || params?.redirect_url)
+  const returnTo = normalizeInternalReturnPath(params?.returnTo || params?.redirect_url || '/dashboard')
 
   return (
     <AuthLayout>

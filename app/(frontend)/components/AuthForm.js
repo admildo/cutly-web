@@ -17,7 +17,7 @@ function GoogleMark() {
   )
 }
 
-export function AuthForm({ mode = 'sign-in', returnTo = '/' }) {
+export function AuthForm({ mode = 'sign-in', returnTo = '/dashboard', oidcPrompt }) {
   const { isLoaded: authLoaded, isSignedIn } = useAuth()
   const { signIn } = useSignIn()
   const { signUp } = useSignUp()
@@ -43,6 +43,7 @@ export function AuthForm({ mode = 'sign-in', returnTo = '/' }) {
         strategy: 'oauth_google',
         redirectUrl: returnTo,
         redirectCallbackUrl: callbackUrl,
+        ...(oidcPrompt ? { oidcPrompt } : {}),
       })
 
       if (authError) setError(displayAuthError(authError))

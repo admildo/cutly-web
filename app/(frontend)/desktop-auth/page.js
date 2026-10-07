@@ -1,7 +1,8 @@
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { AuthForm } from '../components/AuthForm'
 import { AuthLayout } from '../components/AuthLayout'
+import { DesktopAuthChoice } from '../components/DesktopAuthChoice'
 import { normalizeInternalReturnPath } from '@/lib/auth-redirect'
 
 export const metadata = { title: 'Connecting to Deyn Studio', robots: { index: false, follow: false } }
@@ -23,7 +24,8 @@ const getCallback = (redirectUri, state) => {
 }
 
 export default async function DesktopAuthPage({ searchParams }) {
-  const { redirect_uri: redirectUri, state } = await searchParams
+  const params = await searchParams
+  const { redirect_uri: redirectUri, state } = params
   const callback = getCallback(redirectUri, state)
 
   if (!callback) {
@@ -53,10 +55,20 @@ export default async function DesktopAuthPage({ searchParams }) {
     const returnUrl = new URL('/desktop-auth', 'https://cutly.invalid')
     returnUrl.searchParams.set('redirect_uri', callback.toString())
     returnUrl.searchParams.set('state', state)
+    returnUrl.searchParams.set('continue', '1')
     const returnTo = normalizeInternalReturnPath(`${returnUrl.pathname}${returnUrl.search}`)
     return (
       <AuthLayout>
-        <AuthForm mode="sign-in" returnTo={returnTo} />
+        <AuthForm mode="sign-in" returnTo={returnTo} oidcPrompt="select_account" />
+      </AuthLayout>
+    )
+  }
+
+  if (params?.continue !== '1') {
+    const user = await currentUser()
+    return (
+      <AuthLayout>
+        <DesktopAuthChoice email={user?.primaryEmailAddress?.emailAddress || null} />
       </AuthLayout>
     )
   }

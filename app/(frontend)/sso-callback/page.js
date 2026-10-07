@@ -6,6 +6,6 @@ export const metadata = { title: 'Connecting your account', robots: { index: fal
 
 export default async function OAuthCallbackPage({ searchParams }) {
   const params = await searchParams
-  const returnTo = normalizeInternalReturnPath(params?.returnTo)
+  const returnTo = normalizeInternalReturnPath(params?.returnTo || '/dashboard')
   return <OAuthCallback returnTo={returnTo} />
 }

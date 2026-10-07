@@ -17,7 +17,7 @@ const navigationLinks = [
 
 const islandStateEvent = 'cutly:hero-island-state'
 
-export function DynamicIslandNav({ downloadUrl }) {
+export function DynamicIslandNav({ downloadUrl, isSignedIn = false }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -65,7 +65,7 @@ export function DynamicIslandNav({ downloadUrl }) {
             </nav>
 
             <div className="col-start-3 flex shrink-0 items-center justify-self-end gap-1.5 max-[760px]:hidden">
-              <Link href="/sign-in" className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full px-3 text-[12px] font-semibold text-white/90 no-underline transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">Log in</Link>
+              <Link href={isSignedIn ? '/dashboard' : '/sign-in'} className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full px-3 text-[12px] font-semibold text-white/90 no-underline transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
               <Link href={ctaUrl} className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full bg-[#f4f3ef] px-[14px] text-[12px] font-semibold text-[#111216] no-underline shadow-[0_2px_10px_rgb(0_0_0/.18)] transition-[transform,background-color] hover:-translate-y-px hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</Link>
             </div>
 
@@ -95,7 +95,7 @@ export function DynamicIslandNav({ downloadUrl }) {
                 <Link key={label} href={href} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="flex min-h-[42px] items-center rounded-[13px] px-3 text-[13px] font-medium text-white/75 no-underline transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:bg-white/[0.07] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white/70">{label}</Link>
                 ))}
                 <div className="mt-1 grid grid-cols-2 gap-2 pt-2">
-                  <Link href="/sign-in" onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-semibold text-white no-underline transition-colors hover:bg-white/[0.11] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">Log in</Link>
+                  <Link href={isSignedIn ? '/dashboard' : '/sign-in'} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-semibold text-white no-underline transition-colors hover:bg-white/[0.11] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
                   <Link href={ctaUrl} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-[#f4f3ef] text-[12px] font-semibold text-[#111216] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</Link>
                 </div>
               </nav>

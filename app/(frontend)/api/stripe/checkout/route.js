@@ -42,8 +42,8 @@ export async function POST(request) {
       customer_email: user?.primaryEmailAddress?.emailAddress || undefined,
       client_reference_id: userId,
       metadata: { clerkUserId: userId, licenseType: 'lifetime' },
-      success_url: `${configuredOrigin}/?checkout=success`,
-      cancel_url: `${configuredOrigin}/?checkout=cancelled`
+      success_url: `${configuredOrigin}/dashboard?checkout=success`,
+      cancel_url: `${configuredOrigin}/dashboard?checkout=cancelled`
     })
 
     return Response.json({ url: session.url })

@@ -6,7 +6,7 @@ export const metadata = { title: 'Sign in', robots: { index: false, follow: fals
 
 export default async function SignInPage({ searchParams }) {
   const params = await searchParams
-  const returnTo = normalizeInternalReturnPath(params?.returnTo || params?.redirect_url)
+  const returnTo = normalizeInternalReturnPath(params?.returnTo || params?.redirect_url || '/dashboard')
 
   return (
     <AuthLayout>
