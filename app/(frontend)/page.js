@@ -6,18 +6,20 @@ import { BuyLicenseButton } from '@/app/components/BuyLicenseButton'
 import { DynamicIslandNav } from '@/app/components/DynamicIslandNav'
 import { HeroSpiral } from '@/app/components/HeroSpiral'
 import { ProductStory } from '@/app/components/ProductStory'
+import { MediaAssistantTools } from '@/app/components/MediaAssistantTools'
 import { FeatureBento } from '@/app/components/FeatureBento'
 import { BuiltForWork } from '@/app/components/BuiltForWork'
 import { SiteFooter, SiteHeader } from '@/app/components/SiteChrome'
+import { FAQSection } from '@/app/components/FAQSection'
 import { RefreshLicenseStatusButton } from '@/app/components/RefreshLicenseStatusButton'
 import { AccountMenu } from '@/app/components/AccountMenu'
 import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
 
 export const metadata = createPageMetadata({
-  title: 'Turn Long Videos Into Shareable Clips',
-  description: 'Cutly is a desktop video clip editor that helps creators find moments, add captions, reframe, and export short clips from long videos.',
+  title: 'A Desktop Workspace for Media Editing',
+  description: 'Deyn Studio brings assistant-guided editing, video workflows, audio and image tools, and document utilities into one desktop workspace.',
   path: '/',
-  image: { url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Cutly desktop video clip editor' }
+  image: { url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop media workspace' }
 })
 
 const safeExternalUrl = (value) => {
@@ -48,10 +50,10 @@ function MarketingPage({ downloadUrl }) {
           __html: serializeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'SoftwareApplication',
-            name: 'Cutly',
+            name: 'Deyn Studio',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'macOS, Windows, Linux',
-            description: 'A desktop video clip editor for finding moments, adding captions, reframing, and exporting short clips from long videos.',
+            description: 'A desktop media editing and automation workspace with assistant-guided workflows, video, audio, image, and document tools.',
             url: siteOrigin
           })
         }}
@@ -61,70 +63,46 @@ function MarketingPage({ downloadUrl }) {
 
       <ProductStory />
 
+      <MediaAssistantTools />
+
       <FeatureBento />
 
       <BuiltForWork />
 
-      <section className="mx-auto scroll-mt-[24px] w-[min(1000px,calc(100%_-_48px))] border-t border-[#252a36] px-6 py-[80px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0 max-[600px]:py-[58px]" id="pricing">
+      <section className="mx-auto scroll-mt-[24px] w-[min(1000px,calc(100%_-_48px))] border-t border-[#252a36] px-6 py-[clamp(88px,8vw,112px)] max-[700px]:py-[clamp(64px,10vw,72px)] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0" id="pricing">
         <div className="mx-auto mb-12 max-w-[700px] text-center max-[600px]:mb-9">
           <span className="text-sm text-[#aab7d7]">Pricing</span>
           <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[48px]">Pay once.<br />Keep creating.</h2>
-          <p className="mx-auto mb-0 mt-5 max-w-[480px] text-[15px] leading-[1.7] text-[#9398a4]">A lifetime Cutly license for your account, with future desktop updates included.</p>
+          <p className="mx-auto mb-0 mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[#9398a4]">Get the full Deyn Studio workspace at a special one-time launch price, with future desktop updates and use on up to two devices.</p>
         </div>
         <div className="relative mx-auto max-w-[760px] max-[600px]:max-w-none">
           <div aria-hidden="true" className="pointer-events-none absolute -inset-8 rounded-[42px] bg-[radial-gradient(ellipse_at_50%_38%,rgb(157_139_103/.14),transparent_72%)] blur-2xl" />
           <div className="relative overflow-hidden rounded-[28px] border border-[#494947] bg-[linear-gradient(145deg,#2b2b2a,#20201f_55%,#171716)] p-10 shadow-[0_32px_90px_rgb(0_0_0/.48)] backdrop-blur-2xl max-[600px]:rounded-[20px] max-[600px]:p-6">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex rounded-full border border-[#a48c5e]/35 bg-[#a48c5e]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Early bird</span>
-              <span className="inline-flex rounded-full border border-[#8e9b7a]/35 bg-[#8e9b7a]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#d5dfc1]">Save $40 · 58% off</span>
+              <span className="inline-flex rounded-full border border-[#a48c5e]/35 bg-[#a48c5e]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Launch offer</span>
+              <span className="inline-flex rounded-full border border-[#8e9b7a]/35 bg-[#8e9b7a]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#d5dfc1]">Special one-time price</span>
             </div>
-            <h2 className="mb-0 mt-6 text-[30px] font-semibold leading-[1.12] tracking-[-.045em] text-[#f1f1f4] max-[600px]:mt-5 max-[600px]:text-[25px]">Make more of every recording</h2>
-            <p className="mb-0 mt-3 max-w-[590px] text-[17px] leading-[1.55] text-[#c1c3cc] max-[600px]:text-[15px]">Own Cutly outright at the reduced early-bird price.</p>
+            <h2 className="mb-0 mt-6 text-[30px] font-semibold leading-[1.12] tracking-[-.045em] text-[#f1f1f4] max-[600px]:mt-5 max-[600px]:text-[25px]">A launch offer on the whole workspace.</h2>
+            <p className="mb-0 mt-3 max-w-[590px] text-[17px] leading-[1.55] text-[#c1c3cc] max-[600px]:text-[15px]">Get the desktop license once, then use Deyn Studio on up to two devices.</p>
             <div className="mt-6 flex flex-wrap items-end gap-x-4 gap-y-1 text-[#f4f2ed]">
-              <span className="text-[68px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[58px]">$29</span>
-              <span className="mb-2 inline-flex items-baseline gap-2 text-[12px] text-[#a8a7a1]">
-                <span>Was</span>
-                <s className="text-[21px] decoration-[#9a9992] decoration-1">$69</s>
-              </span>
+              <span className="text-[68px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[58px]">€39</span>
             </div>
-            <p className="mb-0 mt-2 text-[13px] font-medium tracking-[.01em] text-[#b8b6ae]">One-time payment · Lifetime license</p>
+            <p className="mb-0 mt-2 text-[13px] font-medium tracking-[.01em] text-[#b8b6ae]">Special launch price · One-time lifetime license</p>
             <div className="my-7 h-px bg-white/[0.12]" />
             <ul className="mb-0 mt-0 grid list-none gap-4 p-0 text-[16px] text-[#ececf0] max-[600px]:gap-3.5 max-[600px]:text-[14px]">
-              {['Moment suggestions and clip editing', 'Local Whisper transcription', 'Captions and social formats', 'Use on up to two devices', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[16px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
+              {['Assistant-guided editing workflows', 'Video, audio, image, and document tools', 'Bundled local Whisper transcription', 'Use on up to two devices', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[16px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
             </ul>
-            <p className="mb-0 mt-6 max-w-[590px] text-[15px] leading-[1.6] text-[#c1c3cc] max-[600px]:text-[13px]">Use bundled Whisper locally, or choose OpenRouter when a cloud transcription workflow suits you.</p>
-            <Link href="/sign-up" className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[16px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get the early-bird license</Link>
-            <small className="mt-4 block text-center text-[13px] text-[#a9a79f]">Yours to keep. Future updates included.</small>
-            <div className="mt-3 text-center text-[12px] text-[#a9acb7]">Already have Cutly? <Link href="/sign-in" className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">Log in</Link></div>
+            <p className="mb-0 mt-6 max-w-[620px] text-[14px] leading-[1.65] text-[#c1c3cc]">The license covers Deyn Studio and desktop updates. A limited sponsored AI trial is metered; after it, supported AI features can use your own OpenRouter key, with provider usage billed separately. Local Whisper transcription runs on your device without a per-use provider fee.</p>
+            <Link href="/sign-up" className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[16px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get the launch price</Link>
+            <small className="mt-4 block text-center text-[13px] text-[#a9a79f]">For macOS, Windows, and Linux.</small>
+            <div className="mt-3 text-center text-[12px] text-[#a9acb7]">Already have Deyn Studio? <Link href="/sign-in" className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">Log in</Link></div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto scroll-mt-[24px] w-[min(688px,calc(100%_-_48px))] py-[80px] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:py-[58px]" id="faq">
-        <div className="mx-auto max-w-[544px] text-center">
-          <h2 className="m-0 text-[clamp(34px,4.32vw,51px)] font-medium leading-[1.02] tracking-[-.06em] text-[#f0f2f8] max-[600px]:text-[34px]">Frequently asked questions</h2>
-          <p className="mx-auto mb-0 mt-4 max-w-[416px] text-[13px] leading-[1.6] text-[#9398a4]">Quick answers about Cutly, transcription, licensing, and getting started.</p>
-        </div>
-        <div className="mt-[43px] grid gap-2 max-[600px]:mt-[29px]">
-          {[
-            ['What does Cutly do?', 'Cutly turns longer videos into shorter clips. It helps you transcribe, find moments, caption, reframe, and export.'],
-            ['Can Cutly transcribe locally?', 'Yes. Cutly bundles Whisper for local transcription and also supports OpenRouter as a cloud option.'],
-            ['Which computers can run Cutly?', 'Cutly supports macOS, Windows, and Linux.'],
-            ['Where are exports saved?', 'Exported clips are currently saved in your Documents folder.']
-          ].map(([question, answer]) => (
-            <details className="group overflow-hidden rounded-[12px] border border-[#252a36] bg-white/[.015] px-[19px] transition-colors duration-200 hover:border-[#3b4352] focus-within:border-[#64708a] max-[600px]:px-[13px]" key={question}>
-              <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-[15px] font-medium text-[#e4e6ed] marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#a9c4ff] max-[600px]:min-h-[52px] max-[600px]:text-[14px]">
-                {question}
-                <svg className="h-[14px] w-[14px] shrink-0 text-[white] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </summary>
-              <p className="mb-0 max-w-[560px] pb-4 pr-8 text-[14px] leading-[1.65] text-[#9298a5]">{answer}</p>
-            </details>
-          ))}
-        </div>
-        <p className="mb-0 mt-[22px] text-center text-[14px] text-[#a0a7b5]">Need more help? <Link className="rounded-sm text-[#b9ceff] underline underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]" href="/support">Contact support.</Link></p>
-      </section>
+      <FAQSection />
 
-      <section className="relative mx-auto flex min-h-[520px] w-[min(1260px,calc(100%_-_48px))] flex-col items-center justify-center overflow-hidden rounded-[30px] border border-[#2b3140] bg-[linear-gradient(rgb(3_5_9/.48),rgb(3_5_9/.48)),url('/cutly-hero-moon.png')] bg-cover bg-[position:center_35%] text-center text-white shadow-[0_40px_100px_rgb(0_0_0/.3)] max-[600px]:min-h-[420px] max-[600px]:rounded-[18px]"><h2 className="relative z-10 m-0 text-[clamp(60px,8vw,104px)] font-medium leading-[.94] tracking-[-.07em] max-[600px]:text-[54px]">Make more of<br />every recording.</h2><a className="relative z-10 mt-[30px] rounded-[10px] border border-white/15 bg-[#f2f2ee] px-[21px] py-4 text-sm font-semibold text-[#0b0b0d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]" href={ctaUrl}>Try Cutly for desktop</a></section>
+      <section className="relative mx-auto flex min-h-[520px] w-[min(1260px,calc(100%_-_48px))] flex-col items-center justify-center overflow-hidden rounded-[30px] border border-[#2b3140] bg-[linear-gradient(rgb(3_5_9/.48),rgb(3_5_9/.48)),url('/cutly-hero-moon.png')] bg-cover bg-[position:center_35%] text-center text-white shadow-[0_40px_100px_rgb(0_0_0/.3)] max-[600px]:min-h-[420px] max-[600px]:rounded-[18px]"><h2 className="relative z-10 m-0 text-[clamp(60px,8vw,104px)] font-medium leading-[.94] tracking-[-.07em] max-[600px]:text-[54px]">Make more of<br />every recording.</h2><a className="relative z-10 mt-[30px] rounded-[10px] border border-white/15 bg-[#f2f2ee] px-[21px] py-4 text-sm font-semibold text-[#0b0b0d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]" href={ctaUrl}>Try Deyn Studio for desktop</a></section>
       <div className="mx-auto w-[min(1120px,calc(100%_-_48px))] text-[#858d9d] [&_footer]:mt-[55px] [&_footer]:border-[#252a36] [&_footer_a]:text-[#8c93a2] [&_footer_a]:transition-colors [&_footer_a]:hover:text-[#f1f3fa] [&_footer_a]:focus-visible:rounded-sm [&_footer_a]:focus-visible:outline [&_footer_a]:focus-visible:outline-2 [&_footer_a]:focus-visible:outline-offset-2 [&_footer_a]:focus-visible:outline-[#a9c4ff]"><SiteFooter dark /></div>
     </main>
   )
@@ -146,7 +124,7 @@ function LicensePanel({ license, licenseError, checkoutState }) {
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#807e7e]/40 p-6 sm:p-8">
           <div>
             <p className="text-sm font-medium text-[#a6a4a4]">Your plan</p>
-            <h2 className="mt-1 text-2xl font-medium tracking-[-0.03em]">{license.plan || 'Cutly license'}</h2>
+            <h2 className="mt-1 text-2xl font-medium tracking-[-0.03em]">{license.plan || 'Deyn Studio license'}</h2>
           </div>
           <span className="rounded-full bg-[#cccbca] px-3 py-1.5 text-xs font-semibold text-[#171716]">Active</span>
         </div>
@@ -175,7 +153,7 @@ function LicensePanel({ license, licenseError, checkoutState }) {
       <div className="mt-10 rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-6 sm:p-8">
         <p className="text-sm font-medium text-[#a6a4a4]">License {state.toLowerCase()}</p>
         <h2 className="mt-2 text-2xl font-medium tracking-[-0.03em]">Your previous license is {state.toLowerCase()}.</h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#a6a4a4]">{license.message || 'Contact Cutly support if you think this status is incorrect.'}</p>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-[#a6a4a4]">{license.message || 'Contact Deyn Studio support if you think this status is incorrect.'}</p>
         <Link href="/support" className="mt-5 inline-flex rounded-full border border-[#807e7e] px-5 py-3 text-sm font-medium text-[#cccbca] transition hover:border-[#cccbca] hover:text-[#f2f0ef]">Contact support</Link>
       </div>
     )
@@ -184,7 +162,7 @@ function LicensePanel({ license, licenseError, checkoutState }) {
   return (
     <div className="mt-10 rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-6 sm:p-8">
       <p className="text-sm font-medium text-[#a6a4a4]">No license yet</p>
-      <h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Get Cutly on your account.</h2>
+      <h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Get Deyn Studio on your account.</h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-[#a6a4a4]">A one-time license includes future desktop updates and use on up to two devices.</p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <BuyLicenseButton />
@@ -202,7 +180,7 @@ function AccountDashboard({ user, license, licenseError, checkoutState, download
         <SiteHeader dashboard><div className="flex items-center gap-3"><span className="hidden text-sm text-[#a6a4a4] sm:block">{user?.primaryEmailAddress?.emailAddress}</span><AccountMenu /></div></SiteHeader>
         <section className="py-12 sm:py-16">
           <p className="text-xs font-semibold tracking-[0.16em] text-[#a6a4a4]">ACCOUNT & LICENSING</p>
-          <div className="mt-4 flex flex-wrap items-end justify-between gap-6"><div><h1 className="text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Your license</h1><p className="mt-3 text-base text-[#a6a4a4]">A clear view of what is active on your Cutly account.</p></div><p className="text-sm text-[#807e7e]">{user?.firstName ? `Welcome back, ${user.firstName}.` : 'Cutly account'}</p></div>
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-6"><div><h1 className="text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Your license</h1><p className="mt-3 text-base text-[#a6a4a4]">A clear view of what is active on your Deyn Studio account.</p></div><p className="text-sm text-[#807e7e]">{user?.firstName ? `Welcome back, ${user.firstName}.` : 'Deyn Studio account'}</p></div>
           <LicensePanel license={license} licenseError={licenseError} checkoutState={checkoutState} />
           <div className="mt-10"><AppAccess downloadUrl={downloadUrl} licensed={Boolean(license?.licensed)} /></div>
         </section>

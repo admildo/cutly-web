@@ -2,7 +2,8 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
 }
 

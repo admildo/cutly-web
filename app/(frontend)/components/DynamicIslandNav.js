@@ -49,8 +49,8 @@ export function DynamicIslandNav({ downloadUrl }) {
       <div className={`pointer-events-auto relative mx-auto w-[460px] max-w-[calc(100vw-24px)] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'translate-y-2' : 'translate-y-0'} ${isMenuOpen ? 'max-[760px]:w-[280px]' : 'max-[760px]:w-[190px]'}`}>
         <div className={`relative transition-[border-radius,background-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'overflow-hidden rounded-[30px] bg-[linear-gradient(180deg,rgb(255_255_255/.12),rgb(255_255_255/.05))] shadow-[0_10px_30px_rgb(0_0_0/.14)] backdrop-blur-[8px] backdrop-saturate-105 max-[760px]:rounded-[27px]' : 'overflow-visible rounded-none bg-transparent shadow-none backdrop-blur-0'}`}>
           <div className={`relative z-10 grid grid-cols-[auto_1fr_auto] items-center transition-[height,padding] duration-[620ms] ease-[cubic-bezier(.65,0,.35,1)] ${isScrolled ? 'h-[60px] px-5 max-[760px]:h-[56px] max-[760px]:px-3' : 'h-[68px] px-4 max-[760px]:h-[56px] max-[760px]:px-1'}`}>
-            <Link href="#top" aria-label="Cutly home" onClick={closeMenu} className="flex shrink-0 items-center rounded-sm text-sm font-semibold tracking-[-.035em] text-white no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80">
-              <span>Cutly</span>
+            <Link href="#top" aria-label="Deyn Studio home" onClick={closeMenu} className="flex shrink-0 items-center rounded-sm text-sm font-semibold tracking-[-.035em] text-white no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80">
+              <span>Deyn Studio</span>
             </Link>
 
             <nav aria-label="Primary navigation" className="flex items-center justify-self-center gap-[14px] whitespace-nowrap text-[12px] font-medium text-white/70 max-[760px]:hidden">

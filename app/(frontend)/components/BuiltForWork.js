@@ -28,17 +28,17 @@ const tools = [
   },
   {
     title: 'A growing set of tools',
-    description: 'More focused utilities keep joining Cutly’s desktop toolbox.',
+    description: 'More focused utilities keep joining the Deyn Studio desktop workspace.',
     Icon: Toolbox
   }
 ]
 
 export function BuiltForWork() {
   return (
-    <section className="w-full bg-[#0d0d0d] px-[clamp(24px,5vw,84px)] py-[84px] max-[900px]:py-[72px] max-[600px]:px-5 max-[600px]:py-[54px]">
+    <section className="w-full bg-[#0d0d0d] px-[clamp(24px,5vw,84px)] py-[clamp(88px,8vw,112px)] max-[700px]:py-[clamp(64px,10vw,72px)] max-[600px]:px-5">
       <div className="mx-auto grid max-w-[1360px] grid-cols-[minmax(0,.78fr)_minmax(0,1.22fr)] gap-[clamp(64px,9vw,140px)] max-[900px]:grid-cols-1 max-[900px]:gap-12 max-[600px]:gap-9">
         <header className="max-w-[440px]">
-          <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">The Cutly toolkit</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">The Deyn Studio toolkit</span>
           <h2 className="mb-0 mt-5 font-serif text-[clamp(48px,5.5vw,68px)] font-normal leading-[.98] tracking-[-.06em] text-[#f0efe9] max-[600px]:text-[46px]">Many more<br />features.</h2>
           <p className="mb-0 mt-6 max-w-[390px] text-[16px] leading-[1.7] text-[#969aa5]">A growing set of practical tools for the work around every video.</p>
         </header>

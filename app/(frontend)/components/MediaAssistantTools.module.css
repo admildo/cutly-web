@@ -1,0 +1,82 @@
+.stackCard {
+  width: 69.66%;
+  transform-origin: center;
+  transition:
+    transform 700ms cubic-bezier(.2, .8, .2, 1),
+    filter 700ms cubic-bezier(.2, .8, .2, 1),
+    opacity 700ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.stackCard[data-position='active'] {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+
+.stackCard[data-position='right'] {
+  transform: translate3d(-27%, -44%, 0) scale(.9) rotate(5deg);
+}
+
+.stackCard[data-position='left'] {
+  transform: translate3d(-73%, -46%, 0) scale(.9) rotate(-5deg);
+}
+
+.titleAnimation {
+  animation: titleSlideRotate 700ms cubic-bezier(.2, .8, .2, 1) both;
+  transform-origin: 50% 100%;
+}
+
+.descriptionAnimation {
+  animation: descriptionBlurIn 650ms cubic-bezier(.2, .8, .2, 1) 90ms both;
+}
+
+@keyframes titleSlideRotate {
+  from {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translate3d(0, 24px, 0) rotateX(-16deg) rotateZ(-2deg);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) rotateX(0) rotateZ(0);
+  }
+}
+
+@keyframes descriptionBlurIn {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate3d(0, 10px, 0);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stackCard,
+  .titleAnimation,
+  .descriptionAnimation {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .stackCard[data-position='right'] {
+    transform: translate3d(-36%, -44%, 0) scale(.9) rotate(5deg);
+  }
+
+  .stackCard[data-position='left'] {
+    transform: translate3d(-64%, -46%, 0) scale(.9) rotate(-5deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .stackCard {
+    width: 77.4%;
+  }
+}

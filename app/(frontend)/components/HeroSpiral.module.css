@@ -19,6 +19,43 @@
   background: #05070d;
 }
 
+.scene[data-mouse-effects='true'][data-pointer-active='true'] { cursor: none; }
+.scene[data-mouse-effects='true'] :is(a, button, video[controls]) { cursor: pointer; }
+
+.mouseCursor {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms ease, visibility 160ms;
+}
+
+.mouseCursor[data-active='true'] { opacity: 1; visibility: visible; }
+
+.cursorDot,
+.cursorRing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cursorDot { width: 6px; height: 6px; background: #f4f3ef; }
+.cursorRing {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgb(244 243 239 / 45%);
+  transition: width 240ms ease, height 240ms ease, border-color 240ms ease;
+}
+.mouseCursor[data-hovered='true'] .cursorRing {
+  width: 60px;
+  height: 60px;
+  border-color: rgb(244 243 239 / 80%);
+}
+
 .backdrop {
   position: absolute;
   z-index: 0;
@@ -86,8 +123,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(100px, 9vw, 136px);
-  aspect-ratio: 0.78;
+  width: clamp(112px, 10vw, 156px);
+  aspect-ratio: 0.72;
   pointer-events: auto;
   transform-style: preserve-3d;
   transform-origin: center;
@@ -96,6 +133,7 @@
 
 .cardIdle,
 .cardParallax,
+.cardBend,
 .cardFace {
   width: 100%;
   height: 100%;
@@ -104,18 +142,22 @@
 
 .cardIdle,
 .cardParallax {
-  pointer-events: auto;
+  pointer-events: inherit;
+}
+
+.cardBend {
+  transform-origin: center;
+  will-change: transform;
 }
 
 .cardFace {
   position: relative;
   overflow: visible;
-  border: 1px solid rgb(255 255 255 / 48%);
   background: #171614;
-  box-shadow: 0 18px 55px rgb(0 0 0 / 44%), 0 2px 10px rgb(0 0 0 / 34%);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
   transform-origin: center;
   backface-visibility: hidden;
-  pointer-events: auto;
+  pointer-events: inherit;
 }
 
 .cardSurface {
@@ -143,54 +185,64 @@
 .projectLabel {
   position: fixed;
   z-index: 1000;
-  display: grid;
+  top: 0;
+  left: 0;
   width: max-content;
-  min-width: 142px;
-  max-width: min(190px, calc(100vw - 24px));
-  gap: 5px;
-  padding: 11px 14px 12px;
-  border: 1px solid rgb(255 255 255 / 20%);
-  border-radius: 13px;
-  background: linear-gradient(145deg, rgb(34 36 40 / 94%), rgb(9 10 12 / 90%));
-  box-shadow: 0 14px 34px rgb(0 0 0 / 40%), inset 0 1px rgb(255 255 255 / 8%);
+  min-width: 168px;
+  max-width: min(224px, calc(100vw - 24px));
   color: #fff;
   text-align: left;
-  backdrop-filter: blur(18px) saturate(130%);
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, -50%) translateY(7px) scale(0.97);
-  transition:
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    visibility 180ms;
+  transition: opacity 180ms ease, visibility 180ms;
   pointer-events: none;
+  will-change: transform;
 }
 
 .projectLabelVisible {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, -50%) translateY(0) scale(1);
 }
 
-.projectLabelMeta {
+.projectLabelContent {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 11px;
+  padding: 12px 18px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(255 255 255 / 18%), rgb(255 255 255 / 7%));
+  box-shadow: 0 10px 30px rgb(0 0 0 / 18%), inset 0 1px rgb(255 255 255 / 12%);
+  backdrop-filter: blur(20px) saturate(130%);
+  transform: translateY(6px) scale(0.94);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.projectLabelDot {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  border-radius: 50%;
-  background: #c5d2f1;
-  box-shadow: 0 0 10px rgb(197 210 241 / 45%);
+.projectLabelVisible .projectLabelContent { transform: translateY(0) scale(1); }
+.projectLabelIcon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+.projectLabelText { display: grid; min-width: 0; gap: 3px; }
 
-.projectTitle,
-.projectCategory { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.projectTitle { display: block; font-size: 13px; font-weight: 600; line-height: 1.2; }
-.projectCategory { color: rgb(237 241 249 / 70%); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; line-height: 1.1; text-transform: uppercase; }
+.projectTitle, .projectCategory {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 180ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.projectTitle { font-size: 14px; font-weight: 500; line-height: 1.2; }
+.projectCategory { color: rgb(237 241 249 / 68%); font-size: 12px; line-height: 1.2; }
+.projectLabelVisible :is(.projectTitle, .projectCategory) { opacity: 1; transform: translateY(0); }
+.projectLabelVisible .projectCategory { transition-delay: 45ms; }
 
 .subjectMotion,
 .subjectIdle,
@@ -232,14 +284,22 @@
 }
 
 .subjectGazeVariant {
+  /* Swap poses directly: crossfading exposes multiple pupil positions. */
   opacity: 0;
-  transition: opacity 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .subjectGaze[data-gaze='left'] [data-gaze-direction='left'],
 .subjectGaze[data-gaze='right'] [data-gaze-direction='right'],
 .subjectGaze[data-gaze='up'] [data-gaze-direction='up'],
-.subjectGaze[data-gaze='down'] [data-gaze-direction='down'] {
+.subjectGaze[data-gaze='down'] [data-gaze-direction='down'],
+.subjectGaze[data-gaze='slight-left'] [data-gaze-direction='slight-left'],
+.subjectGaze[data-gaze='slight-right'] [data-gaze-direction='slight-right'],
+.subjectGaze[data-gaze='slight-up'] [data-gaze-direction='slight-up'],
+.subjectGaze[data-gaze='slight-down'] [data-gaze-direction='slight-down'],
+.subjectGaze[data-gaze='up-left'] [data-gaze-direction='up-left'],
+.subjectGaze[data-gaze='up-right'] [data-gaze-direction='up-right'],
+.subjectGaze[data-gaze='down-left'] [data-gaze-direction='down-left'],
+.subjectGaze[data-gaze='down-right'] [data-gaze-direction='down-right'] {
   opacity: 1;
 }
 
@@ -463,28 +523,32 @@
     perspective: 820px;
     perspective-origin: 50% 48%;
   }
-  .cardMotion { width: clamp(60px, 16vw, 92px); }
-  .camera > .cardMotion:nth-child(n + 20) { display: none; }
+  .cardMotion { width: clamp(72px, 20vw, 108px); }
   .cardMotion, .cardIdle, .cardParallax, .cardFace { pointer-events: none; }
-  .cardFace { border-color: rgb(255 255 255 / 38%); box-shadow: 0 12px 34px rgb(0 0 0 / 48%); }
+  .cardFace { box-shadow: 0 12px 34px rgb(0 0 0 / 48%); }
   .subject, .subjectGaze { bottom: -4dvh; bottom: -4lvh; height: 74dvh; height: 74lvh; }
   .lowerMask { height: min(62dvh, 580px); height: min(62lvh, 580px); }
   .scrollPrompt { right: 12px; bottom: 42px; left: 12px; }
   .downloadHeading { min-height: 1.1em; font-size: clamp(20px, 6vw, 28px); }
   .downloadButton { min-height: 48px; margin-top: 16px; font-size: 13px; }
   .keepScrolling { margin-top: 14px; font-size: 9px; letter-spacing: 0.07em; }
-  .demoVideo { width: calc(100vw - 24px); height: 68svh; aspect-ratio: auto; border-radius: 14px; }
-  .videoContent { width: min(84vw, 540px); gap: 20px; }
+  .demoVideo { width: calc(100vw - 24px); height: auto; aspect-ratio: 16 / 9; border-radius: 14px; }
+  .videoContent { top: 44%; width: min(84vw, 540px); gap: 16px; }
   .videoHeading p { margin-bottom: 10px; font-size: 9px; }
-  .videoHeading h2 { font-size: clamp(26px, 6.4vw, 36px); }
+  .videoHeading h2 { font-size: clamp(24px, 6.2vw, 30px); }
   .playButton { width: 64px; height: 64px; }
   .playButton svg { width: 24px; height: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .mouseCursor { display: none; }
   .cardMotion, .subjectMotion, .subjectGazeVariant { transition: none; }
   .videoContent, .demoVideo, .playButton { transition: none; }
   .downloadHeadingEntering, .downloadHeadingLeaving { animation: none; }
   .downloadHeadingAnimating .downloadHeadingWord,
   .downloadHeadingLeaving .downloadHeadingWord { animation: none; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .mouseCursor { display: none; }
 }

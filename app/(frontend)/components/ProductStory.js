@@ -1,170 +1,290 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import styles from './ProductStory.module.css'
 
 const stories = [
   {
     number: '01',
     title: 'Start with the whole recording',
     description: 'Bring in a video or link, then choose Auto shorts, search for a moment, or set the cut yourself.',
-    image: '/app-shots/cutly-home-video.png',
-    width: 2940,
-    height: 1846,
-    alt: 'Cutly home screen with a video ready and saved clip sets'
+
+    image: '/app-shots/home-p.png',
+    imageBackground: '13 13 13',
+    alt: 'Deyn Studio home screen with a video ready and saved clip sets'
   },
   {
     number: '02',
     title: 'See every strong moment at once',
-    description: 'Cutly turns the recording into a visual set of clips, with timing and titles ready for the next pass.',
-    image: '/app-shots/cutly-clips-grid.png',
-    width: 2936,
-    height: 1836,
-    alt: 'A grid of clips generated from a video in Cutly'
+    description: 'Deyn Studio turns a recording into a visual set of clips, with timing and titles ready for the next pass.',
+    image: '/app-shots/clips-p.png',
+    imageBackground: '43 34 117',
+    alt: 'A grid of clips generated from a video in Deyn Studio'
   },
   {
     number: '03',
     title: 'Finish the clip in one workspace',
     description: 'Edit the transcript, frame the subject, style captions, and export without rebuilding the work elsewhere.',
-    image: '/app-shots/cutly-editor.png',
-    width: 2940,
-    height: 1844,
-    alt: 'Cutly editor with transcript, portrait preview, and caption controls'
+    image: '/app-shots/editor.png',
+    imageBackground: '43 34 117',
+    alt: 'Deyn Studio editor with transcript, portrait preview, and caption controls'
   }
 ]
 
+function DemoVideoPlayer({ story }) {
+  const videoRef = useRef(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const togglePlayback = () => {
+    const video = videoRef.current
+    if (!video) return
+
+    if (video.paused) {
+      if (video.ended) video.currentTime = 0
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+      video.currentTime = 0
+    }
+  }
+
+  return (
+    <div className="group/player relative z-10 h-full w-full bg-black" data-video-player>
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full bg-black object-cover"
+        playsInline
+        preload="metadata"
+        poster={story.image}
+        aria-label={story.alt}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
+      >
+        <source src={story.video} type="video/mp4" />
+        Your browser does not support MP4 video playback.
+      </video>
+
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 z-20 transition-opacity duration-700 ${isPlaying ? 'opacity-0' : 'opacity-100'}`}
+        style={{
+          background: 'linear-gradient(180deg, rgb(0 0 0 / .48), transparent 34%, rgb(0 0 0 / .28)), linear-gradient(90deg, rgb(0 0 0 / .24), transparent 16%, transparent 84%, rgb(0 0 0 / .24))',
+          WebkitMaskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)',
+          maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)'
+        }}
+      />
+
+      <button
+        type="button"
+        aria-label={isPlaying ? 'Stop demo video' : 'Play demo video'}
+        aria-pressed={isPlaying}
+        onClick={togglePlayback}
+        className="absolute left-1/2 top-1/2 z-30 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white shadow-[0_8px_28px_rgb(0_0_0/.42),inset_0_1px_0_rgb(232_222_205/.24)] backdrop-blur-md transition-[transform,background-color,box-shadow] hover:scale-105 hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white max-[600px]:h-12 max-[600px]:w-12"
+      >
+        {isPlaying ? (
+          <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1.5" /></svg>
+        ) : (
+          <svg className="ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.5 3.9c0-.72.79-1.15 1.39-.75l9.28 5.98a1.05 1.05 0 0 1 0 1.75l-9.28 5.98c-.6.4-1.39-.03-1.39-.75V3.9Z" /></svg>
+        )}
+      </button>
+    </div>
+  )
+}
+
 export function ProductStory() {
   const [active, setActive] = useState(0)
+  const [scrollDirection, setScrollDirection] = useState('down')
+  const [copyReadyIndex, setCopyReadyIndex] = useState(-1)
   const panelRefs = useRef([])
-  const mobilePanelRefs = useRef([])
+  const activeRef = useRef(0)
+  const stickyStageRef = useRef(null)
+
+  const setCurrentStory = useCallback((index) => {
+    if (index !== activeRef.current) {
+      setScrollDirection(index > activeRef.current ? 'down' : 'up')
+      setCopyReadyIndex(-1)
+    }
+    activeRef.current = index
+    setActive((current) => current === index ? current : index)
+  }, [])
 
   useEffect(() => {
-    let frame
+    const revealTimer = window.setTimeout(() => setCopyReadyIndex(active), 650)
+    return () => window.clearTimeout(revealTimer)
+  }, [active])
+
+  useEffect(() => {
+    let frame = 0
+    let didInitialSync = false
+
     const updateActiveStory = () => {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
-        const focusY = window.innerHeight / 2
-        let nearestIndex = 0
+        const stageRect = stickyStageRef.current?.getBoundingClientRect()
+        const focusLine = stageRect
+          ? stageRect.top + stageRect.height / 2
+          : window.innerHeight / 2
+        let nearestIndex = activeRef.current
         let nearestDistance = Infinity
 
-        const panels = window.innerWidth <= 700 ? mobilePanelRefs.current : panelRefs.current
-        panels.forEach((node, index) => {
-          if (!node) return
-          const rect = node.getBoundingClientRect()
-          const distance = Math.abs(rect.top + rect.height / 2 - focusY)
+        panelRefs.current.forEach((panel, index) => {
+          if (!panel) return
+          const rect = panel.getBoundingClientRect()
+          const center = rect.top + rect.height / 2
+          const distance = Math.abs(center - focusLine)
           if (distance < nearestDistance) {
             nearestDistance = distance
             nearestIndex = index
           }
         })
 
-        setActive(nearestIndex)
+        if (!didInitialSync) {
+          didInitialSync = true
+          setCurrentStory(nearestIndex)
+          return
+        }
+
+        if (nearestIndex !== activeRef.current) {
+          const activePanel = panelRefs.current[activeRef.current]
+          const activeRect = activePanel?.getBoundingClientRect()
+          const activeCenter = activeRect ? activeRect.top + activeRect.height / 2 : Infinity
+          const activeDistance = Math.abs(activeCenter - focusLine)
+
+          // Switch just past the midpoint between triggers; a tiny dead zone
+          // prevents flicker without making the deck feel late while scrolling.
+          if (nearestDistance + 8 < activeDistance) {
+            setCurrentStory(nearestIndex)
+          }
+        }
       })
     }
 
-    updateActiveStory()
-    window.addEventListener('scroll', updateActiveStory, { passive: true })
-    window.addEventListener('resize', updateActiveStory)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', updateActiveStory)
-      window.removeEventListener('resize', updateActiveStory)
+    const handleResize = () => {
+      didInitialSync = false
+      updateActiveStory()
     }
-  }, [])
 
-  const showStory = (index) => {
-    setActive(index)
-    const panels = window.innerWidth <= 700 ? mobilePanelRefs.current : panelRefs.current
-    panels[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
+    window.addEventListener('scroll', updateActiveStory, { passive: true })
+    window.addEventListener('resize', handleResize)
+    updateActiveStory()
+    return () => {
+      window.removeEventListener('scroll', updateActiveStory)
+      window.removeEventListener('resize', handleResize)
+      cancelAnimationFrame(frame)
+    }
+  }, [setCurrentStory])
 
   return (
-    <section className="relative scroll-mt-[24px] overflow-visible bg-[#080808] px-[clamp(24px,3.2vw,64px)] pt-[78px] pb-[78px] max-[900px]:px-6 max-[900px]:pt-[68px] max-[900px]:pb-[72px] max-[600px]:px-3 max-[600px]:pt-[52px] max-[600px]:pb-[58px]" id="features">
-      <h2 className="mx-auto mb-[54px] max-w-[760px] text-center font-serif text-[52px] font-normal leading-[.98] tracking-[-.055em] text-[#f0efe9] max-[900px]:mb-[58px] max-[900px]:text-[clamp(40px,4.05vw,60px)] max-[600px]:mb-[38px] max-[600px]:text-[clamp(36px,8vw,46px)] max-[600px]:tracking-[-.05em]">
-        Cutly reads between<br />the frames
-      </h2>
-      <div className="mx-auto grid w-full max-w-[1840px] grid-cols-[30%_70%] items-start max-[700px]:hidden max-[900px]:grid-cols-1 max-[900px]:gap-7">
-        <nav aria-label="Product features" className="sticky top-[15vh] flex flex-col justify-center gap-8 px-8 max-[900px]:static max-[900px]:gap-2 max-[900px]:px-3">
-          {stories.map((item, index) => (
-            <button
-              data-story={index}
-              type="button"
-              aria-pressed={active === index}
-              aria-controls={`cutly-story-panel-${index}`}
-              data-active={active === index}
-              className="group relative grid w-full shrink-0 grid-cols-[38px_minmax(0,1fr)] gap-x-2 rounded-sm py-4 text-left text-[#8c93a2] transition-colors duration-500 ease-[cubic-bezier(.2,.75,.25,1)] before:absolute before:left-[-1px] before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:origin-center before:scale-y-0 before:bg-[#f0efe9] before:transition-transform before:duration-500 before:ease-[cubic-bezier(.2,.75,.25,1)] before:content-[''] data-[active=true]:text-[#f0efe9] data-[active=true]:before:scale-y-100 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f0efe9] max-[900px]:grid-cols-[28px_minmax(0,1fr)] max-[900px]:py-3 max-[900px]:before:left-0 max-[900px]:before:h-7 max-[600px]:gap-x-2"
-              key={item.number}
-              onClick={() => showStory(index)}
-            >
-              <span className="row-span-2 pt-1.5 text-[11px] tracking-[.1em]">{item.number}</span>
-              <strong className="max-w-[440px] font-sans text-[clamp(20px,1.6vw,27px)] font-medium leading-[1.15] tracking-[-.035em] max-[900px]:text-lg max-[600px]:text-[17px]">{item.title}</strong>
-              <span className="col-start-2 grid transition-[grid-template-rows,opacity,margin] duration-500 ease-in-out group-data-[active=true]:mt-2 group-data-[active=true]:opacity-100">
-                <span className="max-h-0 max-w-[430px] overflow-hidden text-sm leading-[1.65] text-[#a2a2a0] opacity-0 transition-[max-height,opacity] duration-500 ease-in-out group-data-[active=true]:max-h-[100px] group-data-[active=true]:opacity-100">{item.description}</span>
-              </span>
-            </button>
-          ))}
-        </nav>
+    <section
+      className="relative scroll-mt-[24px] overflow-clip bg-[#0d0d0e] px-[clamp(24px,3.2vw,64px)] pt-[clamp(88px,8vw,112px)] max-[700px]:pt-[clamp(80px,12vw,96px)] max-[600px]:px-4 max-[600px]:pt-[clamp(80px,11svh,104px)]"
+      id="features"
+      aria-labelledby="product-story-heading"
+    >
+      <div className="relative z-10 mx-auto w-full max-w-[1420px]">
+        <h2 id="product-story-heading" className="mx-auto mb-4 max-w-[760px] text-center font-serif text-[42px] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[900px]:text-[clamp(34px,4.4vw,42px)] max-[600px]:text-[clamp(30px,7vw,36px)] max-[600px]:tracking-[-.05em]">
+          Deyn Studio reads between the frames
+        </h2>
+       
 
-        <div
-          className="relative flex flex-col gap-10 max-[900px]:gap-5"
-          style={{
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)'
-          }}
-        >
-          {stories.map((item, index) => (
-            <div ref={(node) => { panelRefs.current[index] = node }} id={`cutly-story-panel-${index}`} data-active={active === index} className="group relative h-[60svh] min-h-[400px] max-h-[620px] scroll-mt-[17vh] overflow-hidden max-[900px]:h-[min(48svh,420px)] max-[900px]:min-h-[280px] max-[600px]:h-[min(46svh,380px)] max-[600px]:min-h-[250px]" aria-label={item.alt} key={item.number}>
-              <Image className="h-full w-full object-contain" src={item.image} width={item.width} height={item.height} alt={item.alt} priority={index === 0} />
+        <div role="group" aria-label="Deyn Studio editing workflow" className="relative">
+          <div ref={stickyStageRef} className="sticky top-[72px] z-20 flex h-[calc(100svh-84px)] w-full items-center justify-center max-[600px]:top-[64px] max-[600px]:h-[calc(100svh-76px)]">
+              <div className="relative mx-auto w-[115%] pb-[132px]" style={{ maxWidth: 'min(1380px, max(805px, 57.5vw), calc(184svh - 313px), calc(100vw - 24px))', perspective: '1400px', transform: 'translateY(10px)' }}>
+                <div className={`relative w-full ${stories[active].video ? 'aspect-video' : 'aspect-[3/2]'}`} aria-hidden="true" />
+
+              {stories.map((story, index) => {
+                const isActive = index === active
+                const showCopy = isActive && copyReadyIndex === index
+                const offset = (index - active + stories.length) % stories.length
+                const stackScale = offset === 1 ? 0.94 : 0.88
+                const stackY = offset === 1 ? -30 : -60
+                const titleAnimation = scrollDirection === 'up' ? styles.titleRollInUp : styles.titleRollInDown
+                const descriptionAnimation = scrollDirection === 'up' ? styles.descriptionBlurInUp : styles.descriptionBlurInDown
+
+                return (
+                  <article
+                    key={story.number}
+                    aria-current={isActive ? 'step' : undefined}
+                    aria-hidden={!isActive}
+                    className={`absolute left-1/2 top-0 w-full rounded-[26px] transition-[transform,opacity,width] duration-[550ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${isActive ? '' : 'pointer-events-none'}`}
+                    style={{
+                      zIndex: isActive ? 10 : 10 - offset,
+                      width: isActive ? '100%' : `${offset === 1 ? 94 : 88}%`,
+                      transform: isActive
+                        ? 'translate3d(-50%, 0, 0) scale(1)'
+                        : `translate3d(-50%, ${stackY}px, 0) scale(${stackScale})`,
+                      transformOrigin: 'center top'
+                    }}
+                  >
+                    <>
+                      <div
+                        className={`relative w-full overflow-hidden rounded-[26px] bg-black transition-[box-shadow] duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${story.video ? 'aspect-video' : 'aspect-[3/2]'} ${isActive ? '' : 'opacity-95'}`}
+                        style={{
+                          boxShadow: isActive
+                            ? '0 34px 72px -28px rgb(0 0 0 / .8), 0 8px 22px -10px rgb(0 0 0 / .48)'
+                            : '0 14px 30px -12px rgb(0 0 0 / .58)'
+                        }}
+                        aria-hidden={!isActive}
+                        aria-label={isActive ? story.alt : undefined}
+                      >
+                        {story.video && isActive ? (
+                            <DemoVideoPlayer story={story} />
+                        ) : (
+                          <Image
+                            className="object-cover object-center"
+                            src={story.image}
+                            alt={isActive ? story.alt : ''}
+                            fill
+                            sizes="(max-width: 600px) 94vw, 1200px"
+                            priority={index === 0}
+                            draggable={false}
+                          />
+                        )}
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0"
+                          style={{
+                            background: `linear-gradient(180deg, rgb(0 0 0 / .02) 40%, rgb(0 0 0 / .16) 72%, rgb(0 0 0 / .38) 100%), radial-gradient(80% 65% at 50% 100%, rgb(${story.imageBackground} / .3), transparent 90%)`
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        id={`product-story-copy-${index}`}
+                        aria-hidden={!showCopy}
+                        className={`relative z-20 mt-5 flex min-h-[152px] items-center justify-center px-7 py-6 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] max-[600px]:mt-4 max-[600px]:min-h-[156px] max-[600px]:px-4 max-[600px]:py-5 ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                      >
+                        <div key={`${story.number}-${showCopy ? `active-${active}-${scrollDirection}` : 'idle'}`} className="relative">
+                          <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(26px,2.6vw,36px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed] max-[600px]:text-[25px]`}>
+                            {story.title}
+                          </h3>
+                          <p className={`${showCopy ? descriptionAnimation : ''} mx-auto mb-0 mt-3 max-w-[52ch] text-[15px] leading-[1.65] text-[#b9babd] max-[900px]:text-[14px] max-[600px]:mt-2 max-[600px]:text-[14px] max-[600px]:leading-[1.6]`}>
+                            {story.description}
+                          </p>
+                        </div>
+                      </div>
+                    </>
+                  </article>
+                )
+              })}
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="mx-auto hidden w-full max-w-[620px] grid-cols-1 max-[700px]:grid">
-        <div className="sticky top-20 z-10 col-start-1 row-start-1 flex h-[calc(100svh-112px)] min-h-[480px] flex-col self-start">
-          <div className="shrink-0 pb-5 pt-2">
-            <div className="flex items-baseline gap-3">
-              <span className="text-[11px] tracking-[.12em] text-[#8d98ad]">{stories[active].number}</span>
-              <h3 className="m-0 text-[22px] font-medium leading-[1.12] tracking-[-.04em] text-[#f0efe9]">{stories[active].title}</h3>
-            </div>
-            <p className="mb-0 ml-7 mt-3 max-w-[540px] text-[14px] leading-[1.65] text-[#a2a2a0]">{stories[active].description}</p>
           </div>
 
-          <div className="relative min-h-0 flex-1">
-            {stories.map((item, index) => (
+          <div aria-hidden="true" className="pointer-events-none">
+            {stories.map((story, index) => (
               <div
-                className={`absolute inset-0 grid place-items-center transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none ${active === index ? 'translate-y-0 scale-100 opacity-100 blur-0' : 'translate-y-4 scale-[.98] opacity-0 blur-sm'}`}
-                aria-hidden={active !== index}
-                key={item.number}
-              >
-                <Image className="max-h-full max-w-full object-contain" src={item.image} width={item.width} height={item.height} alt={active === index ? item.alt : ''} priority={index === 0} />
-              </div>
+                key={`story-trigger-${story.number}`}
+                ref={(node) => { panelRefs.current[index] = node }}
+                className="h-[85svh] min-h-[480px] max-[600px]:h-[80svh] max-[600px]:min-h-[520px]"
+              />
             ))}
           </div>
-
-          <nav aria-label="Choose a product feature" className="mt-5 grid shrink-0 grid-cols-3 gap-3 pb-2">
-            {stories.map((item, index) => (
-              <button
-                type="button"
-                aria-label={`Show feature ${item.number}: ${item.title}`}
-                aria-pressed={active === index}
-                onClick={() => showStory(index)}
-                className="group flex min-h-10 flex-col justify-center gap-2 rounded-sm text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0efe9]"
-                key={item.number}
-              >
-                <span className={`h-[2px] w-full rounded-full transition-colors duration-300 ${active === index ? 'bg-[#f0efe9]' : 'bg-white/40 group-hover:bg-white/60'}`} />
-                <span className={`text-[10px] tracking-[.12em] transition-colors duration-300 ${active === index ? 'text-[#f0efe9]' : 'text-[#9ba2b0]'}`}>{item.number}</span>
-              </button>
-            ))}
-          </nav>
+          <div aria-hidden="true" className="h-[60svh] max-[600px]:h-[55svh]" />
         </div>
-
-        <div className="col-start-1 row-start-1 grid grid-rows-[repeat(3,75svh)]" aria-hidden="true">
-          {stories.map((item, index) => (
-            <div ref={(node) => { mobilePanelRefs.current[index] = node }} key={item.number} />
-          ))}
-        </div>
+        <div className="sr-only" aria-live="polite" aria-atomic="true">Step {stories[active].number}: {stories[active].title}</div>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-b from-transparent via-[#0d0d0d]/65 to-[#0d0d0d] max-[600px]:h-[80px]" aria-hidden="true" />
+      <div className="h-[clamp(72px,10svh,120px)]" aria-hidden="true" />
     </section>
   )
 }

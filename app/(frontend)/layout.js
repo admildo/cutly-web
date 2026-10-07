@@ -1,10 +1,10 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Manrope } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { siteOrigin, siteUrl, serializeJsonLd } from '@/lib/seo'
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -15,28 +15,28 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   metadataBase: siteUrl,
-  applicationName: 'Cutly',
+  applicationName: 'Deyn Studio',
   title: {
-    default: 'Cutly — Desktop Video Clip Editor',
-    template: '%s | Cutly'
+    default: 'Deyn Studio — Desktop Media Workspace',
+    template: '%s | Deyn Studio'
   },
-  description: 'Turn long videos into short, shareable clips with Cutly, a desktop video clip editor for creators.',
-  keywords: ['video clip editor', 'video clipping software', 'short-form video', 'social media clips', 'desktop video editor'],
-  creator: 'Cutly',
-  publisher: 'Cutly',
+  description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
+  keywords: ['desktop media editor', 'media editing automation', 'video editor', 'audio tools', 'image tools', 'PDF utilities'],
+  creator: 'Deyn Studio',
+  publisher: 'Deyn Studio',
   openGraph: {
     type: 'website',
     url: '/',
-    siteName: 'Cutly',
+    siteName: 'Deyn Studio',
     locale: 'en_US',
-    title: 'Cutly — Desktop Video Clip Editor',
-    description: 'Turn long videos into short, shareable clips with Cutly, a desktop video clip editor for creators.',
-    images: [{ url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Cutly desktop video clip editor' }]
+    title: 'Deyn Studio — Desktop Media Workspace',
+    description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
+    images: [{ url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop media workspace' }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cutly — Desktop Video Clip Editor',
-    description: 'Turn long videos into short, shareable clips with Cutly, a desktop video clip editor for creators.',
+    title: 'Deyn Studio — Desktop Media Workspace',
+    description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
     images: ['/cutly-hero-moon.png']
   },
   robots: {
@@ -62,7 +62,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-[#f7f7f5] font-sans text-[#171717] antialiased`}
+        className={`${manrope.variable} ${geistMono.variable} bg-[#f7f7f5] font-sans text-[#171717] antialiased`}
+        style={{
+          '--font-dm-sans': 'var(--font-manrope)',
+          '--font-instrument-serif': 'var(--font-manrope)',
+          '--font-geist-sans': 'var(--font-manrope)',
+          '--font-serif': 'var(--font-manrope)'
+        }}
       >
         <script
           type="application/ld+json"
@@ -71,15 +77,15 @@ export default function RootLayout({ children }) {
               {
                 '@context': 'https://schema.org',
                 '@type': 'Organization',
-                name: 'Cutly',
+                name: 'Deyn Studio',
                 url: siteOrigin
               },
               {
                 '@context': 'https://schema.org',
                 '@type': 'WebSite',
-                name: 'Cutly',
+                name: 'Deyn Studio',
                 url: siteOrigin,
-                description: 'Desktop software for turning long videos into short, shareable clips.'
+                description: 'Desktop software for assistant-guided media editing, video, audio, image, and document workflows.'
               }
             ])
           }}

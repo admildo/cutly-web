@@ -8,6 +8,10 @@ import styles from './HeroSpiral.module.css'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
+// Choose 'spiral' or 'rings' here to change the hero's card layout.
+const HERO_CARD_MODE = 'spiral'
+const HERO_MOUSE_EFFECTS = true
+
 const uniqueCardAssets = [
   { src: '/card-media/se-15.mp4', poster: '/card-media/se-15-poster.webp', type: 'video' },
   { src: '/card-media/se-2.webp', type: 'image' },
@@ -53,13 +57,34 @@ const PROMPT_HEADLINE_START = PROMPT_REVEAL_START + PROMPT_REVEAL_DURATION
 const PROMPT_REVEAL_END = 0.62
 const NAV_ISLAND_REVEAL_FRACTION = 0.5
 const GAZE_SCROLL_CUTOFF = 0.5
+const GAZE_EYES = [
+  { cx: 772, cy: 226, sourceX: 42, sourceY: 41 },
+  { cx: 876, cy: 226, sourceX: 146, sourceY: 41 },
+]
+// Register the eye corners to the portrait; generated crops can differ between poses.
+const GAZE_REGISTRATION = {
+  'slight-right': [
+    { sourceX: 38, sourceY: 35, scale: 1.1 },
+    { sourceX: 134, sourceY: 35, scale: 1.1 },
+  ],
+  'up-left': [
+    { sourceX: 34, sourceY: 34, scale: 1.16 },
+    { sourceX: 120, sourceY: 34, scale: 1.16 },
+  ],
+  'up-right': [
+    { sourceX: 46, sourceY: 41, scale: 1 },
+    { sourceX: 148, sourceY: 41, scale: 1 },
+  ],
+}
+const CARD_FADE_START = 0.58
+const CARD_FADE_END = 0.68
 const heroHeadlines = [
-  'One video. Endless clips.',
-  'Standout moments, found.',
-  'Caption. Reframe. Export.',
-  'Compress. Convert. Done.',
-  'Backgrounds out. No limits.',
-  'Every image. One pass.',
+  'Your media. One workspace.',
+  'Plan the edit. Review. Run.',
+  'Find moments. Shape the story.',
+  'Edit video, audio, images.',
+  'From first pass to finished.',
+  'Make every workflow yours.',
 ]
 
 const publishHeroIslandState = (active) => {
@@ -78,31 +103,44 @@ const smoothstep = (min, max, value) => {
 
 function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) {
   const position = index / (cards.length - 1)
-  const angle = 2.7 + position * Math.PI * 6
+  const rings = HERO_CARD_MODE === 'rings'
+  const cardsPerRing = Math.ceil(cards.length / 3)
+  const ringIndex = Math.floor(index / cardsPerRing)
+  const ringCardCount = Math.min(cardsPerRing, cards.length - ringIndex * cardsPerRing)
+  const angle = rings
+    ? 2.7 + (index % cardsPerRing) / ringCardCount * Math.PI * 2 + ringIndex * Math.PI / cardsPerRing
+    : 2.7 + position * Math.PI * 6
   const travel = progress
-  const theta = angle + orbitRotation + travel * Math.PI * 2
-  const radiusX = width * (mobile ? 0.42 : 0.36) * (1 + travel * 0.04)
-  const verticalSpan = Math.min(height * (mobile ? 0.64 : 0.84), mobile ? 700 : 760)
-  const radiusZ = mobile ? 240 : 430
-  const baseY = (position - 0.5) * verticalSpan
-  const x = Math.cos(theta) * radiusX
-  const rise = height * (mobile ? 0.62 : 0.82)
-  const y = baseY - travel * rise + (mobile ? height * 0.1 : 0)
-  const z = Math.sin(theta) * radiusZ + travel * 30
-  const depthScale = 0.72 + ((Math.sin(theta) + 1) / 2) * 0.42
+  const orbitDirection = rings && ringIndex === 1 ? -1 : 1
+  const theta = angle + (orbitRotation + travel * Math.PI * 1.7) * orbitDirection
+  const radiusX = width * (mobile ? (rings ? 0.37 : 0.34) : (rings ? 0.35 : 0.31))
+  // Give each turn its own vertical space so the cards read as one helix.
+  // The ends extend past the scene instead of compressing every card into it.
+  const verticalSpan = height * (mobile ? 1.55 : 2.35)
+  const radiusZ = mobile ? Math.min(width * 0.48, 210) : Math.min(width * 0.28, 440)
+  const ringY = (ringIndex - 1) * height * (mobile ? 0.4 : 0.65)
+    + (ringIndex === 1 ? height * (mobile ? 0.08 : 0.12) : 0)
+  const baseY = rings ? ringY : (position - 0.5) * verticalSpan
+  const orbitX = Math.cos(theta) * radiusX
+  const y = baseY - travel * height * 0.36 + (mobile ? height * 0.08 : 0)
+  const z = Math.sin(theta) * radiusZ
+  const frontDepth = (Math.sin(theta) + 1) / 2
+  const depthScale = 0.9 + frontDepth * 0.12
   const faceCenterY = mobile ? -height * 0.03 : -height * 0.1
-  const faceCrossing = (1 - smoothstep(width * 0.06, width * 0.22, Math.abs(x)))
+  const faceCrossing = (1 - smoothstep(width * 0.06, width * 0.22, Math.abs(orbitX)))
     * (1 - smoothstep(height * 0.08, height * 0.24, Math.abs(y - faceCenterY)))
-  const scale = depthScale * (1 - faceCrossing * 0.36)
-    * (1 + travel * 0.04 * Math.max(0, Math.sin(theta)))
-  const cardTilt = Math.sin((index + 1) * 2.17) * 14
-  const rotation = cardTilt * (1 - travel * 0.55) + Math.sin(theta + 0.3) * 6
+  // Keep the subject's face clear when a foreground card crosses the center.
+  // The offset fades in with the face overlap, leaving the rest of the orbit intact.
+  const faceAvoidance = faceCrossing * smoothstep(0.38, 0.76, frontDepth)
+  const escapeDirection = index % 2 === 0 ? -1 : 1
+  const x = orbitX + escapeDirection * width * (mobile ? 0.3 : 0.22) * faceAvoidance
+  const scale = depthScale * (1 - faceCrossing * frontDepth * 0.24)
+  const rotation = Math.sin(theta + 0.3) * 2
   const rotationY = 90 - theta * (180 / Math.PI)
-  const rotationX = Math.cos(theta) * 10
-  const exitFade = clamp((-y - height * 0.42) / (height * 0.5), 0, 0.4)
-  const depthOpacity = 0.68 + ((Math.sin(theta) + 1) / 2) * 0.32
+  const rotationX = Math.cos(theta) * 3
+  const depthOpacity = 0.62 + frontDepth * 0.38
 
-  return { x, y, z, scale, rotation, rotationX, rotationY, opacity: depthOpacity * (1 - exitFade) }
+  return { x, y, z, scale, rotation, rotationX, rotationY, opacity: depthOpacity }
 }
 
 export function HeroSpiral({ downloadUrl = '/download' }) {
@@ -110,6 +148,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
   const gazeFeatherId = `hero-gaze-feather-${gazeId}`
   const gazeMaskId = `hero-gaze-eye-mask-${gazeId}`
   const [hoveredCard, setHoveredCard] = useState(null)
+  const [isCardHovered, setIsCardHovered] = useState(false)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isHeadlinePromptActive, setIsHeadlinePromptActive] = useState(false)
   const [headlineIndex, setHeadlineIndex] = useState(0)
@@ -124,11 +163,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
   const playPromptRef = useRef(null)
   const videoRef = useRef(null)
   const hoverLabelRef = useRef(null)
+  const cursorRef = useRef(null)
+  const cursorDotRef = useRef(null)
+  const cursorRingRef = useRef(null)
   const hoveredCardIndexRef = useRef(null)
   const subjectGazeRef = useRef(null)
   const headlineIndexRef = useRef(0)
   const headlinePromptActiveRef = useRef(false)
   const cardRefs = useRef([])
+  const cardBendRefs = useRef([])
   const cardVideoRefs = useRef([])
   const idleRefs = useRef([])
   const parallaxRefs = useRef([])
@@ -159,12 +202,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       all: 'all',
       mobile: '(max-width: 767px)',
       reducedMotion: '(prefers-reduced-motion: reduce)',
+      finePointer: '(hover: hover) and (pointer: fine)',
     }, ({ conditions }) => {
       const mobile = conditions.mobile
       const reducedMotion = conditions.reducedMotion
-      let width = sceneRef.current?.clientWidth || window.innerWidth
-      let height = sceneRef.current?.clientHeight || window.innerHeight
+      const mouseEffects = HERO_MOUSE_EFFECTS && conditions.finePointer && !mobile && !reducedMotion
+      let width = sceneRef.current.clientWidth
+      let height = sceneRef.current.clientHeight
       const cardNodes = cardRefs.current.filter(Boolean)
+      const bendNodes = cardBendRefs.current.filter(Boolean)
       const idleNodes = idleRefs.current.filter(Boolean)
       const parallaxNodes = parallaxRefs.current.filter(Boolean)
       const faceNodes = faceRefs.current.filter(Boolean)
@@ -173,8 +219,13 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       const subjectParallax = subjectParallaxRef.current
       const world = worldRef.current
       const camera = cameraRef.current
+      const cursor = cursorRef.current
+      sceneRef.current.dataset.mouseEffects = String(mouseEffects)
       const scrollState = { progress: 0 }
       const orbitState = { rotation: 0 }
+      const pointerPosition = { x: width / 2, y: height / 2 }
+      let pointerActive = false
+      let resetPointerEffects = () => {}
       const visibleVideoCards = new Set()
       const pendingVideoPlays = new WeakSet()
       const blockedVideoPlays = new WeakSet()
@@ -191,7 +242,29 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         activeGaze = nextGaze
         gazeElement.dataset.gaze = nextGaze
       }
-      const getSpiralProgress = () => clamp(scrollState.progress / 0.52, 0, 1)
+      const getCardProgress = () => clamp(scrollState.progress / 0.52, 0, 1)
+      const bendCardTo = bendNodes.map((node, index) => gsap.quickTo(node, 'rotationX', {
+        duration: 0.24 + (index % 4) * 0.05,
+        ease: 'back.out(1.55)',
+      }))
+      let bendSettleCall = null
+      const applyScrollBend = (velocity) => {
+        if (reducedMotion || Math.abs(velocity) < 12) return
+
+        const direction = Math.sign(velocity)
+        const intensity = 0.48 + 0.52 * clamp(Math.abs(velocity) / 800, 0, 1)
+        const bend = direction * (mobile ? 8 : 10) * intensity
+        bendCardTo.forEach((quickBend, index) => {
+          const cardWeight = 0.86 + (index % 5) * 0.07
+          bendNodes[index].style.transformOrigin = direction > 0 ? 'center 14%' : 'center 86%'
+          quickBend(bend * cardWeight)
+        })
+
+        bendSettleCall?.kill()
+        bendSettleCall = gsap.delayedCall(0.18, () => {
+          bendCardTo.forEach((quickBend) => quickBend(0))
+        })
+      }
       const getFinalBackdropSize = () => {
         if (mobile) return { width: width - 24, height: height * 0.68 }
         const cardWidth = Math.min(width * 0.85, height * 0.82 * 16 / 9)
@@ -223,24 +296,26 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         }
       }
 
-      const positionHoverLabel = (index = hoveredCardIndexRef.current) => {
+      gsap.set(hoverLabelRef.current, { xPercent: -50, yPercent: -50 })
+      const labelX = gsap.quickTo(hoverLabelRef.current, 'x', { duration: 0.28, ease: 'power3.out' })
+      const labelY = gsap.quickTo(hoverLabelRef.current, 'y', { duration: 0.28, ease: 'power3.out' })
+      const positionHoverLabel = (index = hoveredCardIndexRef.current, snap = false) => {
         if (index === null) return
-        const face = faceNodes[index]
         const label = hoverLabelRef.current
-        const scene = sceneRef.current
-        if (!face || !label || !scene) return
+        if (!label) return
 
-        const cardBounds = face.getBoundingClientRect()
-        const halfLabelWidth = label.offsetWidth / 2 || 75
-        const halfLabelHeight = label.offsetHeight / 2 || 24
-        const labelGap = 12
-        const canPlaceRight = cardBounds.right + label.offsetWidth + labelGap <= window.innerWidth - 12
+        const halfLabelWidth = label.offsetWidth / 2 || 90
+        const halfLabelHeight = label.offsetHeight / 2 || 30
+        const labelGap = 24
+        const canPlaceRight = pointerPosition.x + label.offsetWidth + labelGap <= window.innerWidth - 12
         const centerX = canPlaceRight
-          ? cardBounds.right + halfLabelWidth + labelGap
-          : cardBounds.left - halfLabelWidth - labelGap
-        const centerY = cardBounds.top + cardBounds.height * 0.68
-        label.style.left = `${clamp(centerX, halfLabelWidth + 12, window.innerWidth - halfLabelWidth - 12)}px`
-        label.style.top = `${clamp(centerY, halfLabelHeight + 12, window.innerHeight - halfLabelHeight - 12)}px`
+          ? pointerPosition.x + halfLabelWidth + labelGap
+          : pointerPosition.x - halfLabelWidth - labelGap
+        const x = clamp(centerX, halfLabelWidth + 12, window.innerWidth - halfLabelWidth - 12)
+        const y = clamp(pointerPosition.y, halfLabelHeight + 12, window.innerHeight - halfLabelHeight - 12)
+        if (snap) gsap.set(label, { x, y })
+        labelX(x)
+        labelY(y)
       }
 
       const syncCardVideo = (video, shouldPlay) => {
@@ -271,14 +346,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         if (!video.paused) video.pause()
       }
 
-      const renderSpiral = (progress, sceneProgress = scrollState.progress) => {
+      const renderCards = (progress, sceneProgress = scrollState.progress) => {
         const videoCandidates = []
         cardNodes.forEach((node, index) => {
           const pose = getCardPose(index, progress, width, height, mobile, orbitState.rotation)
           node.style.transform = `translate(-50%, -50%) translate3d(${pose.x}px, ${pose.y}px, ${pose.z}px) rotateY(${pose.rotationY}deg) rotateX(${pose.rotationX}deg) rotateZ(${pose.rotation}deg) scale(${pose.scale})`
-          const renderedOpacity = pose.opacity * (1 - smoothstep(0.58, 0.8, sceneProgress))
+          const renderedOpacity = pose.opacity * (1 - smoothstep(CARD_FADE_START, CARD_FADE_END, sceneProgress))
           node.style.opacity = renderedOpacity
-          node.style.pointerEvents = sceneProgress > 0.76 ? 'none' : 'auto'
+          node.style.visibility = sceneProgress >= CARD_FADE_END ? 'hidden' : 'visible'
+          node.style.pointerEvents = mobile || sceneProgress >= CARD_FADE_START ? 'none' : 'auto'
           const video = cardVideoRefs.current[index]
           const isVisible = canObserveVideoCards
             ? visibleVideoCards.has(index)
@@ -297,7 +373,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       }
 
       syncBackdropDimensions()
-      renderSpiral(0)
+      renderCards(0)
       gsap.set(subjectMotion, { scale: 1, y: 0, opacity: 1 })
       gsap.set([world, camera], { rotationX: 0, rotationY: 0 })
 
@@ -316,7 +392,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             }
           })
 
-          if (visibilityChanged) renderSpiral(getSpiralProgress())
+          if (visibilityChanged) renderCards(getCardProgress())
         }, { root: sceneRef.current, rootMargin: '48px', threshold: [0, 0.02] })
         : null
 
@@ -328,20 +404,20 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         cardVideoRefs.current.forEach((video, index) => {
           if (video) visibleVideoCards.add(index)
         })
-        renderSpiral(0)
+        renderCards(0)
       }
 
       const orbitTween = reducedMotion ? null : gsap.to(orbitState, {
         rotation: Math.PI * 2,
-        duration: 36,
+        duration: 52,
         repeat: -1,
         ease: 'none',
-        onUpdate: () => renderSpiral(getSpiralProgress()),
+        onUpdate: () => renderCards(getCardProgress()),
       })
       const idleTweens = reducedMotion ? [] : idleNodes.map((node, index) => gsap.to(node, {
-        y: index % 2 === 0 ? -4 : 4,
-        rotationY: index % 2 === 0 ? 1.2 : -1.2,
-        duration: 8 + index * 0.65,
+        y: index % 2 === 0 ? -2 : 2,
+        rotationY: index % 2 === 0 ? 0.4 : -0.4,
+        duration: 8 + (index % 5) * 0.65,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
@@ -357,7 +433,8 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       let ambientMotionActive = !reducedMotion
       let orbitActive = !reducedMotion
       const syncMotionActivity = (progress = scrollState.progress) => {
-        const shouldAnimate = !reducedMotion && !document.hidden && progress < 0.76
+        if (pointerActive && (document.hidden || progress >= CARD_FADE_START)) resetPointerEffects()
+        const shouldAnimate = !reducedMotion && !document.hidden && progress < CARD_FADE_END
         if (shouldAnimate !== ambientMotionActive) {
           ambientMotionActive = shouldAnimate
           idleTweens.forEach((tween) => (shouldAnimate ? tween.resume() : tween.pause()))
@@ -375,7 +452,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
 
       const onDocumentVisibilityChange = () => {
         syncMotionActivity()
-        renderSpiral(getSpiralProgress())
+        renderCards(getCardProgress())
       }
       document.addEventListener('visibilitychange', onDocumentVisibilityChange)
       syncMotionActivity()
@@ -388,15 +465,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: () => `+=${(sceneRef.current?.clientHeight || height) * (mobile ? 1.9 : 2.8)}`,
-          // Safari changes its visual viewport as browser chrome collapses.
-          // A native sticky scene avoids ScrollTrigger's fixed-pixel pin state
-          // on mobile while the section's CSS height supplies the scroll runway.
+          end: () => `+=${mobile
+            ? Math.max(1, sectionRef.current.offsetHeight - sceneRef.current.offsetHeight)
+            : window.innerHeight * 2.8}`,
           pin: mobile ? false : sceneRef.current,
           pinSpacing: !mobile,
-          scrub: mobile ? 0.18 : 0.35,
+          scrub: 0.35,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (trigger) => applyScrollBend(trigger.getVelocity()),
           onRefresh: (trigger) => {
             const progress = trigger.animation?.progress() ?? trigger.progress
             updateNavigationIsland(progress)
@@ -409,7 +486,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         progress: 1,
         duration: 1,
         ease: 'none',
-        onUpdate: () => renderSpiral(getSpiralProgress(), scrollState.progress),
+        onUpdate: () => renderCards(getCardProgress(), scrollState.progress),
       }, 0)
       timeline.fromTo(backdropRef.current, {
         opacity: 0,
@@ -451,7 +528,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       }, 0.72)
       timeline.to(subjectMotion, {
         scale: mobile ? 0.48 : 0.4,
-        y: () => -(sceneRef.current?.clientHeight || height) * (mobile ? 0.12 : 0.15),
+        y: () => -window.innerHeight * (mobile ? 0.12 : 0.15),
         opacity: 0,
         duration: 0.28,
         ease: 'power2.inOut',
@@ -479,7 +556,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         filter: 'blur(0px)',
         duration: 0.16,
         ease: 'power3.out',
-      }, 0.79)
+      }, mobile ? 0.73 : 0.79)
       timeline.fromTo(playPromptRef.current, {
         autoAlpha: 0,
         y: 8,
@@ -490,7 +567,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         scale: 1,
         duration: 0.12,
         ease: 'back.out(1.2)',
-      }, 0.84)
+      }, mobile ? 0.78 : 0.84)
       timeline.to(world, {
         rotationY: mobile ? 8 : 16,
         rotationX: mobile ? -1.5 : -4,
@@ -534,48 +611,110 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         ease: 'power3.out',
         onUpdate: () => positionHoverLabel(),
       })
+      const hoverTiltX = faceNodes.map((node) => gsap.quickTo(node, 'rotationX', { duration: 0.35, ease: 'power3.out' }))
+      const hoverTiltY = faceNodes.map((node) => gsap.quickTo(node, 'rotationY', { duration: 0.35, ease: 'power3.out' }))
+      gsap.set([cursorDotRef.current, cursorRingRef.current], { xPercent: -50, yPercent: -50 })
+      const cursorDotX = gsap.quickTo(cursorDotRef.current, 'x', { duration: 0.08, ease: 'power2.out' })
+      const cursorDotY = gsap.quickTo(cursorDotRef.current, 'y', { duration: 0.08, ease: 'power2.out' })
+      const cursorRingX = gsap.quickTo(cursorRingRef.current, 'x', { duration: 0.35, ease: 'power3.out' })
+      const cursorRingY = gsap.quickTo(cursorRingRef.current, 'y', { duration: 0.35, ease: 'power3.out' })
+      const clearHoveredCard = () => {
+        const index = hoveredCardIndexRef.current
+        if (index === null) return
+        hoveredCardIndexRef.current = null
+        setIsCardHovered(false)
+        hoverTiltX[index](0)
+        hoverTiltY[index](0)
+        cursor.dataset.hovered = 'false'
+        gsap.to(faceNodes[index], {
+          scale: 1,
+          z: 0,
+          rotationZ: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        })
+        syncMotionActivity(scrollState.progress)
+      }
 
       let pointerFrame = 0
       let latestPointer = null
       const updatePointer = () => {
         pointerFrame = 0
         if (!latestPointer) return
-        const { clientX, clientY } = latestPointer
+        const { clientX, clientY, overControl } = latestPointer
+        pointerPosition.x = clientX
+        pointerPosition.y = clientY
         const bounds = sceneRef.current.getBoundingClientRect()
-        const nx = (clientX - bounds.left) / bounds.width - 0.5
-        const ny = (clientY - bounds.top) / bounds.height - 0.5
+        const nx = clamp((clientX - bounds.left) / bounds.width - 0.5, -0.5, 0.5)
+        const ny = clamp((clientY - bounds.top) / bounds.height - 0.5, -0.5, 0.5)
 
-        subjectX(nx * 12)
-        subjectY(ny * 12)
+        if (!pointerActive) {
+          gsap.set([cursorDotRef.current, cursorRingRef.current], { x: clientX, y: clientY })
+          pointerActive = true
+        }
+        cursor.dataset.active = String(!overControl)
+        sceneRef.current.dataset.pointerActive = String(!overControl)
+        cursorDotX(clientX)
+        cursorDotY(clientY)
+        cursorRingX(clientX)
+        cursorRingY(clientY)
+        subjectX(nx * 10)
+        subjectY(ny * 8)
         if (!reducedMotion && subjectGazeRef.current) {
           const dx = (clientX - (bounds.left + bounds.width * 0.5)) / (bounds.width * 0.28)
           const dy = (clientY - (bounds.top + bounds.height * 0.4)) / (bounds.height * 0.25)
           const strengthX = Math.abs(dx)
           const strengthY = Math.abs(dy)
           let direction = 'center'
-          if (Math.max(strengthX, strengthY) >= 0.2) {
-            if (strengthX > strengthY) direction = dx < 0 ? 'left' : 'right'
-            else direction = dy < 0 ? 'up' : 'down'
+          const strength = Math.max(strengthX, strengthY)
+          if (strength >= 0.2) {
+            const isDiagonal = strength >= 0.5 && Math.min(strengthX, strengthY) >= strength * 0.42
+            if (isDiagonal) {
+              direction = dy < 0
+                ? (dx < 0 ? 'up-left' : 'up-right')
+                : (dx < 0 ? 'down-left' : 'down-right')
+            } else {
+              const cardinalDirection = strengthX > strengthY
+                ? (dx < 0 ? 'left' : 'right')
+                : (dy < 0 ? 'up' : 'down')
+              direction = strength < 0.68 ? `slight-${cardinalDirection}` : cardinalDirection
+            }
           }
           setSubjectGaze(direction)
         }
-        cameraX(nx * (mobile ? 2.5 : 7))
-        cameraY(ny * (mobile ? -1.8 : -5))
+        cameraX(nx * 12)
+        cameraY(ny * -8)
         parallaxNodes.forEach((_, index) => {
-          const pose = getCardPose(index, getSpiralProgress(), width, height, mobile, orbitState.rotation)
-          const depthSpan = mobile ? 350 : 960
-          const depthWeight = 0.55 + clamp((pose.z + depthSpan / 2) / depthSpan, 0, 1) * 0.8
-          quickX[index](nx * (mobile ? 3 : 12) * depthWeight)
-          quickY[index](ny * (mobile ? 3 : 10) * depthWeight)
+          const pose = getCardPose(index, getCardProgress(), width, height, mobile, orbitState.rotation)
+          const depthWeight = 0.45 + clamp((pose.z + 440) / 880, 0, 1) * 0.9
+          quickX[index](nx * 28 * depthWeight)
+          quickY[index](ny * 20 * depthWeight)
         })
+        const hoveredIndex = hoveredCardIndexRef.current
+        if (hoveredIndex !== null) {
+          const cardBounds = faceNodes[hoveredIndex].getBoundingClientRect()
+          const cardX = clamp((clientX - cardBounds.left) / Math.max(1, cardBounds.width) - 0.5, -0.5, 0.5)
+          const cardY = clamp((clientY - cardBounds.top) / Math.max(1, cardBounds.height) - 0.5, -0.5, 0.5)
+          hoverTiltX[hoveredIndex](-cardY * 12)
+          hoverTiltY[hoveredIndex](cardX * 14)
+          positionHoverLabel(hoveredIndex)
+        }
       }
       const onPointerMove = (event) => {
-        if (mobile || event.pointerType === 'touch') return
-        latestPointer = { clientX: event.clientX, clientY: event.clientY }
+        if (!mouseEffects || event.pointerType === 'touch' || scrollState.progress >= CARD_FADE_START) return
+        latestPointer = {
+          clientX: event.clientX,
+          clientY: event.clientY,
+          overControl: Boolean(event.target.closest('a, button, input, video[controls]')),
+        }
         if (!pointerFrame) pointerFrame = window.requestAnimationFrame(updatePointer)
       }
       const onPointerLeave = () => {
+        pointerActive = false
         latestPointer = null
+        cursor.dataset.active = 'false'
+        sceneRef.current.dataset.pointerActive = 'false'
         if (pointerFrame) window.cancelAnimationFrame(pointerFrame)
         pointerFrame = 0
         subjectX(0)
@@ -585,7 +724,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         cameraY(0)
         quickX.forEach((toX) => toX(0))
         quickY.forEach((toY) => toY(0))
+        clearHoveredCard()
       }
+      resetPointerEffects = onPointerLeave
       const onPageScroll = () => {
         if (scrollState.progress >= GAZE_SCROLL_CUTOFF) {
           setSubjectGaze('center')
@@ -597,28 +738,34 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       window.addEventListener('scroll', onPageScroll, { passive: true })
 
       const onResize = () => {
-        width = sceneRef.current?.clientWidth || window.innerWidth
-        height = sceneRef.current?.clientHeight || window.innerHeight
+        width = sceneRef.current.clientWidth
+        height = sceneRef.current.clientHeight
         syncBackdropDimensions()
-        if (!mobile) ScrollTrigger.refresh()
-        renderSpiral(getSpiralProgress())
+        ScrollTrigger.refresh()
+        renderCards(getCardProgress())
       }
       window.addEventListener('resize', onResize, { passive: true })
 
       const enterHandlers = []
       const leaveHandlers = []
-      if (!mobile) {
+      if (mouseEffects) {
         faceNodes.forEach((face, index) => {
-          const onEnter = () => {
+          const onEnter = (event) => {
+            if (scrollState.progress >= CARD_FADE_START) return
+            pointerPosition.x = event.clientX
+            pointerPosition.y = event.clientY
+            clearHoveredCard()
             hoveredCardIndexRef.current = index
             setHoveredCard(cards[index])
+            setIsCardHovered(true)
+            cursor.dataset.hovered = 'true'
             syncMotionActivity(scrollState.progress)
-            positionHoverLabel(index)
+            positionHoverLabel(index, true)
             gsap.to(face, {
-              scale: 1.06,
-              z: 26,
-              rotationZ: -getCardPose(index, getSpiralProgress(), width, height, mobile, orbitState.rotation).rotation * 0.82,
-              duration: 0.3,
+              scale: 1.045,
+              z: 24,
+              rotationZ: -getCardPose(index, getCardProgress(), width, height, mobile, orbitState.rotation).rotation * 0.82,
+              duration: 0.42,
               ease: 'power3.out',
               overwrite: 'auto',
               onUpdate: () => positionHoverLabel(index),
@@ -626,17 +773,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           }
           const onLeave = () => {
             if (hoveredCardIndexRef.current !== index) return
-            hoveredCardIndexRef.current = null
-            setHoveredCard(null)
-            syncMotionActivity(scrollState.progress)
-            gsap.to(face, {
-              scale: 1,
-              z: 0,
-              rotationZ: 0,
-              duration: 0.36,
-              ease: 'power3.out',
-              overwrite: 'auto',
-            })
+            clearHoveredCard()
           }
           face.addEventListener('pointerenter', onEnter)
           face.addEventListener('pointerleave', onLeave)
@@ -648,7 +785,15 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       ScrollTrigger.refresh()
 
       return () => {
+        cursor.dataset.active = 'false'
+        cursor.dataset.hovered = 'false'
+        delete sceneRef.current?.dataset.mouseEffects
+        delete sceneRef.current?.dataset.pointerActive
+        hoveredCardIndexRef.current = null
+        setHoveredCard(null)
+        setIsCardHovered(false)
         setSubjectGaze('center')
+        bendSettleCall?.kill()
         if (pointerFrame) window.cancelAnimationFrame(pointerFrame)
         videoVisibilityObserver?.disconnect()
         document.removeEventListener('visibilitychange', onDocumentVisibilityChange)
@@ -658,8 +803,8 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         window.removeEventListener('scroll', onPageScroll)
         window.removeEventListener('resize', onResize)
         faceNodes.forEach((face, index) => {
-          face.removeEventListener('pointerenter', enterHandlers[index])
-          face.removeEventListener('pointerleave', leaveHandlers[index])
+          if (enterHandlers[index]) face.removeEventListener('pointerenter', enterHandlers[index])
+          if (leaveHandlers[index]) face.removeEventListener('pointerleave', leaveHandlers[index])
         })
       }
     })
@@ -671,7 +816,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
   }, { scope: sectionRef })
 
   return (
-    <section ref={sectionRef} className={styles.hero} aria-label="Hero">
+    <section ref={sectionRef} className={styles.hero} aria-label="Hero" data-hero-mode={HERO_CARD_MODE}>
       <div ref={sceneRef} className={styles.scene}>
         <div ref={backdropRef} className={styles.backdrop} aria-hidden="true">
           <div className={styles.backdropArtwork} />
@@ -697,35 +842,40 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                     ref={(node) => { parallaxRefs.current[index] = node }}
                   >
                     <div
-                      className={styles.cardFace}
-                      ref={(node) => { faceRefs.current[index] = node }}
+                      className={styles.cardBend}
+                      ref={(node) => { cardBendRefs.current[index] = node }}
                     >
-                      {[false, true].map((reverse) => (
-                        <div
-                          className={`${styles.cardSurface} ${reverse ? styles.cardReverse : ''}`}
-                          key={reverse ? `${src}-reverse` : src}
-                        >
-                          {type === 'video' && !reverse ? (
-                            <video
-                              ref={(node) => { cardVideoRefs.current[index] = node }}
-                              src={src}
-                              poster={poster}
-                              loop
-                              muted
-                              playsInline
-                              preload="none"
-                            />
-                          ) : (
-                            <img
-                              src={type === 'video' ? poster : src}
-                              alt={reverse ? '' : `Selected work ${index + 1}`}
-                              loading="lazy"
-                              decoding="async"
-                              draggable="false"
-                            />
-                          )}
-                        </div>
-                      ))}
+                      <div
+                        className={styles.cardFace}
+                        ref={(node) => { faceRefs.current[index] = node }}
+                      >
+                        {[false, true].map((reverse) => (
+                          <div
+                            className={`${styles.cardSurface} ${reverse ? styles.cardReverse : ''}`}
+                            key={reverse ? `${src}-reverse` : src}
+                          >
+                            {type === 'video' && !reverse ? (
+                              <video
+                                ref={(node) => { cardVideoRefs.current[index] = node }}
+                                src={src}
+                                poster={poster}
+                                loop
+                                muted
+                                playsInline
+                                preload="none"
+                              />
+                            ) : (
+                              <img
+                                src={type === 'video' ? poster : src}
+                                alt={reverse ? '' : `Selected work ${index + 1}`}
+                                loading="lazy"
+                                decoding="async"
+                                draggable="false"
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -752,36 +902,61 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                   >
                     <defs>
                       <radialGradient id={gazeFeatherId} cx="50%" cy="50%" r="50%">
-                        <stop offset="0.76" stopColor="white" />
+                        <stop offset="0.9" stopColor="white" />
                         <stop offset="1" stopColor="black" />
                       </radialGradient>
-                      <mask
-                        id={gazeMaskId}
-                        maskUnits="userSpaceOnUse"
-                        maskContentUnits="userSpaceOnUse"
-                        x="0"
-                        y="0"
-                        width="1654"
-                        height="951"
-                      >
-                        <rect width="1654" height="951" fill="black" />
-                        <ellipse cx="772" cy="226" rx="22" ry="16" fill={`url(#${gazeFeatherId})`} />
-                        <ellipse cx="876" cy="226" rx="22" ry="16" fill={`url(#${gazeFeatherId})`} />
-                      </mask>
+                      {GAZE_EYES.map((eye, eyeIndex) => (
+                        <mask
+                          key={eyeIndex}
+                          id={`${gazeMaskId}-${eyeIndex}`}
+                          maskUnits="userSpaceOnUse"
+                          maskContentUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
+                          width="1654"
+                          height="951"
+                        >
+                          <rect width="1654" height="951" fill="black" />
+                          <ellipse cx={eye.cx} cy={eye.cy} rx="29" ry="18" fill={`url(#${gazeFeatherId})`} />
+                        </mask>
+                      ))}
                     </defs>
-                    {['left', 'right', 'up', 'down'].map((direction) => (
-                      <image
+                    {[
+                      'left',
+                      'right',
+                      'up',
+                      'down',
+                      'slight-left',
+                      'slight-right',
+                      'slight-up',
+                      'slight-down',
+                      'up-left',
+                      'up-right',
+                      'down-left',
+                      'down-right',
+                    ].map((direction) => (
+                      <g
                         key={direction}
                         className={styles.subjectGazeVariant}
                         data-gaze-direction={direction}
-                        href={`/bgt1-gaze-${direction}.png`}
-                        x="730"
-                        y="185"
-                        width="190"
-                        height="80"
-                        preserveAspectRatio="none"
-                        mask={`url(#${gazeMaskId})`}
-                      />
+                      >
+                        {GAZE_EYES.map((eye, eyeIndex) => {
+                          const registration = GAZE_REGISTRATION[direction]?.[eyeIndex] ?? eye
+                          const scale = registration.scale ?? 1
+                          return (
+                            <image
+                              key={eyeIndex}
+                              href={`/bgt1-gaze-${direction}.png`}
+                              x={eye.cx - registration.sourceX * scale}
+                              y={eye.cy - registration.sourceY * scale}
+                              width={190 * scale}
+                              height={80 * scale}
+                              preserveAspectRatio="none"
+                              mask={`url(#${gazeMaskId}-${eyeIndex})`}
+                            />
+                          )
+                        })}
+                      </g>
                     ))}
                   </svg>
                 </div>
@@ -828,9 +1003,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           </h1>
           <a className={styles.downloadButton} href={downloadUrl}>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
-            Download for Mac
+            Get Deyn Studio
           </a>
-          <p className={styles.keepScrolling}>Keep scrolling to see Cutly in action <span aria-hidden="true">↓</span></p>
+          <p className={styles.keepScrolling}>Explore what Deyn Studio can do <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
           <video
@@ -839,7 +1014,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             controls={isVideoPlaying}
             playsInline
             preload="metadata"
-            aria-label="Cutly product demo"
+            aria-label="Deyn Studio product demo"
             onPlay={() => setIsVideoPlaying(true)}
             onPause={() => setIsVideoPlaying(false)}
             onEnded={() => setIsVideoPlaying(false)}
@@ -849,14 +1024,14 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           </video>
           <div className={`${styles.videoContent} ${isVideoPlaying ? styles.videoContentPlaying : ''}`}>
             <div ref={videoPromptRef} className={styles.videoHeading}>
-              <p>Cutly in action</p>
-              <h2>See a full recording become<br className={styles.desktopBreak} /> share-ready clips.</h2>
+              <p>Deyn Studio in action</p>
+              <h2>See one of the ways to turn<br className={styles.desktopBreak} /> a recording into share-ready clips.</h2>
             </div>
             <div ref={playPromptRef} className={styles.playPrompt}>
               <button
                 className={`${styles.playButton} ${isVideoPlaying ? styles.playButtonHidden : ''}`}
                 type="button"
-                aria-label="Play Cutly product demo"
+                aria-label="Play Deyn Studio product demo"
                 onClick={() => videoRef.current?.play().catch(() => {})}
               >
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>
@@ -865,16 +1040,24 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           </div>
         </div>
       </div>
+      <div ref={cursorRef} className={styles.mouseCursor} aria-hidden="true">
+        <span ref={cursorDotRef} className={styles.cursorDot} />
+        <span ref={cursorRingRef} className={styles.cursorRing} />
+      </div>
       <div
         ref={hoverLabelRef}
-        className={`${styles.projectLabel} ${hoveredCard ? styles.projectLabelVisible : ''}`}
+        className={`${styles.projectLabel} ${isCardHovered ? styles.projectLabelVisible : ''}`}
         aria-hidden="true"
       >
-        <span className={styles.projectLabelMeta}>
-          <span className={styles.projectLabelDot} />
-          <span className={styles.projectCategory}>{hoveredCard?.category}</span>
+        <span className={styles.projectLabelContent}>
+          <svg className={styles.projectLabelIcon} viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 18 18 6M7 6h11v11" />
+          </svg>
+          <span className={styles.projectLabelText}>
+            <span className={styles.projectTitle}>{hoveredCard?.title}</span>
+            <span className={styles.projectCategory}>{hoveredCard?.category}</span>
+          </span>
         </span>
-        <span className={styles.projectTitle}>{hoveredCard?.title}</span>
       </div>
     </section>
   )

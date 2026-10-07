@@ -23,7 +23,7 @@ export function BuyLicenseButton() {
   return (
     <div>
       <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#f2f0ef] px-5 py-3 text-sm font-medium text-[#171716] transition hover:bg-[#cccbca] disabled:cursor-wait disabled:opacity-60">
-        {loading ? 'Opening checkout…' : 'Buy Cutly Lifetime'}
+        {loading ? 'Opening checkout…' : 'Buy Deyn Studio Lifetime'}
       </button>
       {error ? <p className="mt-3 text-sm text-[#cccbca]">{error}</p> : null}
     </div>
