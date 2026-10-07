@@ -2,7 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import Stripe from 'stripe'
 
 const getCheckoutOrigin = (request) => {
-  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.DEYN STUDIO_SITE_URL
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.CUTLY_SITE_URL
   if (!configuredOrigin) {
     return process.env.NODE_ENV === 'production' ? null : new URL(request.url).origin
   }

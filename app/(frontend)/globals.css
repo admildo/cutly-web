@@ -36,6 +36,10 @@
 
 }
 
+html {
+  background-color: #08090c;
+}
+
 .auth-charcoal-atmosphere {
   position: absolute;
   z-index: 0;

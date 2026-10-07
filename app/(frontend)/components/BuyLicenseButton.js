@@ -22,10 +22,10 @@ export function BuyLicenseButton() {
 
   return (
     <div>
-      <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#f2f0ef] px-5 py-3 text-sm font-medium text-[#171716] transition hover:bg-[#cccbca] disabled:cursor-wait disabled:opacity-60">
+      <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#f2f2ee] px-5 py-3 text-sm font-semibold text-[#17171a] transition hover:bg-white disabled:cursor-wait disabled:opacity-60">
         {loading ? 'Opening checkout…' : 'Buy Deyn Studio Lifetime'}
       </button>
-      {error ? <p className="mt-3 text-sm text-[#cccbca]">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-[#e5d2a8]">{error}</p> : null}
     </div>
   )
 }

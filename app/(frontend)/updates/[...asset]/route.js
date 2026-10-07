@@ -1,7 +1,7 @@
 const ASSET_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 
 function getStorageBase() {
-  const configuredUrl = process.env.DEYN STUDIO_UPDATE_STORAGE_URL
+  const configuredUrl = process.env.CUTLY_UPDATE_STORAGE_URL
   if (!configuredUrl) return null
 
   try {

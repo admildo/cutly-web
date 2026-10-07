@@ -4,10 +4,10 @@ import { useState } from 'react'
 
 export function AppAccess({ downloadUrl, compact = false, allowReleasePage = true, licensed = false, dark = true }) {
   const [opening, setOpening] = useState(false)
-  const shell = dark ? 'border-[#807e7e]/50 bg-[#242322] text-[#f2f0ef]' : 'border-black/10 bg-white text-[#171717]'
-  const copy = dark ? 'text-[#a6a4a4]' : 'text-black/55'
-  const primary = dark ? 'bg-[#f2f0ef] text-[#171716] hover:bg-[#cccbca]' : 'bg-[#171717] text-white hover:bg-black'
-  const secondary = dark ? 'border-[#807e7e] bg-[#242322] text-[#cccbca] hover:border-[#cccbca] hover:text-[#f2f0ef]' : 'border-black/15 bg-white text-[#171717] hover:border-black/35'
+  const shell = dark ? 'border-[#8993ad]/20 bg-[#11141d]/85 text-[#f1f3fa] shadow-[0_24px_80px_rgb(0_0_0/.18)]' : 'border-black/10 bg-white text-[#171717]'
+  const copy = dark ? 'text-[#9398a4]' : 'text-black/55'
+  const primary = dark ? 'bg-[#f2f2ee] text-[#17171a] hover:bg-white' : 'bg-[#171717] text-white hover:bg-black'
+  const secondary = dark ? 'border-[#8993ad]/30 bg-transparent text-[#c5cbe0] hover:border-[#a9c4ff]/60 hover:text-white' : 'border-black/15 bg-white text-[#171717] hover:border-black/35'
   const openApp = () => {
     setOpening(true)
     window.location.assign('cutly://open')
@@ -15,7 +15,7 @@ export function AppAccess({ downloadUrl, compact = false, allowReleasePage = tru
   }
 
   return (
-    <section className={`flex flex-wrap items-center justify-between gap-5 rounded-2xl border p-6 ${shell} ${compact ? 'max-w-[34rem]' : ''}`} aria-label="Deyn Studio desktop app">
+    <section className={`flex flex-wrap items-center justify-between gap-5 rounded-[24px] border p-6 sm:p-7 ${shell} ${compact ? 'max-w-[34rem]' : ''}`} aria-label="Deyn Studio desktop app">
       <div>
         <p className="text-sm font-medium">Use Deyn Studio on your desktop</p>
         <p className={`mt-1 text-sm leading-6 ${copy}`}>
@@ -39,5 +39,5 @@ export function AppAccess({ downloadUrl, compact = false, allowReleasePage = tru
 }
 
 function LinkToRelease({ dark }) {
-  return <a href="/download" className={`rounded-full border px-5 py-3 text-sm font-medium transition ${dark ? 'border-[#807e7e] bg-[#242322] text-[#cccbca] hover:border-[#cccbca] hover:text-[#f2f0ef]' : 'border-black/15 bg-white text-[#171717] hover:border-black/35'}`}>Download app</a>
+  return <a href="/download" className={`rounded-full border px-5 py-3 text-sm font-medium transition ${dark ? 'border-[#8993ad]/30 bg-transparent text-[#c5cbe0] hover:border-[#a9c4ff]/60 hover:text-white' : 'border-black/15 bg-white text-[#171717] hover:border-black/35'}`}>Download app</a>
 }

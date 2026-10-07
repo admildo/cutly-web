@@ -20,8 +20,8 @@ export function AccountMenu() {
 
   return (
     <div className="flex items-center gap-3">
-      <Link href="/account" className="text-sm font-medium text-[#a6a4a4] underline-offset-4 hover:text-[#f2f0ef] hover:underline">Account settings</Link>
-      <button type="button" onClick={handleSignOut} disabled={signingOut} className="rounded-full border border-[#807e7e] px-4 py-2 text-sm font-medium text-[#cccbca] transition hover:border-[#cccbca] hover:text-[#f2f0ef] disabled:opacity-60">
+      <Link href="/account" className="text-sm font-medium text-[#aab7d7] underline-offset-4 hover:text-white hover:underline">Account settings</Link>
+      <button type="button" onClick={handleSignOut} disabled={signingOut} className="rounded-full border border-[#8993ad]/30 px-4 py-2 text-sm font-medium text-[#c5cbe0] transition hover:border-[#a9c4ff]/60 hover:text-white disabled:opacity-60">
         {signingOut ? 'Signing out…' : 'Sign out'}
       </button>
     </div>

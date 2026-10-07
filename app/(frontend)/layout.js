@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${manrope.variable} ${geistMono.variable} bg-[#f7f7f5] font-sans text-[#171717] antialiased`}
+        className={`${manrope.variable} ${geistMono.variable} bg-[#08090c] font-sans text-[#f2f0ef] antialiased`}
         style={{
           '--font-dm-sans': 'var(--font-manrope)',
           '--font-instrument-serif': 'var(--font-manrope)',
