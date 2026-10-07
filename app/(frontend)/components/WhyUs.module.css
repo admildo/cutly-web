@@ -1,0 +1,292 @@
+.section {
+  --ticker-font-size: clamp(44px, 6vw, 126px);
+  --ticker-step: clamp(105px, 8.4vw, 176px);
+  position: relative;
+  height: 1150svh;
+  background: #000;
+  color: #f7f7f7;
+}
+
+.stickyStage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100svh;
+  align-items: center;
+  overflow: hidden;
+  perspective: 1400px;
+  perspective-origin: center center;
+}
+
+.ticker {
+  position: relative;
+  width: min(72vw, 1450px);
+  height: calc(var(--ticker-step) * 3);
+  margin-inline: auto;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+.topic {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: var(--ticker-step);
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #8f8f8f;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--ticker-font-size);
+  font-weight: 400;
+  letter-spacing: -.055em;
+  line-height: 1;
+  text-align: left;
+  text-overflow: clip;
+  white-space: nowrap;
+  filter: blur(3px);
+  opacity: .58;
+  transform: translateY(-50%);
+  transition:
+    top 1050ms cubic-bezier(.22, .61, .36, 1),
+    filter 850ms ease,
+    opacity 850ms ease,
+    color 850ms ease;
+}
+
+.previous {
+  top: calc(50% - var(--ticker-step));
+}
+
+.active {
+  top: 50%;
+  color: #f7f7f7;
+  filter: blur(0);
+  opacity: 1;
+}
+
+.next {
+  top: calc(50% + var(--ticker-step));
+}
+
+.topic:focus-visible {
+  outline: 2px solid #f7f7f7;
+  outline-offset: -4px;
+}
+
+.content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 1900px);
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+.topicLabel {
+  margin: 0 0 clamp(28px, 5vw, 80px);
+  color: #a4a4a4;
+  font-size: clamp(12px, 1.1vw, 20px);
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 1700px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(46px, 7.2vw, 144px);
+  font-weight: 500;
+  letter-spacing: -.075em;
+  line-height: .99;
+}
+
+.description {
+  max-width: 1150px;
+  margin: clamp(28px, 4.5vw, 72px) 0 0;
+  color: #fff;
+  font-size: clamp(22px, 3vw, 52px);
+  font-weight: 400;
+  letter-spacing: -.045em;
+  line-height: 1.15;
+  transform-origin: left center;
+  will-change: transform, filter;
+}
+
+.revealWord {
+  white-space: pre-wrap;
+  transition: color 180ms ease-out, filter 220ms ease-out;
+}
+
+.progress {
+  position: absolute;
+  z-index: 5;
+  right: clamp(24px, 4vw, 64px);
+  bottom: clamp(24px, 4vh, 48px);
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  color: #a2a2a2;
+}
+
+.progressCount {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+.progressCount span {
+  padding-inline: 3px;
+  color: #565656;
+}
+
+.progressDots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.progressDotButton {
+  display: grid;
+  width: 18px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.progressDotButton:focus-visible {
+  border-radius: 999px;
+  outline: 2px solid #f7f7f7;
+  outline-offset: 1px;
+}
+
+.progressDot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #555;
+  transition: width 360ms cubic-bezier(.22, .61, .36, 1), background-color 360ms ease;
+}
+
+.progressDotActive {
+  width: 17px;
+  background: #f2f2f2;
+}
+
+.scrollHint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 4vh, 48px);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #858585;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  transition: opacity 300ms ease, transform 300ms ease, visibility 300ms ease;
+}
+
+.scrollHint svg {
+  width: 14px;
+  height: 14px;
+}
+
+.scrollHintHidden {
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, 5px);
+}
+
+@media (max-width: 700px) {
+  .section {
+    --ticker-font-size: clamp(40px, 9vw, 66px);
+    --ticker-step: clamp(92px, 19vw, 132px);
+    height: 1000svh;
+  }
+
+  .ticker {
+    width: 84vw;
+  }
+
+  .topic {
+    filter: blur(2px);
+  }
+
+  .active {
+    filter: blur(0);
+  }
+
+  .content {
+    width: 88vw;
+  }
+
+  .progress {
+    right: 18px;
+    bottom: 18px;
+    gap: 10px;
+  }
+
+  .progressCount {
+    font-size: 10px;
+  }
+
+  .scrollHint {
+    bottom: 22px;
+    left: 22px;
+    transform: none;
+    font-size: 9px;
+  }
+
+  .scrollHintHidden {
+    transform: translateY(5px);
+  }
+
+  .title,
+  .description {
+    transform-origin: left center;
+  }
+
+  .topicLabel {
+    margin-bottom: 32px;
+    font-size: 11px;
+  }
+
+  .title {
+    font-size: clamp(40px, 11vw, 68px);
+    letter-spacing: -.065em;
+    line-height: 1.03;
+  }
+
+  .description {
+    margin-top: 32px;
+    font-size: clamp(19px, 5.4vw, 28px);
+    line-height: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker,
+  .topic,
+  .content,
+  .description,
+  .revealWord,
+  .progressDot,
+  .scrollHint {
+    transition-duration: .01ms;
+  }
+}

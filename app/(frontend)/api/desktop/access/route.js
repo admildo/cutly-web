@@ -21,9 +21,9 @@ export async function POST(request) {
   const desktopUserId = await getDesktopUserId(request)
   if (!desktopUserId) {
     const { userId } = await auth()
-    if (!userId) return json({ error: 'Please sign in to check Cutly access.' }, 401)
+    if (!userId) return json({ error: 'Please sign in to check Deyn Studio access.' }, 401)
     // This endpoint serves the desktop app only; browser sessions cannot enroll trials.
-    return json({ error: 'Use Cutly desktop to check trial access.' }, 401)
+    return json({ error: 'Use Deyn Studio desktop to check trial access.' }, 401)
   }
 
   const accountLimit = await enforceRateLimit(request, {
@@ -82,7 +82,7 @@ export async function POST(request) {
         return json({
           status: 'trial-verification-required',
           licensed: false,
-          message: 'Verify your email address in your Cutly account, then check access again.'
+          message: 'Verify your email address in your Deyn Studio account, then check access again.'
         }, 403)
       }
     }
@@ -102,6 +102,6 @@ export async function POST(request) {
     return json({ licensed: false, ...snapshot })
   } catch (error) {
     console.error('Could not resolve desktop access:', error)
-    return json({ error: 'Could not check your Cutly access. Please try again.' }, 503)
+    return json({ error: 'Could not check your Deyn Studio access. Please try again.' }, 503)
   }
 }

@@ -47,7 +47,7 @@ const cards = cardAssets.map(({ src, poster, type }, index) => ({
   poster,
   type,
   title: `Project ${String(index + 1).padStart(2, '0')}`,
-  category: type === 'video' ? 'Motion' : 'Selected work',
+  category: type === 'video' ? 'videos' : 'images',
 }))
 
 const NAV_ISLAND_EVENT = 'cutly:hero-island-state'
@@ -79,12 +79,10 @@ const GAZE_REGISTRATION = {
 const CARD_FADE_START = 0.58
 const CARD_FADE_END = 0.68
 const heroHeadlines = [
-  'Your media. One workspace.',
-  'Plan the edit. Review. Run.',
-  'Find moments. Shape the story.',
-  'Edit video, audio, images.',
-  'From first pass to finished.',
-  'Make every workflow yours.',
+  'Turn long videos into clips.',
+  'Find strong moments with AI.',
+  'Add captions and portrait framing.',
+  'Export from one desktop app.',
 ]
 
 const publishHeroIslandState = (active) => {
@@ -126,19 +124,30 @@ function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) 
   const z = Math.sin(theta) * radiusZ
   const frontDepth = (Math.sin(theta) + 1) / 2
   const depthScale = 0.9 + frontDepth * 0.12
+  const perspective = mobile ? 820 : 1120
+  const projection = perspective / (perspective - z)
+  const cardWidth = mobile ? clamp(width * 0.2, 72, 108) : clamp(width * 0.1, 112, 156)
+  const halfCardWidth = cardWidth * depthScale * projection * 0.5
+  const halfCardHeight = halfCardWidth / 0.72
   const faceCenterY = mobile ? -height * 0.03 : -height * 0.1
-  const faceCrossing = (1 - smoothstep(width * 0.06, width * 0.22, Math.abs(orbitX)))
-    * (1 - smoothstep(height * 0.08, height * 0.24, Math.abs(y - faceCenterY)))
-  // Keep the subject's face clear when a foreground card crosses the center.
-  // The offset fades in with the face overlap, leaving the rest of the orbit intact.
+  const faceCrossing = (1 - smoothstep(
+    width * (mobile ? 0.22 : 0.06) + halfCardWidth,
+    width * (mobile ? 0.3 : 0.16) + halfCardWidth,
+    Math.abs(orbitX * projection),
+  )) * (1 - smoothstep(
+    height * 0.08 + halfCardHeight,
+    height * 0.15 + halfCardHeight,
+    Math.abs(y * projection - faceCenterY),
+  ))
+  // Keep tiles on the helix while fading foreground tiles across the face.
+  // Moving alternating tiles sideways breaks the continuous spiral on narrow screens.
   const faceAvoidance = faceCrossing * smoothstep(0.38, 0.76, frontDepth)
-  const escapeDirection = index % 2 === 0 ? -1 : 1
-  const x = orbitX + escapeDirection * width * (mobile ? 0.3 : 0.22) * faceAvoidance
-  const scale = depthScale * (1 - faceCrossing * frontDepth * 0.24)
+  const x = orbitX
+  const scale = depthScale
   const rotation = Math.sin(theta + 0.3) * 2
   const rotationY = 90 - theta * (180 / Math.PI)
   const rotationX = Math.cos(theta) * 3
-  const depthOpacity = 0.62 + frontDepth * 0.38
+  const depthOpacity = (0.62 + frontDepth * 0.38) * (1 - faceAvoidance)
 
   return { x, y, z, scale, rotation, rotationX, rotationY, opacity: depthOpacity }
 }
@@ -528,7 +537,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       }, 0.72)
       timeline.to(subjectMotion, {
         scale: mobile ? 0.48 : 0.4,
-        y: () => -window.innerHeight * (mobile ? 0.12 : 0.15),
+        y: () => -height * (mobile ? 0.12 : 0.15),
         opacity: 0,
         duration: 0.28,
         ease: 'power2.inOut',
@@ -738,8 +747,12 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       window.addEventListener('scroll', onPageScroll, { passive: true })
 
       const onResize = () => {
-        width = sceneRef.current.clientWidth
-        height = sceneRef.current.clientHeight
+        const nextWidth = sceneRef.current.clientWidth
+        const nextHeight = sceneRef.current.clientHeight
+        // Mobile browser bars can resize the viewport without resizing the lvh scene.
+        if (nextWidth === width && nextHeight === height) return
+        width = nextWidth
+        height = nextHeight
         syncBackdropDimensions()
         ScrollTrigger.refresh()
         renderCards(getCardProgress())
@@ -867,7 +880,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                             ) : (
                               <img
                                 src={type === 'video' ? poster : src}
-                                alt={reverse ? '' : `Selected work ${index + 1}`}
+                                alt={reverse ? '' : `Work with ${index + 1}`}
                                 loading="lazy"
                                 decoding="async"
                                 draggable="false"
@@ -967,7 +980,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         <div className={styles.vignette} aria-hidden="true" />
         <div ref={lowerMaskRef} className={styles.lowerMask} aria-hidden="true" />
         <div ref={scrollPromptRef} className={styles.scrollPrompt}>
-          <p className={styles.downloadEyebrow}>Make every recording go further</p>
+          <p className={styles.downloadEyebrow}>From long video to shareable clips</p>
           <h1 className={styles.downloadHeading}>
             {previousHeadlineIndex !== null && (
               <span
@@ -1003,9 +1016,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           </h1>
           <a className={styles.downloadButton} href={downloadUrl}>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
-            Get Deyn Studio
+            Download Deyn Studio
           </a>
-          <p className={styles.keepScrolling}>Explore what Deyn Studio can do <span aria-hidden="true">↓</span></p>
+          <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
           <video
@@ -1025,7 +1038,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
           <div className={`${styles.videoContent} ${isVideoPlaying ? styles.videoContentPlaying : ''}`}>
             <div ref={videoPromptRef} className={styles.videoHeading}>
               <p>Deyn Studio in action</p>
-              <h2>See one of the ways to turn<br className={styles.desktopBreak} /> a recording into share-ready clips.</h2>
+              <h2>Watch Deyn turn a long video<br className={styles.desktopBreak} /> into clips ready to share.</h2>
             </div>
             <div ref={playPromptRef} className={styles.playPrompt}>
               <button

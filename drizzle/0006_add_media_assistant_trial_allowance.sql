@@ -1,0 +1,1 @@
+ALTER TABLE `trial_config` ADD `media_assistant_plans_max` integer DEFAULT 1 NOT NULL;

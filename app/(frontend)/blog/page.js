@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = createPageMetadata({
   title: 'Video Editing Tips and News',
-  description: 'Practical video editing tips, creator stories, and product news from Cutly.',
+  description: 'Practical video editing tips, creator stories, and product news from Deyn Studio.',
   path: '/blog'
 })
 
@@ -23,9 +23,9 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen [color-scheme:dark] bg-[#171716] px-6 py-20 text-[#f2f0ef] sm:px-10">
       <div className="mx-auto max-w-6xl">
-      <Link href="/" className="text-sm text-[#a6a4a4] hover:text-[#f2f0ef]">← Cutly home</Link>
+      <Link href="/" className="text-sm text-[#a6a4a4] hover:text-[#f2f0ef]">← Deyn Studio home</Link>
       <header className="mb-12 mt-10 max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#a6a4a4]">Cutly Journal</p>
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#a6a4a4]">Deyn Studio Journal</p>
         <h1 className="mt-3 text-5xl font-semibold tracking-tight">Stories, tips, and updates</h1>
       </header>
       {posts.length === 0 ? (

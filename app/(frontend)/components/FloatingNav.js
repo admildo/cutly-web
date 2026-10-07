@@ -52,9 +52,9 @@ export function FloatingNav({ downloadUrl }) {
           <div
             className={`absolute flex h-[36px] items-center justify-between gap-5 transition-[top,inset] duration-[560ms] ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none max-[700px]:inset-x-4 max-[700px]:top-0 max-[700px]:h-full max-[700px]:grid max-[700px]:grid-cols-[minmax(0,1fr)_auto] max-[700px]:gap-3 ${isScrolled ? 'inset-x-[14px] top-[9px]' : 'inset-x-[56px] top-[7px]'}`}
           >
-            <Link href="#hero" aria-label="Noyte home" className="flex min-w-0 items-center gap-2 text-sm font-semibold tracking-[-.03em] text-white no-underline">
+            <Link href="#hero" aria-label="Deyn Studio home" className="flex min-w-0 items-center gap-2 text-sm font-semibold tracking-[-.03em] text-white no-underline">
             
-              <b>Noyte</b>
+              <b>Deyn Studio</b>
             </Link>
             <nav aria-label="Primary navigation" className="flex items-center justify-center gap-[25px] text-xs font-medium text-[#a5a8b1] max-[700px]:hidden">
               <a className="transition-colors hover:text-white" href="#features">Features</a>

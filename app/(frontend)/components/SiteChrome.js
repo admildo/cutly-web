@@ -20,7 +20,8 @@ export function SiteHeader({ children, dashboard = false, dark = dashboard }) {
 
 export function SiteFooter({ dark = false }) {
   return (
-    <footer className={`mt-16 border-t py-7 text-sm ${dark ? 'border-[#807e7e]/40 text-[#a6a4a4]' : 'border-black/10 text-black/55'}`}>
+    <footer className={`mt-16 flex flex-col gap-4 py-7 text-xs sm:flex-row sm:items-center sm:justify-between ${dark ? 'text-[#a6a4a4]' : 'text-black/55'}`}>
+      <p className="m-0">© {new Date().getFullYear()} Deyn Studio</p>
       <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer navigation">
         <Link href="/about">About</Link>
         <Link href="/blog">Blog</Link>
@@ -30,7 +31,6 @@ export function SiteFooter({ dark = false }) {
         <Link href="/open-source">Open source</Link>
         <Link href="/support">Support</Link>
       </nav>
-      <p className="mt-4">© {new Date().getFullYear()} Deyn Studio. All rights reserved.</p>
     </footer>
   )
 }

@@ -1,0 +1,123 @@
+.card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-alpha: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 32px 36px;
+  background: linear-gradient(145deg, #292927, #20201f 58%, #171716);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 38%);
+  text-align: center;
+  backdrop-filter: blur(24px);
+}
+
+.smoke,
+.pointerGlow {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.smoke {
+  inset: -34%;
+  border-radius: 50%;
+  filter: url(#pricing-smoke-distortion);
+  will-change: transform;
+}
+
+.smokeOne {
+  opacity: 0.58;
+  background:
+    radial-gradient(ellipse at 28% 55%, rgb(158 163 172 / 17%), transparent 35%),
+    radial-gradient(ellipse at 52% 42%, rgb(109 114 123 / 12%), transparent 31%),
+    radial-gradient(ellipse at 63% 70%, rgb(146 150 157 / 11%), transparent 36%);
+  animation: smoke-one 18s ease-in-out infinite;
+}
+
+.smokeTwo {
+  filter: url(#pricing-smoke-distortion);
+  opacity: 0.52;
+  background:
+    radial-gradient(ellipse at 69% 35%, rgb(161 164 170 / 13%), transparent 32%),
+    radial-gradient(ellipse at 41% 65%, rgb(132 137 146 / 13%), transparent 30%),
+    radial-gradient(ellipse at 55% 53%, rgb(107 112 120 / 10%), transparent 39%);
+  animation: smoke-two 24s ease-in-out infinite;
+}
+
+.smokeThree {
+  filter: url(#pricing-smoke-distortion);
+  opacity: 0.4;
+  background:
+    radial-gradient(ellipse at 47% 29%, rgb(180 182 187 / 9%), transparent 35%),
+    radial-gradient(ellipse at 30% 78%, rgb(117 121 129 / 12%), transparent 36%),
+    radial-gradient(ellipse at 78% 68%, rgb(155 158 164 / 8%), transparent 34%);
+  animation: smoke-three 30s ease-in-out infinite;
+}
+
+.pointerGlow {
+  inset: 0;
+  background: radial-gradient(
+    ellipse 135px 90px at var(--pointer-x) var(--pointer-y),
+    rgb(190 193 199 / 17%),
+    transparent 76%
+  ), radial-gradient(
+    ellipse 210px 125px at calc(var(--pointer-x) + 8%) calc(var(--pointer-y) - 3%),
+    rgb(150 154 162 / 11%),
+    transparent 78%
+  ), radial-gradient(
+    ellipse 255px 155px at calc(var(--pointer-x) - 10%) calc(var(--pointer-y) + 7%),
+    rgb(120 124 132 / 9%),
+    transparent 78%
+  );
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  opacity: var(--pointer-alpha);
+  transition: opacity 360ms ease;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes smoke-one {
+  0%, 100% { transform: translate3d(-4%, 7%, 0) rotate(-5deg) scale(0.96); }
+  50% { transform: translate3d(4%, -7%, 0) rotate(5deg) scale(1.1); }
+}
+
+@keyframes smoke-two {
+  0%, 100% { transform: translate3d(3%, -5%, 0) rotate(4deg) scale(1.08); }
+  50% { transform: translate3d(-5%, 6%, 0) rotate(-6deg) scale(0.96); }
+}
+
+@keyframes smoke-three {
+  0%, 100% { transform: translate3d(-2%, 6%, 0) rotate(-3deg) scale(0.98); }
+  50% { transform: translate3d(4%, -8%, 0) rotate(5deg) scale(1.12); }
+}
+
+@media (max-width: 600px) {
+  .card {
+    border-radius: 20px;
+    padding: 24px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters {
+    display: none;
+  }
+
+  .smoke {
+    animation: none;
+    filter: blur(36px);
+  }
+}

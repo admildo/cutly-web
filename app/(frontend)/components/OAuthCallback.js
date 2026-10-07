@@ -28,7 +28,7 @@ export function OAuthCallback({ returnTo = '/' }) {
     const { error: finalizeError } = await resource.finalize({
       navigate: ({ session, decorateUrl }) => {
         if (session?.currentTask) {
-          setError('Your account needs another security step. Please restart sign-in or contact Cutly support.')
+          setError('Your account needs another security step. Please restart sign-in or contact Deyn Studio support.')
           return
         }
         window.location.replace(decorateUrl(returnTo))
@@ -75,7 +75,7 @@ export function OAuthCallback({ returnTo = '/' }) {
             .map((factor) => factor.strategy)
             .filter((strategy) => ['totp', 'backup_code', 'email_code', 'phone_code'].includes(strategy))
           const selectedStrategy = ['totp', 'email_code', 'phone_code', 'backup_code'].find((strategy) => availableStrategies.includes(strategy))
-          if (!selectedStrategy) throw new Error('This account needs a verification method that is not available here. Please contact Cutly support.')
+          if (!selectedStrategy) throw new Error('This account needs a verification method that is not available here. Please contact Deyn Studio support.')
 
           setNeedsVerification(true)
           setVerificationStrategy(selectedStrategy)
@@ -118,7 +118,7 @@ export function OAuthCallback({ returnTo = '/' }) {
             session: existingSessionId,
             navigate: ({ session, decorateUrl }) => {
               if (session?.currentTask) {
-                setError('Your account needs another security step. Please restart sign-in or contact Cutly support.')
+                setError('Your account needs another security step. Please restart sign-in or contact Deyn Studio support.')
                 return
               }
               window.location.replace(decorateUrl(returnTo))
@@ -148,7 +148,7 @@ export function OAuthCallback({ returnTo = '/' }) {
 
     const unsupported = missing.some((field) => !['first_name', 'last_name', 'legal_accepted'].includes(field))
     if (unsupported) {
-      setError('We need one more account detail that can’t be collected here. Please contact Cutly support.')
+      setError('We need one more account detail that can’t be collected here. Please contact Deyn Studio support.')
       return
     }
 
@@ -226,7 +226,7 @@ export function OAuthCallback({ returnTo = '/' }) {
           <>
             <p className="mb-4 text-[10px] font-semibold tracking-[0.18em] text-[#a6a4a4]">SECURE SIGN-IN</p>
             <h1 className="mb-0 text-[32px] font-semibold leading-tight tracking-[-0.05em] text-[#f2f0ef]">Verify it’s you.</h1>
-            <p className="mb-0 mt-3 text-[15px] leading-6 text-[#a6a4a4]">Complete the extra security step on your Cutly account to continue.</p>
+            <p className="mb-0 mt-3 text-[15px] leading-6 text-[#a6a4a4]">Complete the extra security step on your Deyn Studio account to continue.</p>
             <form className="mt-7 space-y-4" onSubmit={verifySecondFactor}>
               {availableVerificationStrategies.length > 1 ? (
                 <label className="block text-[13px] font-medium text-[#cccbca]">
@@ -253,7 +253,7 @@ export function OAuthCallback({ returnTo = '/' }) {
           <>
             <p className="mb-4 text-[10px] font-semibold tracking-[0.18em] text-[#a6a4a4]">FINISH SETUP</p>
             <h1 className="mb-0 text-[32px] font-semibold leading-tight tracking-[-0.05em] text-[#f2f0ef]">One last detail.</h1>
-            <p className="mb-0 mt-3 text-[15px] leading-6 text-[#a6a4a4]">Add the details needed to finish your Cutly account.</p>
+            <p className="mb-0 mt-3 text-[15px] leading-6 text-[#a6a4a4]">Add the details needed to finish your Deyn Studio account.</p>
             <form className="mt-7 space-y-4" onSubmit={finishProfile}>
               {missing.includes('first_name') ? (
                 <label className="block text-[13px] font-medium text-[#cccbca]">
@@ -270,7 +270,7 @@ export function OAuthCallback({ returnTo = '/' }) {
               {missing.includes('legal_accepted') ? (
                 <label className="flex items-start gap-3 text-[13px] leading-5 text-[#a6a4a4]">
                   <input type="checkbox" checked={legalAccepted} onChange={(event) => setLegalAccepted(event.target.checked)} required className="mt-1 accent-[#cccbca]" />
-                  <span>I agree to the Cutly <Link href="/terms" className="text-[#f2f0ef] underline underline-offset-2">Terms</Link> and <Link href="/privacy" className="text-[#f2f0ef] underline underline-offset-2">Privacy Policy</Link>.</span>
+                  <span>I agree to the Deyn Studio <Link href="/terms" className="text-[#f2f0ef] underline underline-offset-2">Terms</Link> and <Link href="/privacy" className="text-[#f2f0ef] underline underline-offset-2">Privacy Policy</Link>.</span>
                 </label>
               ) : null}
               {error ? <p role="alert" className="m-0 rounded-lg border border-[#807e7e] bg-[#242322] px-3.5 py-3 text-[13px] leading-5 text-[#f2f0ef]">{error}</p> : null}

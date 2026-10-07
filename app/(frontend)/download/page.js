@@ -3,7 +3,7 @@ import { InfoPage, Section } from '@/app/components/InfoPage'
 
 import { createPageMetadata } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'Download Cutly', description: 'Download or open the Cutly desktop app.', path: '/download' })
+export const metadata = createPageMetadata({ title: 'Download Deyn Studio', description: 'Download or open the Deyn Studio desktop app.', path: '/download' })
 
 const safeExternalUrl = (value) => {
   try {
@@ -14,8 +14,8 @@ const safeExternalUrl = (value) => {
 
 export default function DownloadPage() {
   const downloadUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
-  return <InfoPage eyebrow="CUTLY DESKTOP" title="Open or download Cutly" intro="The account portal manages your identity and license. Create and export clips in the desktop app.">
+  return <InfoPage eyebrow="DEYN STUDIO DESKTOP" title="Open or download Deyn Studio" intro="Manage your account here. Find, edit, and export clips in the desktop app.">
     <AppAccess downloadUrl={downloadUrl} allowReleasePage={false} />
-    <Section title="Before you install"><p>Download only from an official Cutly release. Keep the app updated, and only process media you have the right to use.</p></Section>
+    <Section title="Before you install"><p>Download Deyn Studio from an official release. Keep the app updated, and only process media you have permission to use.</p></Section>
   </InfoPage>
 }

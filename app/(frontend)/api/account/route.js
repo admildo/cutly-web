@@ -28,7 +28,7 @@ export async function DELETE(request) {
   try {
     await markUserDeleted(userId)
   } catch (error) {
-    console.error('Could not mark the deleted account in Cutly records:', error)
+    console.error('Could not mark the deleted account in Deyn Studio records:', error)
   }
 
   return Response.json({ success: true })

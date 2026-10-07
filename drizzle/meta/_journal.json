@@ -43,6 +43,13 @@
       "when": 1790770198823,
       "tag": "0005_chubby_thundra",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1791379439521,
+      "tag": "0006_add_media_assistant_trial_allowance",
+      "breakpoints": true
     }
   ]
 }

@@ -2,7 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import Stripe from 'stripe'
 
 const getCheckoutOrigin = (request) => {
-  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.CUTLY_SITE_URL
+  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.DEYN STUDIO_SITE_URL
   if (!configuredOrigin) {
     return process.env.NODE_ENV === 'production' ? null : new URL(request.url).origin
   }
@@ -19,7 +19,7 @@ const getCheckoutOrigin = (request) => {
 
 export async function POST(request) {
   const { userId } = await auth()
-  if (!userId) return Response.json({ error: 'You must be signed in to purchase Cutly.' }, { status: 401 })
+  if (!userId) return Response.json({ error: 'You must be signed in to purchase Deyn Studio.' }, { status: 401 })
 
   const priceId = process.env.STRIPE_LIFETIME_PRICE_ID
   const secretKey = process.env.STRIPE_SECRET_KEY

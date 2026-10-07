@@ -2,33 +2,33 @@ import { Eraser, FilmStrip, Images, Microphone, Toolbox, WaveformSlash } from '@
 
 const tools = [
   {
-    title: 'Remove image backgrounds offline',
-    description: 'Cut out subjects locally, without sending your images to a cloud service.',
+    title: 'Remove image backgrounds',
+    description: 'Cut out a subject on your device; your image stays local.',
     Icon: Eraser
   },
   {
-    title: 'Compress and convert videos',
-    description: 'Reduce file sizes or convert videos to another format.',
+    title: 'Convert or compress video',
+    description: 'Change formats or shrink files for easier sharing.',
     Icon: FilmStrip
   },
   {
-    title: 'Bulk image compression and conversion',
-    description: 'Process batches of image files in one pass.',
+    title: 'Batch process images',
+    description: 'Compress or convert a folder of images in one pass.',
     Icon: Images
   },
   {
-    title: 'Smart audio censoring',
-    description: 'Find sensitive speech and censor it in the audio.',
+    title: 'Clean up spoken audio',
+    description: 'Find selected words in a recording and beep or mute them.',
     Icon: WaveformSlash
   },
   {
-    title: 'Local Whisper transcription',
-    description: 'Transcribe recordings on your device with bundled Whisper.',
+    title: 'Transcribe on your device',
+    description: 'Deyn includes Whisper, so local transcription needs no provider key.',
     Icon: Microphone
   },
   {
-    title: 'A growing set of tools',
-    description: 'More focused utilities keep joining the Deyn Studio desktop workspace.',
+    title: 'Tools for more media jobs',
+    description: 'Handle common video, audio, image, and document tasks in Deyn Studio.',
     Icon: Toolbox
   }
 ]
@@ -38,9 +38,9 @@ export function BuiltForWork() {
     <section className="w-full bg-[#0d0d0d] px-[clamp(24px,5vw,84px)] py-[clamp(88px,8vw,112px)] max-[700px]:py-[clamp(64px,10vw,72px)] max-[600px]:px-5">
       <div className="mx-auto grid max-w-[1360px] grid-cols-[minmax(0,.78fr)_minmax(0,1.22fr)] gap-[clamp(64px,9vw,140px)] max-[900px]:grid-cols-1 max-[900px]:gap-12 max-[600px]:gap-9">
         <header className="max-w-[440px]">
-          <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">The Deyn Studio toolkit</span>
-          <h2 className="mb-0 mt-5 font-serif text-[clamp(48px,5.5vw,68px)] font-normal leading-[.98] tracking-[-.06em] text-[#f0efe9] max-[600px]:text-[46px]">Many more<br />features.</h2>
-          <p className="mb-0 mt-6 max-w-[390px] text-[16px] leading-[1.7] text-[#969aa5]">A growing set of practical tools for the work around every video.</p>
+          <span className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9297a4]">More than clip editing</span>
+          <h2 className="mb-0 mt-5 font-serif text-[clamp(48px,5.5vw,68px)] font-normal leading-[.98] tracking-[-.06em] text-[#f0efe9] max-[600px]:text-[46px]">The rest of<br />your media work.</h2>
+          <p className="mb-0 mt-6 max-w-[390px] text-[16px] leading-[1.7] text-[#969aa5]">Handle audio, images, and documents without leaving Deyn Studio.</p>
         </header>
 
         <div className="border-t border-[#292b32]">

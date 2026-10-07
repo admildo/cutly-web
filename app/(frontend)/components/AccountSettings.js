@@ -64,7 +64,7 @@ export function AccountSettings({ initialProfile, isTrialAdmin = false }) {
     <main className="min-h-screen [color-scheme:dark] bg-[#171716] px-5 py-6 text-[#f2f0ef] sm:px-8 sm:py-8">
       <div className="mx-auto max-w-4xl">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#807e7e]/40 pb-5">
-          <Link href="/" aria-label="Cutly home" className="text-sm font-semibold tracking-[0.22em] text-[#f2f0ef] no-underline">CUTLY</Link>
+          <Link href="/" aria-label="Deyn Studio home" className="text-sm font-semibold tracking-[0.22em] text-[#f2f0ef] no-underline">DEYN STUDIO</Link>
           <div className="flex flex-wrap items-center gap-4">
             {isTrialAdmin ? <Link href="/account/trial-settings" className="text-sm text-[#a6a4a4] underline-offset-4 hover:text-[#f2f0ef] hover:underline">Trial controls</Link> : null}
             <Link href="/" className="text-sm text-[#a6a4a4] underline-offset-4 hover:text-[#f2f0ef] hover:underline">Back to your license</Link>
@@ -73,15 +73,15 @@ export function AccountSettings({ initialProfile, isTrialAdmin = false }) {
         </header>
 
         <section className="py-12 sm:py-16">
-          <p className="text-xs font-semibold tracking-[0.16em] text-[#a6a4a4]">YOUR CUTLY ACCOUNT</p>
+          <p className="text-xs font-semibold tracking-[0.16em] text-[#a6a4a4]">YOUR DEYN STUDIO ACCOUNT</p>
           <h1 className="mb-0 mt-4 text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Account settings</h1>
-          <p className="mb-0 mt-3 max-w-2xl text-base leading-7 text-[#a6a4a4]">Manage the details connected to your Cutly account.</p>
+          <p className="mb-0 mt-3 max-w-2xl text-base leading-7 text-[#a6a4a4]">Manage the details connected to your Deyn Studio account.</p>
 
           <form onSubmit={saveProfile} className="mt-9 rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-6 sm:p-8">
             <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#807e7e]/40 pb-5">
               <div>
                 <h2 className="m-0 text-xl font-medium tracking-[-0.025em]">Personal details</h2>
-                <p className="mb-0 mt-2 text-sm text-[#a6a4a4]">Your name appears with your Cutly account.</p>
+                <p className="mb-0 mt-2 text-sm text-[#a6a4a4]">Your name appears with your Deyn Studio account.</p>
               </div>
               <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-full bg-[#343332] text-sm font-semibold text-[#cccbca]">
                 {(firstName || initialProfile.email || 'C').slice(0, 1).toUpperCase()}
@@ -115,7 +115,7 @@ export function AccountSettings({ initialProfile, isTrialAdmin = false }) {
             <div className="max-w-2xl">
               <p className="mb-2 text-xs font-semibold tracking-[0.14em] text-[#a6a4a4]">DATA & PRIVACY</p>
               <h2 id="delete-account-title" className="m-0 text-xl font-medium tracking-[-0.025em]">Delete your account</h2>
-              <p className="mb-0 mt-3 text-sm leading-6 text-[#a6a4a4]">You can permanently remove your Cutly sign-in and profile here. This also signs out your desktop sessions. License and transaction records may be retained as described in our <Link href="/privacy" className="font-medium text-[#f2f0ef] underline underline-offset-2">Privacy Policy</Link>.</p>
+              <p className="mb-0 mt-3 text-sm leading-6 text-[#a6a4a4]">You can permanently remove your Deyn Studio sign-in and profile here. This also signs out your desktop sessions. License and transaction records may be retained as described in our <Link href="/privacy" className="font-medium text-[#f2f0ef] underline underline-offset-2">Privacy Policy</Link>.</p>
             </div>
 
             {!confirmingDelete ? (

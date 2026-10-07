@@ -1,7 +1,7 @@
 const ASSET_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 
 function getStorageBase() {
-  const configuredUrl = process.env.CUTLY_UPDATE_STORAGE_URL
+  const configuredUrl = process.env.DEYN STUDIO_UPDATE_STORAGE_URL
   if (!configuredUrl) return null
 
   try {
@@ -25,7 +25,7 @@ function getStorageBase() {
 async function forwardToReleaseStore(request, context) {
   const storageBase = getStorageBase()
   if (!storageBase) {
-    return new Response('Cutly update storage is not configured.', { status: 503 })
+    return new Response('Deyn Studio update storage is not configured.', { status: 503 })
   }
 
   const { asset } = await context.params

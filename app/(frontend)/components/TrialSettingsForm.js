@@ -5,7 +5,8 @@ import { useState } from 'react'
 const allowanceFields = [
   { key: 'clipGenerationsMax', label: 'AI clip generations', help: 'Initial clip generation and reprompts share this allowance.' },
   { key: 'smartCleanMax', label: 'Smart audio cleaning', help: 'Each AI word-matching action uses one allowance.' },
-  { key: 'captionTranslationsMax', label: 'Caption translations', help: 'Each translation action uses one allowance.' }
+  { key: 'captionTranslationsMax', label: 'Caption translations', help: 'Each translation action uses one allowance.' },
+  { key: 'mediaAssistantPlansMax', label: 'Media Assistant plans', help: 'Each new plan or AI-assisted revision uses one allowance.' }
 ]
 
 export function TrialSettingsForm({ initialConfig }) {
@@ -14,6 +15,7 @@ export function TrialSettingsForm({ initialConfig }) {
     clipGenerationsMax: initialConfig.clipGenerationsMax,
     smartCleanMax: initialConfig.smartCleanMax,
     captionTranslationsMax: initialConfig.captionTranslationsMax,
+    mediaAssistantPlansMax: initialConfig.mediaAssistantPlansMax,
     dailyBudgetDollars: (initialConfig.dailyBudgetMicros / 1_000_000).toFixed(2),
     monthlyBudgetDollars: (initialConfig.monthlyBudgetMicros / 1_000_000).toFixed(2)
   })
@@ -38,6 +40,7 @@ export function TrialSettingsForm({ initialConfig }) {
           clipGenerationsMax: Number(values.clipGenerationsMax),
           smartCleanMax: Number(values.smartCleanMax),
           captionTranslationsMax: Number(values.captionTranslationsMax),
+          mediaAssistantPlansMax: Number(values.mediaAssistantPlansMax),
           dailyBudgetDollars: Number(values.dailyBudgetDollars),
           monthlyBudgetDollars: Number(values.monthlyBudgetDollars)
         })
@@ -49,6 +52,7 @@ export function TrialSettingsForm({ initialConfig }) {
         clipGenerationsMax: result.clipGenerationsMax,
         smartCleanMax: result.smartCleanMax,
         captionTranslationsMax: result.captionTranslationsMax,
+        mediaAssistantPlansMax: result.mediaAssistantPlansMax,
         dailyBudgetDollars: (result.dailyBudgetMicros / 1_000_000).toFixed(2),
         monthlyBudgetDollars: (result.monthlyBudgetMicros / 1_000_000).toFixed(2)
       })

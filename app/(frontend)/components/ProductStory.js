@@ -7,8 +7,8 @@ import styles from './ProductStory.module.css'
 const stories = [
   {
     number: '01',
-    title: 'Start with the whole recording',
-    description: 'Bring in a video or link, then choose Auto shorts, search for a moment, or set the cut yourself.',
+    title: 'Bring in a long video',
+    description: 'Import a video or paste a supported public link. Let Deyn suggest clips, search for a moment, or choose the cut yourself.',
 
     image: '/app-shots/home-p.png',
     imageBackground: '13 13 13',
@@ -16,16 +16,16 @@ const stories = [
   },
   {
     number: '02',
-    title: 'See every strong moment at once',
-    description: 'Deyn Studio turns a recording into a visual set of clips, with timing and titles ready for the next pass.',
+    title: 'Find the moments worth sharing',
+    description: 'AI finds moments in the transcript and suggests clips. Review the timing and titles, then choose what to keep.',
     image: '/app-shots/clips-p.png',
     imageBackground: '43 34 117',
     alt: 'A grid of clips generated from a video in Deyn Studio'
   },
   {
     number: '03',
-    title: 'Finish the clip in one workspace',
-    description: 'Edit the transcript, frame the subject, style captions, and export without rebuilding the work elsewhere.',
+    title: 'Polish each clip and export',
+    description: 'Edit the transcript, style captions, frame for portrait video, and export from the same app.',
     image: '/app-shots/editor.png',
     imageBackground: '43 34 117',
     alt: 'Deyn Studio editor with transcript, portrait preview, and caption controls'
@@ -183,15 +183,15 @@ export function ProductStory() {
       aria-labelledby="product-story-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[1420px]">
-        <h2 id="product-story-heading" className="mx-auto mb-4 max-w-[760px] text-center font-serif text-[42px] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[900px]:text-[clamp(34px,4.4vw,42px)] max-[600px]:text-[clamp(30px,7vw,36px)] max-[600px]:tracking-[-.05em]">
-          Deyn Studio reads between the frames
+        <h2 id="product-story-heading" className="relative z-30 mx-auto mb-7 max-w-[640px] text-center font-serif text-[36px] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[900px]:text-[clamp(30px,3.8vw,36px)] max-[600px]:mb-6 max-[600px]:text-[clamp(26px,6.5vw,32px)] max-[600px]:tracking-[-.05em]">
+          From long video to finished clips
         </h2>
-       
+
 
         <div role="group" aria-label="Deyn Studio editing workflow" className="relative">
           <div ref={stickyStageRef} className="sticky top-[72px] z-20 flex h-[calc(100svh-84px)] w-full items-center justify-center max-[600px]:top-[64px] max-[600px]:h-[calc(100svh-76px)]">
               <div className="relative mx-auto w-[115%] pb-[132px]" style={{ maxWidth: 'min(1380px, max(805px, 57.5vw), calc(184svh - 313px), calc(100vw - 24px))', perspective: '1400px', transform: 'translateY(10px)' }}>
-                <div className={`relative w-full ${stories[active].video ? 'aspect-video' : 'aspect-[3/2]'}`} aria-hidden="true" />
+                <div className={`relative mx-auto w-[90%] ${stories[active].video ? 'aspect-video' : 'aspect-[3/2]'}`} aria-hidden="true" />
 
               {stories.map((story, index) => {
                 const isActive = index === active
@@ -219,7 +219,7 @@ export function ProductStory() {
                   >
                     <>
                       <div
-                        className={`relative w-full overflow-hidden rounded-[26px] bg-black transition-[box-shadow] duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${story.video ? 'aspect-video' : 'aspect-[3/2]'} ${isActive ? '' : 'opacity-95'}`}
+                        className={`relative mx-auto w-[90%] overflow-hidden rounded-[26px] bg-black transition-[box-shadow] duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${story.video ? 'aspect-video' : 'aspect-[3/2]'} ${isActive ? '' : 'opacity-95'}`}
                         style={{
                           boxShadow: isActive
                             ? '0 34px 72px -28px rgb(0 0 0 / .8), 0 8px 22px -10px rgb(0 0 0 / .48)'
@@ -256,7 +256,7 @@ export function ProductStory() {
                         className={`relative z-20 mt-5 flex min-h-[152px] items-center justify-center px-7 py-6 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] max-[600px]:mt-4 max-[600px]:min-h-[156px] max-[600px]:px-4 max-[600px]:py-5 ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                       >
                         <div key={`${story.number}-${showCopy ? `active-${active}-${scrollDirection}` : 'idle'}`} className="relative">
-                          <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(26px,2.6vw,36px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed] max-[600px]:text-[25px]`}>
+                          <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(16px,2.6vw,26px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed] max-[600px]:text-[20px]`}>
                             {story.title}
                           </h3>
                           <p className={`${showCopy ? descriptionAnimation : ''} mx-auto mb-0 mt-3 max-w-[52ch] text-[15px] leading-[1.65] text-[#b9babd] max-[900px]:text-[14px] max-[600px]:mt-2 max-[600px]:text-[14px] max-[600px]:leading-[1.6]`}>

@@ -4,7 +4,7 @@ import { AuthForm } from '../components/AuthForm'
 import { AuthLayout } from '../components/AuthLayout'
 import { normalizeInternalReturnPath } from '@/lib/auth-redirect'
 
-export const metadata = { title: 'Connecting to Cutly', robots: { index: false, follow: false } }
+export const metadata = { title: 'Connecting to Deyn Studio', robots: { index: false, follow: false } }
 import { createDesktopAuthGrant } from '@/lib/desktop-auth'
 
 const getCallback = (redirectUri, state) => {
@@ -35,12 +35,12 @@ export default async function DesktopAuthPage({ searchParams }) {
               <path d="M10 6.25v4.25m0 3.25h.01M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <h1 className="mb-0 text-[25px] font-semibold leading-tight tracking-[-0.04em]">This link can’t connect to Cutly desktop</h1>
+          <h1 className="mb-0 text-[25px] font-semibold leading-tight tracking-[-0.04em]">This link can’t connect to Deyn Studio desktop</h1>
           <p className="mb-0 mt-3 text-[14px] leading-6 text-[#807e7e]">
-            Close this tab and start again from the Cutly desktop app so it can receive your sign-in securely.
+            Close this tab and start again from the Deyn Studio desktop app so it can receive your sign-in securely.
           </p>
           <a href="/download" className="mt-6 inline-flex min-h-12 items-center justify-center rounded-xl bg-[#171716] px-5 text-[14px] font-semibold text-[#f2f0ef] no-underline transition-colors hover:bg-[#343332]">
-            Get Cutly for desktop
+            Get Deyn Studio for desktop
           </a>
         </div>
       </AuthLayout>

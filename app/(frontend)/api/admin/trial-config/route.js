@@ -37,7 +37,7 @@ export async function PATCH(request) {
     return json({ error: 'A valid settings object is required.' }, 400)
   }
   const allowedKeys = new Set([
-    'enabled', 'clipGenerationsMax', 'smartCleanMax', 'captionTranslationsMax',
+    'enabled', 'clipGenerationsMax', 'smartCleanMax', 'captionTranslationsMax', 'mediaAssistantPlansMax',
     'dailyBudgetDollars', 'monthlyBudgetDollars'
   ])
   if (!payload || typeof payload !== 'object' || Array.isArray(payload) ||
@@ -45,7 +45,7 @@ export async function PATCH(request) {
     return json({ error: 'The trial settings are invalid.' }, 400)
   }
 
-  const counts = ['clipGenerationsMax', 'smartCleanMax', 'captionTranslationsMax']
+  const counts = ['clipGenerationsMax', 'smartCleanMax', 'captionTranslationsMax', 'mediaAssistantPlansMax']
   if (counts.some((key) => !Number.isInteger(payload[key]) || payload[key] < 0 || payload[key] > 20)) {
     return json({ error: 'Each trial allowance must be a whole number from 0 to 20.' }, 400)
   }
@@ -62,6 +62,7 @@ export async function PATCH(request) {
       clipGenerationsMax: payload.clipGenerationsMax,
       smartCleanMax: payload.smartCleanMax,
       captionTranslationsMax: payload.captionTranslationsMax,
+      mediaAssistantPlansMax: payload.mediaAssistantPlansMax,
       dailyBudgetMicros: Math.round(payload.dailyBudgetDollars * 1_000_000),
       monthlyBudgetMicros: Math.round(payload.monthlyBudgetDollars * 1_000_000)
     }, userId)

@@ -25,7 +25,7 @@ async function getPost(slug) {
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const post = await getPost(slug)
-  if (!post) return { title: 'Post not found | Cutly', robots: { index: false, follow: false } }
+  if (!post) return { title: 'Post not found | Deyn Studio', robots: { index: false, follow: false } }
   return createPageMetadata({
     title: post.title,
     description: post.excerpt,
@@ -58,8 +58,8 @@ export default async function BlogPostPage({ params }) {
               dateModified: post.updatedAt || post.publishedAt,
               mainEntityOfPage: new URL(`/blog/${encodeURIComponent(post.slug)}`, siteOrigin).toString(),
               image: post.coverImageUrl || undefined,
-              author: { '@type': 'Organization', name: 'Cutly', url: siteOrigin },
-              publisher: { '@type': 'Organization', name: 'Cutly', url: siteOrigin }
+              author: { '@type': 'Organization', name: 'Deyn Studio', url: siteOrigin },
+              publisher: { '@type': 'Organization', name: 'Deyn Studio', url: siteOrigin }
             })
           }}
         />

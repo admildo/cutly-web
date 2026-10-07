@@ -7,8 +7,8 @@ import styles from './MediaAssistantTools.module.css'
 const slides = [
   {
     number: '01',
-    title: 'A media assistant that starts with your request',
-    description: 'Describe the edit you have in mind. Media Assistant turns it into a clear plan you can review, adjust, and run on your selected files.',
+    title: 'Describe the job. Get a plan.',
+    description: 'Choose files and tell Media Assistant what you need. Review the steps before they run.',
     image: '/app-shots/tools.png',
     width: 1920,
     height: 1440,
@@ -16,21 +16,21 @@ const slides = [
   },
   {
     number: '02',
-    title: 'Tools for every kind of media',
-    description: 'Move between video, audio, image, and document tools in one desktop workspace, with focused controls for the task at hand.',
+    title: 'Review each step before it runs',
+    description: 'Adjust the plan, remove a step, or save it to reuse with compatible files.',
     image: '/app-shots/tools-2.png',
     width: 1920,
     height: 1440,
-    alt: 'A grid of clips generated from a video in Deyn Studio'
+    alt: 'Media Assistant plan with proposed video changes for review'
   },
   {
     number: '03',
-    title: 'Stay in control from plan to finish',
-    description: 'Review each proposed step, make it your own, and keep your media and results together as you finish the edit.',
+    title: 'Track your work over time',
+    description: 'See clip, export, and assistant activity at a glance, right in Deyn Studio.',
     image: '/app-shots/usage-p.png',
     width: 1920,
     height: 1440,
-    alt: 'Deyn Studio editor with transcript, portrait preview, and caption controls'
+    alt: 'Deyn Studio activity dashboard with clip and export statistics'
   }
 ]
 

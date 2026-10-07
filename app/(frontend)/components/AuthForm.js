@@ -59,12 +59,12 @@ export function AuthForm({ mode = 'sign-in', returnTo = '/' }) {
         {isSignUp ? 'CREATE YOUR ACCOUNT' : 'ACCOUNT ACCESS'}
       </p>
       <h1 id="auth-title" className="mb-0 text-[clamp(32px,4vw,42px)] font-semibold leading-[1.02] tracking-[-0.055em] text-[#f2f0ef]">
-        {isSignUp ? 'Make room for your next great clip.' : 'Welcome back.'}
+        {isSignUp ? 'Find more in every recording.' : 'Welcome back.'}
       </h1>
       <p className="mb-0 mt-3 max-w-[370px] text-[15px] leading-6 text-[#a6a4a4]">
         {isSignUp
-          ? 'Create your Cutly account to connect your desktop editor and license.'
-          : 'Sign in to your Cutly account and get back to creating.'}
+          ? 'Create an account to set up Deyn Studio and manage your license.'
+          : 'Sign in to manage your license and reconnect the desktop app.'}
       </p>
 
       {authLoaded && isSignedIn ? (
@@ -84,7 +84,7 @@ export function AuthForm({ mode = 'sign-in', returnTo = '/' }) {
       {error ? <p role="alert" className="mb-0 mt-4 rounded-lg border border-[#807e7e] bg-[#242322] px-3.5 py-3 text-[13px] leading-5 text-[#f2f0ef]">{error}</p> : null}
 
       <p className="mb-0 mt-7 text-center text-[13px] text-[#a6a4a4]">
-        {isSignUp ? 'Already have an account?' : 'New to Cutly?'}{' '}
+        {isSignUp ? 'Already have an account?' : 'New to Deyn Studio?'}{' '}
         <Link
           href={isSignUp ? `/sign-in?returnTo=${encodeURIComponent(returnTo)}` : `/sign-up?returnTo=${encodeURIComponent(returnTo)}`}
           className="font-semibold text-[#f2f0ef] underline decoration-[#807e7e] underline-offset-4 transition-colors hover:text-[#cccbca]"

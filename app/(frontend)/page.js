@@ -7,19 +7,20 @@ import { DynamicIslandNav } from '@/app/components/DynamicIslandNav'
 import { HeroSpiral } from '@/app/components/HeroSpiral'
 import { ProductStory } from '@/app/components/ProductStory'
 import { MediaAssistantTools } from '@/app/components/MediaAssistantTools'
-import { FeatureBento } from '@/app/components/FeatureBento'
+import { WhyUs } from '@/app/components/WhyUs'
 import { BuiltForWork } from '@/app/components/BuiltForWork'
 import { SiteFooter, SiteHeader } from '@/app/components/SiteChrome'
 import { FAQSection } from '@/app/components/FAQSection'
+import { PricingCard } from '@/app/components/PricingCard'
 import { RefreshLicenseStatusButton } from '@/app/components/RefreshLicenseStatusButton'
 import { AccountMenu } from '@/app/components/AccountMenu'
 import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
 
 export const metadata = createPageMetadata({
-  title: 'A Desktop Workspace for Media Editing',
-  description: 'Deyn Studio brings assistant-guided editing, video workflows, audio and image tools, and document utilities into one desktop workspace.',
+  title: 'Turn Long Videos Into Shareable Clips',
+  description: 'Find the best moments in a long video, add captions and portrait framing, and export clips from one desktop app.',
   path: '/',
-  image: { url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop media workspace' }
+  image: { url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop app showing a video clip workflow' }
 })
 
 const safeExternalUrl = (value) => {
@@ -53,7 +54,7 @@ function MarketingPage({ downloadUrl }) {
             name: 'Deyn Studio',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'macOS, Windows, Linux',
-            description: 'A desktop media editing and automation workspace with assistant-guided workflows, video, audio, image, and document tools.',
+            description: 'A desktop app for finding moments in long videos, editing captions and framing, and exporting shareable clips.',
             url: siteOrigin
           })
         }}
@@ -65,45 +66,42 @@ function MarketingPage({ downloadUrl }) {
 
       <MediaAssistantTools />
 
-      <FeatureBento />
+      <WhyUs />
 
-      <BuiltForWork />
 
-      <section className="mx-auto scroll-mt-[24px] w-[min(1000px,calc(100%_-_48px))] border-t border-[#252a36] px-6 py-[clamp(88px,8vw,112px)] max-[700px]:py-[clamp(64px,10vw,72px)] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0" id="pricing">
-        <div className="mx-auto mb-12 max-w-[700px] text-center max-[600px]:mb-9">
+
+      <section className="mx-auto scroll-mt-[24px] w-[min(900px,calc(100%_-_48px))] px-6 py-[clamp(76px,7vw,96px)] max-[700px]:py-[clamp(60px,9vw,72px)] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0" id="pricing">
+        <div className="mx-auto mb-10 max-w-[700px] text-center max-[600px]:mb-8">
           <span className="text-sm text-[#aab7d7]">Pricing</span>
-          <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[48px]">Pay once.<br />Keep creating.</h2>
-          <p className="mx-auto mb-0 mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[#9398a4]">Get the full Deyn Studio workspace at a special one-time launch price, with future desktop updates and use on up to two devices.</p>
+          <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[48px]">A lifetime license.<br />One payment.</h2>
+          <p className="mx-auto mb-0 mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[#9398a4]">Use Deyn Studio on up to two devices. Future desktop updates are included.</p>
         </div>
-        <div className="relative mx-auto max-w-[760px] max-[600px]:max-w-none">
-          <div aria-hidden="true" className="pointer-events-none absolute -inset-8 rounded-[42px] bg-[radial-gradient(ellipse_at_50%_38%,rgb(157_139_103/.14),transparent_72%)] blur-2xl" />
-          <div className="relative overflow-hidden rounded-[28px] border border-[#494947] bg-[linear-gradient(145deg,#2b2b2a,#20201f_55%,#171716)] p-10 shadow-[0_32px_90px_rgb(0_0_0/.48)] backdrop-blur-2xl max-[600px]:rounded-[20px] max-[600px]:p-6">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex rounded-full border border-[#a48c5e]/35 bg-[#a48c5e]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Launch offer</span>
-              <span className="inline-flex rounded-full border border-[#8e9b7a]/35 bg-[#8e9b7a]/[0.12] px-3.5 py-1.5 text-[12px] font-semibold text-[#d5dfc1]">Special one-time price</span>
+        <div className="relative mx-auto max-w-[560px] max-[600px]:max-w-none">
+          <div aria-hidden="true" className="pointer-events-none absolute -inset-6 rounded-[38px] bg-[radial-gradient(ellipse_at_50%_38%,rgb(157_139_103/.13),transparent_72%)] blur-2xl" />
+          <PricingCard>
+            <span className="inline-flex rounded-full bg-[#a48c5e]/[0.14] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Launch price</span>
+            <p className="mb-0 mt-5 text-[12px] font-semibold uppercase tracking-[.13em] text-[#b8b6ae]">Lifetime license</p>
+            <div className="mt-2 flex flex-wrap items-baseline justify-center gap-x-3 text-[#f4f2ed]">
+              <span className="text-[58px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[52px]">€39</span>
+              <s aria-label="Regular price €69" className="text-[24px] font-medium leading-none tracking-[-.04em] text-[#b0a0a1] decoration-white decoration-[0.5px] max-[600px]:text-[21px]">€69</s>
+              <span className="rounded-full bg-[#8e9b7a]/[0.14] px-2.5 py-1 text-[11px] font-semibold tracking-[.01em] text-[#c9d5b8]">43% off</span>
             </div>
-            <h2 className="mb-0 mt-6 text-[30px] font-semibold leading-[1.12] tracking-[-.045em] text-[#f1f1f4] max-[600px]:mt-5 max-[600px]:text-[25px]">A launch offer on the whole workspace.</h2>
-            <p className="mb-0 mt-3 max-w-[590px] text-[17px] leading-[1.55] text-[#c1c3cc] max-[600px]:text-[15px]">Get the desktop license once, then use Deyn Studio on up to two devices.</p>
-            <div className="mt-6 flex flex-wrap items-end gap-x-4 gap-y-1 text-[#f4f2ed]">
-              <span className="text-[68px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[58px]">€39</span>
-            </div>
-            <p className="mb-0 mt-2 text-[13px] font-medium tracking-[.01em] text-[#b8b6ae]">Special launch price · One-time lifetime license</p>
-            <div className="my-7 h-px bg-white/[0.12]" />
-            <ul className="mb-0 mt-0 grid list-none gap-4 p-0 text-[16px] text-[#ececf0] max-[600px]:gap-3.5 max-[600px]:text-[14px]">
-              {['Assistant-guided editing workflows', 'Video, audio, image, and document tools', 'Bundled local Whisper transcription', 'Use on up to two devices', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[16px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
+            <p className="mx-auto mb-0 mt-3 max-w-[400px] text-[14px] leading-[1.6] text-[#c1c3cc]">Find moments, edit captions, and export from one desktop app.</p>
+            <ul className="mx-auto mb-0 mt-6 grid w-fit list-none gap-3 p-0 text-left text-[14px] text-[#ececf0] max-[600px]:gap-2.5 max-[600px]:text-[13px]">
+              {['Find and edit clips from long videos', 'Caption and reframe each clip', 'Transcribe on your device', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[15px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
             </ul>
-            <p className="mb-0 mt-6 max-w-[620px] text-[14px] leading-[1.65] text-[#c1c3cc]">The license covers Deyn Studio and desktop updates. A limited sponsored AI trial is metered; after it, supported AI features can use your own OpenRouter key, with provider usage billed separately. Local Whisper transcription runs on your device without a per-use provider fee.</p>
-            <Link href="/sign-up" className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[16px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get the launch price</Link>
-            <small className="mt-4 block text-center text-[13px] text-[#a9a79f]">For macOS, Windows, and Linux.</small>
-            <div className="mt-3 text-center text-[12px] text-[#a9acb7]">Already have Deyn Studio? <Link href="/sign-in" className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">Log in</Link></div>
-          </div>
+            <p className="mx-auto mb-0 mt-5 max-w-[440px] text-[12px] leading-[1.6] text-[#aaa9a3]">Eligible accounts get a limited AI trial. After it ends, add an OpenRouter API key and choose a model. OpenRouter bills that usage; local transcription has no per-use fee.</p>
+            <Link href="/sign-up" className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[15px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get lifetime access</Link>
+            <small className="mt-3 block text-center text-[12px] text-[#a9a79f]">For macOS, Windows, and Linux.</small>
+            <div className="mt-2.5 text-center text-[12px] text-[#a9acb7]">Already have Deyn Studio? <Link href="/sign-in" className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">Log in</Link></div>
+          </PricingCard>
         </div>
       </section>
 
       <FAQSection />
 
-      <section className="relative mx-auto flex min-h-[520px] w-[min(1260px,calc(100%_-_48px))] flex-col items-center justify-center overflow-hidden rounded-[30px] border border-[#2b3140] bg-[linear-gradient(rgb(3_5_9/.48),rgb(3_5_9/.48)),url('/cutly-hero-moon.png')] bg-cover bg-[position:center_35%] text-center text-white shadow-[0_40px_100px_rgb(0_0_0/.3)] max-[600px]:min-h-[420px] max-[600px]:rounded-[18px]"><h2 className="relative z-10 m-0 text-[clamp(60px,8vw,104px)] font-medium leading-[.94] tracking-[-.07em] max-[600px]:text-[54px]">Make more of<br />every recording.</h2><a className="relative z-10 mt-[30px] rounded-[10px] border border-white/15 bg-[#f2f2ee] px-[21px] py-4 text-sm font-semibold text-[#0b0b0d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]" href={ctaUrl}>Try Deyn Studio for desktop</a></section>
-      <div className="mx-auto w-[min(1120px,calc(100%_-_48px))] text-[#858d9d] [&_footer]:mt-[55px] [&_footer]:border-[#252a36] [&_footer_a]:text-[#8c93a2] [&_footer_a]:transition-colors [&_footer_a]:hover:text-[#f1f3fa] [&_footer_a]:focus-visible:rounded-sm [&_footer_a]:focus-visible:outline [&_footer_a]:focus-visible:outline-2 [&_footer_a]:focus-visible:outline-offset-2 [&_footer_a]:focus-visible:outline-[#a9c4ff]"><SiteFooter dark /></div>
+
+      <div className="mx-auto w-[min(1120px,calc(100%_-_48px))] text-[#858d9d] [&_footer]:mt-[55px] [&_footer_a]:text-[#8c93a2] [&_footer_a]:transition-colors [&_footer_a]:hover:text-[#f1f3fa] [&_footer_a]:focus-visible:rounded-sm [&_footer_a]:focus-visible:outline [&_footer_a]:focus-visible:outline-2 [&_footer_a]:focus-visible:outline-offset-2 [&_footer_a]:focus-visible:outline-[#a9c4ff]"><SiteFooter dark /></div>
     </main>
   )
 }
@@ -162,7 +160,7 @@ function LicensePanel({ license, licenseError, checkoutState }) {
   return (
     <div className="mt-10 rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-6 sm:p-8">
       <p className="text-sm font-medium text-[#a6a4a4]">No license yet</p>
-      <h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Get Deyn Studio on your account.</h2>
+      <h2 className="mt-2 max-w-lg text-2xl font-medium tracking-[-0.03em]">Get Deyn Studio.</h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-[#a6a4a4]">A one-time license includes future desktop updates and use on up to two devices.</p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <BuyLicenseButton />
@@ -180,7 +178,7 @@ function AccountDashboard({ user, license, licenseError, checkoutState, download
         <SiteHeader dashboard><div className="flex items-center gap-3"><span className="hidden text-sm text-[#a6a4a4] sm:block">{user?.primaryEmailAddress?.emailAddress}</span><AccountMenu /></div></SiteHeader>
         <section className="py-12 sm:py-16">
           <p className="text-xs font-semibold tracking-[0.16em] text-[#a6a4a4]">ACCOUNT & LICENSING</p>
-          <div className="mt-4 flex flex-wrap items-end justify-between gap-6"><div><h1 className="text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Your license</h1><p className="mt-3 text-base text-[#a6a4a4]">A clear view of what is active on your Deyn Studio account.</p></div><p className="text-sm text-[#807e7e]">{user?.firstName ? `Welcome back, ${user.firstName}.` : 'Deyn Studio account'}</p></div>
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-6"><div><h1 className="text-4xl font-medium tracking-[-0.045em] sm:text-5xl">Your license</h1><p className="mt-3 text-base text-[#a6a4a4]">See your Deyn Studio access and connected devices.</p></div><p className="text-sm text-[#807e7e]">{user?.firstName ? `Welcome back, ${user.firstName}.` : 'Deyn Studio account'}</p></div>
           <LicensePanel license={license} licenseError={licenseError} checkoutState={checkoutState} />
           <div className="mt-10"><AppAccess downloadUrl={downloadUrl} licensed={Boolean(license?.licensed)} /></div>
         </section>

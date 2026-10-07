@@ -127,7 +127,7 @@ export const trialUsageCounts = sqliteTable(
   'trial_usage_counts',
   {
     userId: text('user_id').notNull(),
-    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation'] }).notNull(),
+    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation', 'media_assistant_plan'] }).notNull(),
     usedCount: integer('used_count').notNull().default(0),
     updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
   },
@@ -143,7 +143,7 @@ export const trialActionRequests = sqliteTable(
     id: text('id').primaryKey(),
     userId: text('user_id').notNull(),
     requestId: text('request_id').notNull(),
-    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation'] }).notNull(),
+    action: text('action', { enum: ['clip_generation', 'smart_clean', 'caption_translation', 'media_assistant_plan'] }).notNull(),
     status: text('status', { enum: ['pending', 'succeeded', 'failed', 'rejected'] }).notNull(),
     responseJson: text('response_json'),
     errorMessage: text('error_message'),
@@ -191,6 +191,7 @@ export const trialConfig = sqliteTable(
     clipGenerationsMax: integer('clip_generations_max').notNull().default(2),
     smartCleanMax: integer('smart_clean_max').notNull().default(1),
     captionTranslationsMax: integer('caption_translations_max').notNull().default(1),
+    mediaAssistantPlansMax: integer('media_assistant_plans_max').notNull().default(1),
     dailyBudgetMicros: integer('daily_budget_micros').notNull().default(1_000_000),
     monthlyBudgetMicros: integer('monthly_budget_micros').notNull().default(10_000_000),
     updatedBy: text('updated_by'),

@@ -24,7 +24,7 @@ const recordStripeEvent = async (event) => {
 
 const activateLifetimeLicense = async (session) => {
   const userId = session.metadata?.clerkUserId || session.client_reference_id
-  if (!userId) throw new Error('Stripe Checkout Session has no Cutly user reference.')
+  if (!userId) throw new Error('Stripe Checkout Session has no Deyn Studio user reference.')
 
   const transactionId = session.payment_intent || session.id
   await syncUser(userId)
@@ -35,7 +35,7 @@ const activateLifetimeLicense = async (session) => {
       userId,
       type: 'lifetime',
       status: 'active',
-      planName: 'Cutly Lifetime',
+      planName: 'Deyn Studio Lifetime',
       deviceLimit: 2,
       paymentProvider: 'stripe',
       providerCustomerId: typeof session.customer === 'string' ? session.customer : null,

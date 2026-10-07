@@ -17,11 +17,11 @@ export const metadata = {
   metadataBase: siteUrl,
   applicationName: 'Deyn Studio',
   title: {
-    default: 'Deyn Studio — Desktop Media Workspace',
+    default: 'Deyn Studio — Desktop Clip Editor',
     template: '%s | Deyn Studio'
   },
-  description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
-  keywords: ['desktop media editor', 'media editing automation', 'video editor', 'audio tools', 'image tools', 'PDF utilities'],
+  description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
+  keywords: ['desktop clip editor', 'video clips', 'video captions', 'portrait video framing', 'local transcription', 'media tools'],
   creator: 'Deyn Studio',
   publisher: 'Deyn Studio',
   openGraph: {
@@ -29,14 +29,14 @@ export const metadata = {
     url: '/',
     siteName: 'Deyn Studio',
     locale: 'en_US',
-    title: 'Deyn Studio — Desktop Media Workspace',
-    description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
-    images: [{ url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop media workspace' }]
+    title: 'Deyn Studio — Desktop Clip Editor',
+    description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
+    images: [{ url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop app showing a video clip workflow' }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Deyn Studio — Desktop Media Workspace',
-    description: 'Edit and automate media with Deyn Studio, a desktop workspace for assistant-guided workflows, video, audio, images, and documents.',
+    title: 'Deyn Studio — Desktop Clip Editor',
+    description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
     images: ['/cutly-hero-moon.png']
   },
   robots: {
@@ -85,7 +85,7 @@ export default function RootLayout({ children }) {
                 '@type': 'WebSite',
                 name: 'Deyn Studio',
                 url: siteOrigin,
-                description: 'Desktop software for assistant-guided media editing, video, audio, image, and document workflows.'
+                description: 'Desktop software for finding moments in long videos, editing captions and framing, and exporting clips.'
               }
             ])
           }}

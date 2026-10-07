@@ -29,7 +29,7 @@ export default async function TrialSettingsPage() {
       <div className="mx-auto max-w-3xl">
         <header className="flex items-center justify-between border-b border-[#807e7e]/40 pb-5">
           <a href="/account" className="text-sm text-[#a6a4a4] underline-offset-4 hover:text-[#f2f0ef] hover:underline">Back to account</a>
-          <span className="text-sm font-semibold tracking-[0.22em]">CUTLY</span>
+          <span className="text-sm font-semibold tracking-[0.22em]">DEYN STUDIO</span>
         </header>
         <section className="py-10 sm:py-14">
           <p className="text-xs font-semibold tracking-[0.16em] text-[#a6a4a4]">ADMIN SETTINGS</p>

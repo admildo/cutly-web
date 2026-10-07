@@ -15,16 +15,16 @@ export function AppAccess({ downloadUrl, compact = false, allowReleasePage = tru
   }
 
   return (
-    <section className={`flex flex-wrap items-center justify-between gap-5 rounded-2xl border p-6 ${shell} ${compact ? 'max-w-[34rem]' : ''}`} aria-label="Cutly desktop app">
+    <section className={`flex flex-wrap items-center justify-between gap-5 rounded-2xl border p-6 ${shell} ${compact ? 'max-w-[34rem]' : ''}`} aria-label="Deyn Studio desktop app">
       <div>
-        <p className="text-sm font-medium">Use Cutly on your desktop</p>
+        <p className="text-sm font-medium">Use Deyn Studio on your desktop</p>
         <p className={`mt-1 text-sm leading-6 ${copy}`}>
-          {licensed ? 'Your account and license are ready in the Cutly desktop app.' : 'Open the desktop app if it is installed, or download Cutly to get started.'}
+          {licensed ? 'Your account and license are ready in Deyn Studio.' : 'Open Deyn Studio if it is installed, or download the app to get started.'}
         </p>
       </div>
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={openApp} className={`rounded-full px-5 py-3 text-sm font-medium transition ${primary}`}>
-          {opening ? 'Opening Cutly…' : 'Open Cutly'}
+          {opening ? 'Opening Deyn Studio…' : 'Open Deyn Studio'}
         </button>
         {downloadUrl ? (
           <a href={downloadUrl} className={`rounded-full border px-5 py-3 text-sm font-medium transition ${secondary}`}>Download app</a>

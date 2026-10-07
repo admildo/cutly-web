@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
+const desktopNavigationLinks = [
+  { label: 'Features', href: '#features' },
+  { label: 'Pricing', href: '#pricing' },
+]
+
 const navigationLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Pricing', href: '#pricing' },
@@ -54,7 +59,7 @@ export function DynamicIslandNav({ downloadUrl }) {
             </Link>
 
             <nav aria-label="Primary navigation" className="flex items-center justify-self-center gap-[14px] whitespace-nowrap text-[12px] font-medium text-white/70 max-[760px]:hidden">
-              {navigationLinks.map(({ label, href }) => (
+              {desktopNavigationLinks.map(({ label, href }) => (
               <Link key={label} href={href} className="whitespace-nowrap rounded-sm no-underline transition-colors hover:text-white focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80">{label}</Link>
               ))}
             </nav>
