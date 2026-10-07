@@ -1,8 +1,18 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import styles from './PricingCard.module.css'
 
 export function PricingCard({ children }) {
+  const cardRef = useRef(null)
+  useEffect(() => {
+    const card = cardRef.current
+    const observer = new IntersectionObserver(([entry]) => {
+      card.dataset.active = String(entry.isIntersecting)
+    })
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
   const handlePointerMove = (event) => {
     if (event.pointerType === 'touch') return
 
@@ -20,16 +30,7 @@ export function PricingCard({ children }) {
   }
 
   return (
-    <div className={styles.card} onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
-      <svg className={styles.filters} aria-hidden="true">
-        <filter id="pricing-smoke-distortion" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.022" numOctaves="3" seed="7" result="smokeNoise">
-            <animate attributeName="baseFrequency" dur="18s" values="0.012 0.022;0.024 0.036;0.012 0.022" repeatCount="indefinite" />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="smokeNoise" scale="30" xChannelSelector="R" yChannelSelector="G" result="billowedSmoke" />
-          <feGaussianBlur in="billowedSmoke" stdDeviation="10" />
-        </filter>
-      </svg>
+    <div ref={cardRef} className={styles.card} data-active="false" onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
       <div className={`${styles.smoke} ${styles.smokeOne}`} aria-hidden="true" />
       <div className={`${styles.smoke} ${styles.smokeTwo}`} aria-hidden="true" />
       <div className={`${styles.smoke} ${styles.smokeThree}`} aria-hidden="true" />

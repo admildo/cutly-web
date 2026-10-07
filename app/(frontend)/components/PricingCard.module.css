@@ -10,7 +10,7 @@
   background: linear-gradient(145deg, #292927, #20201f 58%, #171716);
   box-shadow: 0 24px 70px rgb(0 0 0 / 38%);
   text-align: center;
-  backdrop-filter: blur(24px);
+  contain: paint;
 }
 
 .smoke,
@@ -20,19 +20,14 @@
   pointer-events: none;
 }
 
-.filters {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
+.smoke {
+  inset: -12%;
+  border-radius: 50%;
+  animation-play-state: paused;
 }
 
-.smoke {
-  inset: -34%;
-  border-radius: 50%;
-  filter: url(#pricing-smoke-distortion);
-  will-change: transform;
-}
+.card[data-active='true'] .smoke { animation-play-state: running; will-change: transform; }
+.card[data-active='false'] .smoke { display: none; }
 
 .smokeOne {
   opacity: 0.58;
@@ -44,7 +39,6 @@
 }
 
 .smokeTwo {
-  filter: url(#pricing-smoke-distortion);
   opacity: 0.52;
   background:
     radial-gradient(ellipse at 69% 35%, rgb(161 164 170 / 13%), transparent 32%),
@@ -54,7 +48,6 @@
 }
 
 .smokeThree {
-  filter: url(#pricing-smoke-distortion);
   opacity: 0.4;
   background:
     radial-gradient(ellipse at 47% 29%, rgb(180 182 187 / 9%), transparent 35%),
@@ -112,12 +105,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .filters {
-    display: none;
-  }
-
   .smoke {
-    animation: none;
-    filter: blur(36px);
+    animation: none !important;
   }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pointerGlow { display: none; }
 }

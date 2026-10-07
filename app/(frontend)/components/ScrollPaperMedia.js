@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useImperativeHandle, useRef } from 'react'
+import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 import styles from './HeroSpiral.module.css'
 import { getPaperStripPose } from '../../../lib/hero-paper.js'
 
@@ -15,6 +15,9 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
   const frameRef = useRef(0)
   const activeRef = useRef(false)
   const sizeRef = useRef(null)
+  const pendingBendRef = useRef(0)
+  const curveMountedRef = useRef(false)
+  const [curveMounted, setCurveMounted] = useState(false)
 
   const drawVideo = () => {
     const video = videoRef()
@@ -39,8 +42,7 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
     frameRef.current = requestAnimationFrame(animateVideo)
   }
 
-  useImperativeHandle(ref, () => ({
-    setBend(amount) {
+  const applyBend = (amount) => {
       const root = rootRef.current
       if (!root) return
       const active = Math.abs(amount) > 0.002
@@ -52,6 +54,7 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
         return
       }
       if (!activeRef.current) {
+        if (!sizeRef.current) {
         const width = root.clientWidth
         const height = root.clientHeight
         sizeRef.current = { width, height }
@@ -75,6 +78,7 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
             canvas.height = Math.ceil(sliceHeight * pixelRatio)
           }
         })
+        }
         activeRef.current = true
         if (type === 'video') {
           drawVideo()
@@ -89,18 +93,47 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
         const { y, z, rotationX } = getPaperStripPose(index, STRIPS, height, amount)
         strip.style.transform = `translate3d(0, ${y}px, ${z}px) rotateX(${rotationX}deg)`
       })
+  }
+
+  useImperativeHandle(ref, () => ({
+    setBend(amount) {
+      pendingBendRef.current = amount
+      if (Math.abs(amount) > 0.002 && !curveMountedRef.current) {
+        setCurveMounted(true)
+        return
+      }
+      applyBend(amount)
+    },
+    release() {
+      pendingBendRef.current = 0
+      applyBend(0)
+      sizeRef.current = null
+      setCurveMounted(false)
     },
   }))
 
-  useEffect(() => () => {
-    activeRef.current = false
-    cancelAnimationFrame(frameRef.current)
+  useLayoutEffect(() => {
+    curveMountedRef.current = curveMounted
+    if (curveMounted) applyBend(pendingBendRef.current)
+  })
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      sizeRef.current = null
+      if (activeRef.current) applyBend(0)
+    })
+    observer.observe(rootRef.current)
+    return () => {
+      observer.disconnect()
+      activeRef.current = false
+      cancelAnimationFrame(frameRef.current)
+    }
   }, [])
 
   return (
     <div ref={rootRef} className={styles.paperMedia} data-bending="false">
       <div className={styles.paperFlat}>{children}</div>
-      <div className={styles.paperCurve} aria-hidden="true">
+      {curveMounted && <div className={styles.paperCurve} aria-hidden="true">
         {Array.from({ length: STRIPS }, (_, index) => (
           <div key={index} ref={(node) => { stripRefs.current[index] = node }} className={styles.paperStrip}>
             {[false, true].map((reverse) => (
@@ -113,7 +146,7 @@ export function ScrollPaperMedia({ ref, src, poster, type, videoRef, children })
             ))}
           </div>
         ))}
-      </div>
+      </div>}
     </div>
   )
 }

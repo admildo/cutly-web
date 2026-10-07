@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import styles from './HeroSpiral.module.css'
 import { ScrollPaperMedia } from './ScrollPaperMedia'
+import { useHeroVideoTiles } from './useHeroVideoTiles'
 import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -137,6 +138,7 @@ function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) 
 }
 
 export function HeroSpiral({ downloadUrl = '/download' }) {
+  const videoTilesEnabled = useHeroVideoTiles()
   const gazeId = useId().replace(/:/g, '')
   const gazeFeatherId = `hero-gaze-feather-${gazeId}`
   const gazeMaskId = `hero-gaze-eye-mask-${gazeId}`
@@ -218,6 +220,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       const scrollState = { progress: 0 }
       const orbitState = { rotation: 0 }
       const pointerPosition = { x: width / 2, y: height / 2 }
+      let sceneVisible = true
+      let paperResourcesActive = true
+      const visibleCardIndices = new Set()
       let pointerActive = false
       let resetPointerEffects = () => {}
       const visibleVideoCards = new Set()
@@ -255,6 +260,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         const intensity = clamp(Math.abs(velocity) / (mobile ? 1600 : 2200), 0, 1)
         const bend = Math.sign(velocity) * intensity
         bendCardTo.forEach((quickBend, index) => {
+          if (!sceneVisible || !visibleCardIndices.has(index)) return
           quickBend.tween.duration(0.2 + (index % 4) * 0.025)
           quickBend(bend * (0.86 + (index % 5) * 0.035))
         })
@@ -352,6 +358,20 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         const videoCandidates = []
         cardNodes.forEach((node, index) => {
           const pose = getCardPose(index, progress, width, height, mobile, orbitState.rotation)
+          const projection = (mobile ? 820 : 1120) / ((mobile ? 820 : 1120) - pose.z)
+          const margin = mobile ? 120 : 260
+          const inView = sceneVisible && sceneProgress < CARD_FADE_END
+            && Math.abs(pose.x * projection) < width / 2 + margin
+            && Math.abs(pose.y * projection) < height / 2 + margin
+          if (!inView) {
+            visibleCardIndices.delete(index)
+            node.dataset.inView = 'false'
+            node.style.visibility = 'hidden'
+            if (cardVideoRefs.current[index]) syncCardVideo(cardVideoRefs.current[index], false)
+            return
+          }
+          visibleCardIndices.add(index)
+          node.dataset.inView = 'true'
           node.style.transform = `translate(-50%, -50%) translate3d(${pose.x}px, ${pose.y}px, ${pose.z}px) rotateY(${pose.rotationY}deg) rotateX(${pose.rotationX}deg) rotateZ(${pose.rotation}deg) scale(${pose.scale})`
           const renderedOpacity = pose.opacity * (1 - smoothstep(CARD_FADE_START, CARD_FADE_END, sceneProgress))
           node.style.opacity = renderedOpacity
@@ -374,6 +394,14 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         positionHoverLabel()
       }
 
+      let cardFrame = 0
+      const scheduleCards = () => {
+        if (cardFrame) return
+        cardFrame = window.requestAnimationFrame(() => {
+          cardFrame = 0
+          renderCards(getCardProgress())
+        })
+      }
       syncBackdropDimensions()
       renderCards(0)
       gsap.set(subjectMotion, { scale: 1, y: 0, opacity: 1 })
@@ -394,7 +422,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             }
           })
 
-          if (visibilityChanged) renderCards(getCardProgress())
+          if (visibilityChanged) scheduleCards()
         }, { root: sceneRef.current, rootMargin: '48px', threshold: [0, 0.02] })
         : null
 
@@ -414,7 +442,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         duration: mobile ? 40 : 52,
         repeat: -1,
         ease: 'none',
-        onUpdate: () => renderCards(getCardProgress()),
+        onUpdate: scheduleCards,
       })
       const idleTweens = reducedMotion || mobile ? [] : idleNodes.map((node, index) => gsap.to(node, {
         y: index % 2 === 0 ? -2 : 2,
@@ -436,7 +464,21 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       let orbitActive = !reducedMotion
       const syncMotionActivity = (progress = scrollState.progress) => {
         if (pointerActive && (document.hidden || progress >= CARD_FADE_START)) resetPointerEffects()
-        const shouldAnimate = !reducedMotion && !document.hidden && progress < CARD_FADE_END
+        const sceneActive = sceneVisible && !document.hidden && progress < CARD_FADE_END
+        sceneRef.current.dataset.sceneActive = String(sceneActive)
+        if (!sceneActive && paperResourcesActive) {
+          paperResourcesActive = false
+          bendSettleCall?.kill()
+          bendCardTo.forEach((quickBend, index) => {
+            quickBend.tween.pause()
+            bendStates[index].amount = 0
+            bendTiltSetters[index](0)
+          })
+          paperMediaRefs.current.forEach((paper) => paper?.release())
+        } else if (sceneActive) {
+          paperResourcesActive = true
+        }
+        const shouldAnimate = !reducedMotion && sceneActive
         if (shouldAnimate !== ambientMotionActive) {
           ambientMotionActive = shouldAnimate
           idleTweens.forEach((tween) => (shouldAnimate ? tween.resume() : tween.pause()))
@@ -456,6 +498,13 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         syncMotionActivity()
         renderCards(getCardProgress())
       }
+      const sceneObserver = new IntersectionObserver(([entry]) => {
+        sceneVisible = entry.isIntersecting
+        syncMotionActivity()
+        if (!sceneVisible) videoRef.current?.pause()
+        scheduleCards()
+      })
+      sceneObserver.observe(sceneRef.current)
       document.addEventListener('visibilitychange', onDocumentVisibilityChange)
       window.addEventListener('pageshow', onDocumentVisibilityChange)
       syncMotionActivity()
@@ -488,7 +537,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         progress: 1,
         duration: 1,
         ease: 'none',
-        onUpdate: () => renderCards(getCardProgress(), scrollState.progress),
+        onUpdate: scheduleCards,
       }, 0)
       timeline.fromTo(backdropRef.current, {
         opacity: 0,
@@ -812,6 +861,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         bendSettleCall?.kill()
         paperMediaRefs.current.forEach((paper) => paper?.setBend(0))
         if (pointerFrame) window.cancelAnimationFrame(pointerFrame)
+        if (cardFrame) window.cancelAnimationFrame(cardFrame)
+        sceneObserver.disconnect()
+        delete sceneRef.current?.dataset.sceneActive
         videoVisibilityObserver?.disconnect()
         document.removeEventListener('visibilitychange', onDocumentVisibilityChange)
         window.removeEventListener('pageshow', onDocumentVisibilityChange)
@@ -831,7 +883,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
       publishHeroIslandState(false)
       media.revert()
     }
-  }, { scope: sectionRef })
+  }, { scope: sectionRef, dependencies: [videoTilesEnabled], revertOnUpdate: true })
 
   return (
     <section ref={sectionRef} className={styles.hero} aria-label="Hero" data-hero-mode={HERO_CARD_MODE}>
@@ -869,9 +921,9 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                       >
                         <ScrollPaperMedia
                           ref={(handle) => { paperMediaRefs.current[index] = handle }}
-                          src={src}
+                          src={type === 'video' && !videoTilesEnabled ? poster : src}
                           poster={poster}
-                          type={type}
+                          type={videoTilesEnabled ? type : 'image'}
                           videoRef={() => cardVideoRefs.current[index]}
                         >
                         {[false, true].map((reverse) => (
@@ -879,7 +931,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
                             className={`${styles.cardSurface} ${reverse ? styles.cardReverse : ''}`}
                             key={reverse ? `${src}-reverse` : src}
                           >
-                            {type === 'video' && !reverse ? (
+                            {type === 'video' && videoTilesEnabled && !reverse ? (
                               <video
                                 ref={(node) => { cardVideoRefs.current[index] = node }}
                                 src={src}
@@ -1039,7 +1091,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             className={`${styles.demoVideo} ${isVideoPlaying ? styles.demoVideoPlaying : ''}`}
             controls={isVideoPlaying}
             playsInline
-            preload="metadata"
+            preload="none"
             aria-label="Deyn Studio product demo"
             onPlay={() => setIsVideoPlaying(true)}
             onPause={() => setIsVideoPlaying(false)}

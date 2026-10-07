@@ -189,9 +189,9 @@
   inset: 0;
   transform-style: preserve-3d;
 }
-.paperCurve { visibility: hidden; pointer-events: none; }
+.paperCurve { display: none; pointer-events: none; }
 .paperMedia[data-bending='true'] .paperFlat { visibility: hidden; }
-.paperMedia[data-bending='true'] .paperCurve { visibility: visible; }
+.paperMedia[data-bending='true'] .paperCurve { display: block; }
 .cardFace:has(.paperMedia[data-bending='true']) { background: transparent; box-shadow: none; }
 .paperStrip {
   position: absolute;
@@ -584,3 +584,7 @@
 @media (hover: none), (pointer: coarse) {
   .mouseCursor { display: none; }
 }
+
+/* Release the hero's 3D compositing tree when later sections are visible. */
+.scene[data-scene-active='false'] .world { display: none; }
+.cardMotion[data-in-view='false'] { will-change: auto; }
