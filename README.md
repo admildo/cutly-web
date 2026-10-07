@@ -47,10 +47,17 @@ pnpm db:generate
 pnpm db:migrate
 ```
 
-The license endpoints are:
+The desktop and account API endpoints are:
 
+- `POST /api/desktop/access` — resolve the desktop account's license or trial access. It expects
+  the `desktop-session` bearer token created during sign-in and the hashed device ID. This route
+  verifies the desktop token in its handler, so it must remain exempt from Clerk cookie protection
+  in `proxy.js`.
+- `POST /api/trial/ai` — submit a trial AI request. It also verifies the `desktop-session` bearer
+  token in its handler, so it must remain exempt from Clerk cookie protection in `proxy.js`.
 - `GET /api/license` — read the signed-in account’s entitlement.
-- `POST /api/license` — register or renew the current device. It expects a Clerk bearer token and a hashed device ID.
+- `POST /api/license` — register or renew the current device. It accepts an authenticated account
+  request or a `desktop-session` bearer token, together with a hashed device ID.
 
 User provisioning is handled in two ways: the signed-in desktop-session and license endpoints upsert the current user synchronously, and `POST /api/webhooks/clerk` synchronizes Clerk `user.created`, `user.updated`, and `user.deleted` events. Configure that URL as a Clerk webhook and set `CLERK_WEBHOOK_SIGNING_SECRET` in the site environment.
 

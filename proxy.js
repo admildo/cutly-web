@@ -24,6 +24,8 @@ const isPublicRoute = createRouteMatcher([
   // middleware only has access to browser cookies, so protecting them here
   // rejects a valid desktop sign-in before the route handler can verify it.
   '/api/auth/desktop-session(.*)',
+  '/api/desktop/access(.*)',
+  '/api/trial/ai(.*)',
   '/api/license(.*)',
   '/api/webhooks(.*)',
   // Payload uses its own CMS login and collection access controls.
