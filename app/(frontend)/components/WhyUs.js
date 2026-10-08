@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 import styles from './WhyUs.module.css'
 
 const reasons = [
@@ -27,7 +28,7 @@ const reasons = [
   {
     label: 'Lifetime license',
     title: 'One payment includes future updates.',
-    description: 'The €29 launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.'
+    description: `The ${LIFETIME_LICENSE_PRICE_LABEL} launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.`
   }
 ]
 

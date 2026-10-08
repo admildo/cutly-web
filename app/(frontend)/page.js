@@ -9,6 +9,7 @@ import { SiteFooter } from '@/app/components/SiteChrome'
 import { FAQSection } from '@/app/components/FAQSection'
 import { PricingCard } from '@/app/components/PricingCard'
 import { createPageMetadata, defaultSocialImage, serializeJsonLd, siteOrigin } from '@/lib/seo'
+import { LIFETIME_LICENSE_PRICE_EUR, LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 
 export const metadata = createPageMetadata({
   title: 'AI Video Clip Maker for Desktop',
@@ -16,8 +17,6 @@ export const metadata = createPageMetadata({
   path: '/',
   absoluteTitle: true
 })
-
-const lifetimeLicensePrice = '29.00'
 
 const safeExternalUrl = (value) => {
   try {
@@ -48,7 +47,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
             creator: { '@id': `${siteOrigin}/#organization` },
             offers: {
               '@type': 'Offer',
-              price: lifetimeLicensePrice,
+              price: LIFETIME_LICENSE_PRICE_EUR.toFixed(2),
               priceCurrency: 'EUR',
               availability: 'https://schema.org/InStock',
               url: new URL('/sign-up', siteOrigin).toString()
@@ -79,7 +78,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
             <span className="inline-flex rounded-full bg-[#a48c5e]/[0.14] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Launch price</span>
             <p className="mb-0 mt-5 text-[12px] font-semibold uppercase tracking-[.13em] text-[#b8b6ae]">Lifetime license</p>
             <div className="mt-2 flex flex-wrap items-baseline justify-center gap-x-3 text-[#f4f2ed]">
-              <span className="text-[58px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[52px]">€{Number(lifetimeLicensePrice).toFixed(0)}</span>
+              <span className="text-[58px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[52px]">{LIFETIME_LICENSE_PRICE_LABEL}</span>
               <s aria-label="Regular price €69" className="text-[24px] font-medium leading-none tracking-[-.04em] text-[#b0a0a1] decoration-white decoration-[0.5px] max-[600px]:text-[21px]">€69</s>
               <span className="rounded-full bg-[#8e9b7a]/[0.14] px-2.5 py-1 text-[11px] font-semibold tracking-[.01em] text-[#c9d5b8]">58% off</span>
             </div>

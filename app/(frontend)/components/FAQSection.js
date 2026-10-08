@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import { LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 
 const FAQ_ITEMS = [
   {
@@ -37,7 +38,7 @@ const FAQ_ITEMS = [
   {
     category: 'Pricing & License',
     question: 'What does Deyn Studio cost?',
-    answer: 'The launch license costs €29 once. It includes lifetime access, future desktop updates, and use on up to two devices.'
+    answer: `The launch license costs ${LIFETIME_LICENSE_PRICE_LABEL} once. It includes lifetime access, future desktop updates, and use on up to two devices.`
   },
   {
     category: 'Compatibility',
