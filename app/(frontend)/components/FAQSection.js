@@ -37,12 +37,12 @@ const FAQ_ITEMS = [
   {
     category: 'Pricing & License',
     question: 'What does Deyn Studio cost?',
-    answer: 'The launch license costs €39 once. It includes lifetime access, future desktop updates, and use on up to two devices.'
+    answer: 'The launch license costs €29 once. It includes lifetime access, future desktop updates, and use on up to two devices.'
   },
   {
     category: 'Compatibility',
     question: 'Which computers can run Deyn Studio?',
-    answer: 'Deyn Studio supports macOS, Windows, and Linux.'
+    answer: 'Deyn Studio is currently available for macOS, with separate downloads for Apple silicon and Intel Macs. Windows and Linux versions are coming soon.'
   },
   {
     category: 'AI & Privacy',

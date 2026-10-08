@@ -1,6 +1,7 @@
 import { getDesktopUserId } from '@/lib/desktop-auth'
 import { getActiveLicense, getMostRecentLicense } from '@/lib/license'
 import { getDb } from '@/lib/db'
+import { siteOrigin } from '@/lib/seo'
 import { sql } from 'drizzle-orm'
 import { enforceRateLimit, rateLimitResponse } from '@/lib/rate-limiting'
 import {
@@ -318,7 +319,7 @@ const invokeOpenRouter = async (action, input, requestSignal) => {
       headers: {
         Authorization: `Bearer ${key}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://cutly-web.vercel.app',
+        'HTTP-Referer': siteOrigin,
         'X-Title': 'Deyn Studio desktop trial'
       },
       body: JSON.stringify({

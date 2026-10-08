@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react'
 import styles from './HeroSpiral.module.css'
 import { ScrollPaperMedia } from './ScrollPaperMedia'
 import { useHeroVideoTiles } from './useHeroVideoTiles'
+import { DownloadOptionsButton } from './DownloadOptionsButton'
 import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -82,10 +83,10 @@ const GAZE_REGISTRATION = {
 const CARD_FADE_START = 0.58
 const CARD_FADE_END = 0.68
 const heroHeadlines = [
-  'Turn long videos into clips.',
-  'Find strong moments with AI.',
-  'Add captions and portrait framing.',
-  'Export from one desktop app.',
+  'Stop scrubbing. Find your next clip.',
+  'Let AI find the moments worth sharing.',
+  'Add captions. Frame for social. Export.',
+  'All your clip tools in one desktop app.',
 ]
 
 const publishHeroIslandState = (active) => {
@@ -137,7 +138,7 @@ function getCardPose(index, progress, width, height, mobile, orbitRotation = 0) 
   return { x, y, z, scale, rotation, rotationX, rotationY, opacity: depthOpacity }
 }
 
-export function HeroSpiral({ downloadUrl = '/download' }) {
+export function HeroSpiral({ downloadUrls }) {
   const videoTilesEnabled = useHeroVideoTiles()
   const gazeId = useId().replace(/:/g, '')
   const gazeFeatherId = `hero-gaze-feather-${gazeId}`
@@ -1082,11 +1083,11 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             </span>
           </h1>
           <p className={styles.mobileDescription}>Find the best moments, add captions, and frame every clip for social.</p>
-          <a className={styles.downloadButton} href={downloadUrl}>
+          <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.downloadButton}>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
             Download Deyn Studio
-          </a>
-          <p className={styles.mobilePlatforms}>For macOS, Windows, and Linux</p>
+          </DownloadOptionsButton>
+          <p className={styles.mobilePlatforms}>For macOS. Windows and Linux coming soon.</p>
           <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
@@ -1100,7 +1101,6 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             controls={isVideoPlaying}
             playsInline
             preload="none"
-            poster="/app-shots/clips-p.png"
             aria-label="Deyn Studio product demo"
             aria-hidden={!isVideoPlaying}
             onPlay={() => setIsVideoPlaying(true)}
@@ -1114,15 +1114,19 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
             <div ref={videoPromptRef} className={styles.videoHeading}>
               <p>Deyn Studio in action</p>
               <h2>Watch Deyn turn a long video<br className={styles.desktopBreak} /> into clips ready to share.</h2>
+              <p className={styles.videoDescription}>See Deyn find highlights, add captions, and frame clips for social.</p>
             </div>
             <div ref={playPromptRef} className={styles.playPrompt}>
               <button
                 className={`${styles.playButton} ${isVideoPlaying ? styles.playButtonHidden : ''}`}
                 type="button"
-                aria-label="Play Deyn Studio product demo"
+                aria-label="Watch the Deyn Studio demo"
                 onClick={() => videoRef.current?.play().catch(() => {})}
               >
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>
+                <span className={styles.playIcon}>
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>
+                </span>
+                <span>Watch demo</span>
               </button>
             </div>
           </div>

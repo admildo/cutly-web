@@ -1,6 +1,7 @@
 import { Geist_Mono, Manrope } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { siteOrigin, siteUrl, serializeJsonLd } from '@/lib/seo'
+import { defaultSocialImage, siteOrigin, siteUrl, serializeJsonLd } from '@/lib/seo'
 import "./globals.css";
 
 const manrope = Manrope({
@@ -26,11 +27,10 @@ export const metadata = {
   },
   manifest: '/favicon/site.webmanifest',
   title: {
-    default: 'Deyn Studio — Desktop Clip Editor',
+    default: 'AI Video Clip Maker for Desktop | Deyn Studio',
     template: '%s | Deyn Studio'
   },
-  description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
-  keywords: ['desktop clip editor', 'video clips', 'video captions', 'portrait video framing', 'local transcription', 'media tools'],
+  description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
   creator: 'Deyn Studio',
   publisher: 'Deyn Studio',
   openGraph: {
@@ -38,15 +38,15 @@ export const metadata = {
     url: '/',
     siteName: 'Deyn Studio',
     locale: 'en_US',
-    title: 'Deyn Studio — Desktop Clip Editor',
-    description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
-    images: [{ url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop app showing a video clip workflow' }]
+    title: 'AI Video Clip Maker for Desktop | Deyn Studio',
+    description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
+    images: [defaultSocialImage]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Deyn Studio — Desktop Clip Editor',
-    description: 'Find the best moments in long videos, add captions and portrait framing, and export clips with Deyn Studio for desktop.',
-    images: ['/cutly-hero-moon.png']
+    title: 'AI Video Clip Maker for Desktop | Deyn Studio',
+    description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
+    images: [defaultSocialImage.url]
   },
   robots: {
     index: true,
@@ -65,6 +65,7 @@ export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#08090c',
 };
 
 export default function RootLayout({ children }) {
@@ -82,24 +83,36 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: serializeJsonLd([
-              {
-                '@context': 'https://schema.org',
-                '@type': 'Organization',
-                name: 'Deyn Studio',
-                url: siteOrigin
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'WebSite',
-                name: 'Deyn Studio',
-                url: siteOrigin,
-                description: 'Desktop software for finding moments in long videos, editing captions and framing, and exporting clips.'
-              }
-            ])
+            __html: serializeJsonLd({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': `${siteOrigin}/#organization`,
+                  name: 'Deyn Studio',
+                  url: siteOrigin,
+                  logo: {
+                    '@type': 'ImageObject',
+                    url: new URL('/favicon/web-app-manifest-512x512.png', siteUrl).toString(),
+                    width: 512,
+                    height: 512
+                  }
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': `${siteOrigin}/#website`,
+                  name: 'Deyn Studio',
+                  url: siteOrigin,
+                  description: 'Desktop software for finding moments in long videos, editing captions and framing, and exporting clips.',
+                  publisher: { '@id': `${siteOrigin}/#organization` },
+                  inLanguage: 'en'
+                }
+              ]
+            })
           }}
         />
         <ClerkProvider signInUrl="/sign-in" signUpUrl="/sign-up" dynamic>{children}</ClerkProvider>
+        <Analytics />
       </body>
     </html>
   );

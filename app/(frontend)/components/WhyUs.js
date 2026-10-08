@@ -27,7 +27,7 @@ const reasons = [
   {
     label: 'Lifetime license',
     title: 'One payment includes future updates.',
-    description: 'The €39 launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.'
+    description: 'The €29 launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.'
   }
 ]
 

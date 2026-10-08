@@ -25,7 +25,7 @@ export function BuyLicenseButton() {
       <button type="button" onClick={startCheckout} disabled={loading} className="rounded-full bg-[#f2f2ee] px-5 py-3 text-sm font-semibold text-[#17171a] transition hover:bg-white disabled:cursor-wait disabled:opacity-60">
         {loading ? 'Opening checkout…' : 'Buy Deyn Studio Lifetime'}
       </button>
-      {error ? <p className="mt-3 text-sm text-[#e5d2a8]">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-[#f2f2ee]">{error}</p> : null}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { InfoPage, Section } from '@/app/components/InfoPage'
 
 import { createPageMetadata } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'About Deyn Studio', description: 'Deyn Studio turns long videos into clips you can caption, frame, and export on your desktop.', path: '/about' })
+export const metadata = createPageMetadata({ title: 'About', description: 'Learn how Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.', path: '/about' })
 
 export default function AboutPage() {
   return <InfoPage eyebrow="ABOUT DEYN STUDIO" title="Make more from every recording." intro="Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.">

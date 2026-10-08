@@ -1,15 +1,19 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import Stripe from 'stripe'
+import { siteOrigin } from '@/lib/seo'
 
 const getCheckoutOrigin = (request) => {
+  if (process.env.NODE_ENV === 'production') {
+    return siteOrigin.startsWith('https://') ? siteOrigin : null
+  }
+
   const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL || process.env.CUTLY_SITE_URL
   if (!configuredOrigin) {
-    return process.env.NODE_ENV === 'production' ? null : new URL(request.url).origin
+    return new URL(request.url).origin
   }
 
   try {
     const url = new URL(configuredOrigin)
-    if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') return null
     if (url.username || url.password) return null
     return url.origin
   } catch {

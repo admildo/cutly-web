@@ -3,7 +3,7 @@ import { InfoPage, Section } from '@/app/components/InfoPage'
 
 import { createPageMetadata } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'Download Deyn Studio', description: 'Download or open the Deyn Studio desktop app.', path: '/download' })
+export const metadata = createPageMetadata({ title: 'Download', description: 'Download Deyn Studio for macOS and manage your desktop app account. Windows and Linux versions are coming soon.', path: '/download' })
 
 const safeExternalUrl = (value) => {
   try {

@@ -3,7 +3,7 @@ import { InfoPage, Section } from '@/app/components/InfoPage'
 
 import { createPageMetadata } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'Deyn Studio Support', description: 'Get help with Deyn Studio, your account, or your license.', path: '/support' })
+export const metadata = createPageMetadata({ title: 'Support', description: 'Get help with Deyn Studio sign-in, downloads, your account, and your license.', path: '/support' })
 
 export default function SupportPage() {
   const supportUrl = process.env.NEXT_PUBLIC_SUPPORT_URL

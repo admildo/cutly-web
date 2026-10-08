@@ -82,7 +82,7 @@ For local desktop development, start Electron with the site origin configured:
 CUTLY_SITE_URL=http://localhost:3000 pnpm dev
 ```
 
-For production, set the same Clerk environment variables in the hosting provider and set `NEXT_PUBLIC_SITE_URL` to the public HTTPS site origin (for example, `https://cutly.app`). This value is used for canonical URLs, social metadata, structured data, `robots.txt`, and `sitemap.xml`. `CUTLY_SITE_URL` remains supported as a fallback for existing deployments.
+For production, set the same Clerk environment variables in the hosting provider and set `NEXT_PUBLIC_SITE_URL=https://deynstudio.com`. This value is used for canonical URLs, social metadata, structured data, `robots.txt`, and `sitemap.xml`. `CUTLY_SITE_URL` remains supported as a fallback for existing deployments.
 
 Production Stripe checkout also requires a canonical HTTPS origin through
 `NEXT_PUBLIC_SITE_URL` or `CUTLY_SITE_URL`; it will not derive payment return
@@ -94,30 +94,33 @@ overwrites; do not point it at a header clients can supply themselves.
 
 ## Public-site configuration
 
-Set `NEXT_PUBLIC_APP_DOWNLOAD_URL` to the HTTPS URL of the current signed Cutly
-installer or release-download page. The account dashboard uses it for its
-**Download app** action and uses the `cutly://open` desktop protocol for its
+Set `NEXT_PUBLIC_APP_DOWNLOAD_URL` to the HTTPS URL of the current signed Deyn
+Studio installer or release-download page. The landing-page download dialog
+uses it as a fallback for both Mac architectures. To link directly to each
+installer, set `NEXT_PUBLIC_APP_DOWNLOAD_MAC_SILICON_URL` and
+`NEXT_PUBLIC_APP_DOWNLOAD_MAC_INTEL_URL` to their HTTPS download URLs. Windows
+and Linux are not yet supported. The account dashboard uses the shared URL for
+its **Download app** action and uses the `cutly://open` desktop protocol for its
 **Open Cutly** action. Set `NEXT_PUBLIC_SUPPORT_URL` to the HTTPS support page
 or contact form that should receive account, privacy, and legal requests.
 
 ### Desktop auto-updates
 
 Set `CUTLY_UPDATE_STORAGE_URL` in the site environment to the public HTTPS base
-directory of an object store or CDN for Cutly release files. Use a store that
+directory of an object store or CDN for Deyn Studio release files. Use a store that
 allows public reads and supports byte-range downloads; the app packages are
 large, so keep them in object storage rather than in the Next.js deployment.
-The site exposes a stable HTTPS feed at `https://<your-site-domain>/updates/`
+The site exposes a stable HTTPS feed at `https://deynstudio.com/updates/`
 and redirects each requested file to that store. For example, the app's updater
 requests `/updates/latest-mac.yml`, and the manifest's package and blockmap
 filenames use the same path.
 
-Set `CUTLY_UPDATE_URL` to `https://<your-site-domain>/updates/` when building
-the desktop app. Upload the versioned packages and blockmaps to the configured
-storage directory first, then upload `latest-mac.yml` or `latest.yml` last. The
-URL must be publicly reachable over HTTPS and the store must retain prior
-versioned files while installed apps may still download them. Verify the feed
-with a request to `/updates/latest-mac.yml` (or `/updates/latest.yml` for
-Windows) after deployment.
+The desktop release configuration points to `https://deynstudio.com/updates/`.
+Upload the versioned packages and blockmaps to the configured storage directory
+first, then upload `latest-mac.yml` or `latest.yml` last. The feed must be
+publicly reachable over HTTPS and the store must retain prior versioned files
+while installed apps may still download them. Verify the feed with a request to
+`/updates/latest-mac.yml` (or `/updates/latest.yml` for Windows) after deployment.
 
 Stripe checkout uses these server-only variables:
 

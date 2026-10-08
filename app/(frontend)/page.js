@@ -8,14 +8,16 @@ import { WhyUs } from '@/app/components/WhyUs'
 import { SiteFooter } from '@/app/components/SiteChrome'
 import { FAQSection } from '@/app/components/FAQSection'
 import { PricingCard } from '@/app/components/PricingCard'
-import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
+import { createPageMetadata, defaultSocialImage, serializeJsonLd, siteOrigin } from '@/lib/seo'
 
 export const metadata = createPageMetadata({
-  title: 'Turn Long Videos Into Shareable Clips',
-  description: 'Find the best moments in a long video, add captions and portrait framing, and export clips from one desktop app.',
+  title: 'AI Video Clip Maker for Desktop',
+  description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
   path: '/',
-  image: { url: '/cutly-hero-moon.png', width: 1672, height: 941, alt: 'Deyn Studio desktop app showing a video clip workflow' }
+  absoluteTitle: true
 })
+
+const lifetimeLicensePrice = '29.00'
 
 const safeExternalUrl = (value) => {
   try {
@@ -26,8 +28,7 @@ const safeExternalUrl = (value) => {
   }
 }
 
-function MarketingPage({ downloadUrl, isSignedIn }) {
-  const ctaUrl = downloadUrl || '/download'
+function MarketingPage({ downloadUrls, isSignedIn }) {
 
   return (
     <main id="top" className="min-h-screen overflow-x-clip bg-[#08090c] text-[#f1f3fa]">
@@ -37,16 +38,26 @@ function MarketingPage({ downloadUrl, isSignedIn }) {
           __html: serializeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'SoftwareApplication',
+            '@id': `${siteOrigin}/#software`,
             name: 'Deyn Studio',
+            url: siteOrigin,
+            image: new URL(defaultSocialImage.url, siteOrigin).toString(),
             applicationCategory: 'MultimediaApplication',
-            operatingSystem: 'macOS, Windows, Linux',
+            operatingSystem: 'macOS',
             description: 'A desktop app for finding moments in long videos, editing captions and framing, and exporting shareable clips.',
-            url: siteOrigin
+            creator: { '@id': `${siteOrigin}/#organization` },
+            offers: {
+              '@type': 'Offer',
+              price: lifetimeLicensePrice,
+              priceCurrency: 'EUR',
+              availability: 'https://schema.org/InStock',
+              url: new URL('/sign-up', siteOrigin).toString()
+            }
           })
         }}
       />
-      <DynamicIslandNav downloadUrl={ctaUrl} isSignedIn={isSignedIn} />
-      <HeroSpiral downloadUrl={ctaUrl} />
+      <DynamicIslandNav downloadUrls={downloadUrls} isSignedIn={isSignedIn} />
+      <HeroSpiral downloadUrls={downloadUrls} />
 
       <ProductStory />
 
@@ -68,9 +79,9 @@ function MarketingPage({ downloadUrl, isSignedIn }) {
             <span className="inline-flex rounded-full bg-[#a48c5e]/[0.14] px-3.5 py-1.5 text-[12px] font-semibold text-[#e5d2a8]">Launch price</span>
             <p className="mb-0 mt-5 text-[12px] font-semibold uppercase tracking-[.13em] text-[#b8b6ae]">Lifetime license</p>
             <div className="mt-2 flex flex-wrap items-baseline justify-center gap-x-3 text-[#f4f2ed]">
-              <span className="text-[58px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[52px]">€39</span>
+              <span className="text-[58px] font-medium leading-none tracking-[-.07em] max-[600px]:text-[52px]">€{Number(lifetimeLicensePrice).toFixed(0)}</span>
               <s aria-label="Regular price €69" className="text-[24px] font-medium leading-none tracking-[-.04em] text-[#b0a0a1] decoration-white decoration-[0.5px] max-[600px]:text-[21px]">€69</s>
-              <span className="rounded-full bg-[#8e9b7a]/[0.14] px-2.5 py-1 text-[11px] font-semibold tracking-[.01em] text-[#c9d5b8]">43% off</span>
+              <span className="rounded-full bg-[#8e9b7a]/[0.14] px-2.5 py-1 text-[11px] font-semibold tracking-[.01em] text-[#c9d5b8]">58% off</span>
             </div>
             <p className="mx-auto mb-0 mt-3 max-w-[400px] text-[14px] leading-[1.6] text-[#c1c3cc]">Find moments, edit captions, and export from one desktop app.</p>
             <ul className="mx-auto mb-0 mt-6 grid w-fit list-none gap-3 p-0 text-left text-[14px] text-[#ececf0] max-[600px]:gap-2.5 max-[600px]:text-[13px]">
@@ -78,7 +89,7 @@ function MarketingPage({ downloadUrl, isSignedIn }) {
             </ul>
             <p className="mx-auto mb-0 mt-5 max-w-[440px] text-[12px] leading-[1.6] text-[#aaa9a3]">Eligible accounts get a limited AI trial. After it ends, add an OpenRouter API key and choose a model. OpenRouter bills that usage; local transcription has no per-use fee.</p>
             <Link href="/sign-up" className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-[13px] bg-[#f2f2ee] text-[15px] font-semibold text-[#17171a] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff]">Get lifetime access</Link>
-            <small className="mt-3 block text-center text-[12px] text-[#a9a79f]">For macOS, Windows, and Linux.</small>
+            <small className="mt-3 block text-center text-[12px] text-[#a9a79f]">Available for macOS. Windows and Linux are coming soon.</small>
             <div className="mt-2.5 text-center text-[12px] text-[#a9acb7]">{isSignedIn ? 'Manage your Deyn Studio account:' : 'Already have Deyn Studio?'} <Link href={isSignedIn ? '/dashboard' : '/sign-in'} className="rounded-sm text-[#c5cbe0] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c4ff]">{isSignedIn ? 'Dashboard' : 'Log in'}</Link></div>
           </PricingCard>
         </div>
@@ -94,7 +105,11 @@ function MarketingPage({ downloadUrl, isSignedIn }) {
 
 export default async function Home() {
   const { userId } = await auth()
-  const downloadUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
+  const releasePageUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
+  const downloadUrls = {
+    silicon: safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_MAC_SILICON_URL) || releasePageUrl,
+    intel: safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_MAC_INTEL_URL) || releasePageUrl
+  }
 
-  return <MarketingPage downloadUrl={downloadUrl} isSignedIn={Boolean(userId)} />
+  return <MarketingPage downloadUrls={downloadUrls} isSignedIn={Boolean(userId)} />
 }
