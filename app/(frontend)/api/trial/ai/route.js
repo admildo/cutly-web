@@ -377,7 +377,7 @@ export async function POST(request) {
     console.error('Could not protect trial device identifier:', error)
     return json({ error: 'The free AI trial is temporarily unavailable.' }, 503)
   }
-  const device = await getDb().get(sql`
+  const [device] = await getDb().all(sql`
     SELECT user_id AS userId FROM trial_device_claims WHERE device_hash = ${deviceHash}
   `)
   if (!device || device.userId !== userId) return json({ error: 'Sign in on this device to continue the trial.' }, 403)
