@@ -18,10 +18,10 @@ const slides = [
     number: '02',
     title: 'Review each step before it runs',
     description: 'Adjust the plan, remove a step, or save it to reuse with compatible files.',
-    image: '/app-shots/tools-2.png',
+    image: '/app-shots/tools-3.png',
     width: 1920,
     height: 1440,
-    alt: 'Media Assistant plan with proposed video changes for review'
+    alt: 'Media Assistant plan with proposed video changes for review, shown in Deyn Studio'
   },
   {
     number: '03',
@@ -61,14 +61,14 @@ export function MediaAssistantTools() {
   return (
     <section
       id="media-assistant-tools"
-      className="relative overflow-hidden bg-[#0d0d0e] px-6 py-[clamp(88px,8vw,112px)] text-[#f0efe9] max-[700px]:py-[clamp(64px,10vw,72px)] max-[600px]:px-4"
+      className="relative overflow-hidden bg-[#0d0d0e] px-6 py-[clamp(88px,8vw,112px)] text-[#f0efe9] max-[700px]:py-[clamp(64px,10vw,72px)] max-[767px]:px-5"
       aria-label="Media Assistant and tools"
     >
       <div className="pointer-events-none absolute left-1/2 top-[22%] h-[460px] w-[min(850px,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgb(110_132_170/.14),transparent_68%)] blur-3xl" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-[1120px]">
         <p className="mb-8 text-center text-[11px] font-medium uppercase tracking-[.2em] text-[#aeb4c2] max-[600px]:mb-6">Media Assistant &amp; Tools</p>
 
-        <div className="relative mx-auto aspect-[1.64] w-full max-w-[980px] [perspective:1400px] max-[700px]:aspect-[1.38] max-[480px]:aspect-[1.3]">
+        <div className="relative mx-auto aspect-[1.64] w-full max-w-[980px] [perspective:1400px] max-[767px]:aspect-[1.3]">
           <div className="absolute inset-[12%_13%] rounded-[50%] bg-[#8294b8]/[.12] blur-[70px]" aria-hidden="true" />
           {slides.map((slide, index) => {
             const offset = (index - active + slides.length) % slides.length
@@ -90,8 +90,8 @@ export function MediaAssistantTools() {
                     width={slide.width}
                     height={slide.height}
                     alt={isActive ? slide.alt : ''}
-                    priority={index === 0}
-                    sizes="(max-width: 700px) 77.4vw, 683px"
+                    loading={index === active ? 'eager' : 'lazy'}
+                    sizes="(max-width: 767px) 90vw, 683px"
                   />
                 </div>
               </div>

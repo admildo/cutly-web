@@ -291,7 +291,7 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         publishHeroIslandState(progress >= revealAt)
 
         const headlinePromptActive = !reducedMotion
-          && progress >= PROMPT_HEADLINE_START
+          && (mobile || progress >= PROMPT_HEADLINE_START)
           && progress < PROMPT_REVEAL_END
         if (headlinePromptActive !== headlinePromptActiveRef.current) {
           headlinePromptActiveRef.current = headlinePromptActive
@@ -551,21 +551,21 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         ease: 'power2.out',
       }, 0.57)
       timeline.fromTo(lowerMaskRef.current, {
-        scaleY: 0,
+        scaleY: mobile ? 1 : 0,
       }, {
         scaleY: 1,
         duration: 0.36,
         ease: 'power2.inOut',
       }, 0.16)
       timeline.fromTo(scrollPromptRef.current, {
-        autoAlpha: 0,
-        y: 18,
+        autoAlpha: mobile ? 1 : 0,
+        y: mobile ? 0 : 18,
       }, {
         autoAlpha: 1,
         y: 0,
         duration: PROMPT_REVEAL_DURATION,
         ease: 'power2.out',
-      }, PROMPT_REVEAL_START)
+      }, mobile ? 0 : PROMPT_REVEAL_START)
       timeline.to(scrollPromptRef.current, {
         autoAlpha: 0,
         y: -12,
@@ -1046,53 +1046,63 @@ export function HeroSpiral({ downloadUrl = '/download' }) {
         <div ref={lowerMaskRef} className={styles.lowerMask} aria-hidden="true" />
         <div ref={scrollPromptRef} className={styles.scrollPrompt}>
           <p className={styles.downloadEyebrow}>From long video to shareable clips</p>
-          <h1 className={styles.downloadHeading}>
-            {previousHeadlineIndex !== null && (
+          <h1 className={styles.headingContainer}>
+            <span className={styles.downloadHeading}>
+              {previousHeadlineIndex !== null && (
+                <span
+                  key={`leaving-${previousHeadlineIndex}`}
+                  className={styles.downloadHeadingLeaving}
+                  aria-hidden="true"
+                >
+                  {heroHeadlines[previousHeadlineIndex].split(' ').map((word, index, words) => (
+                    <span
+                      className={styles.downloadHeadingWord}
+                      key={`${word}-${index}`}
+                      style={{ animationDelay: `${(words.length - index - 1) * 80}ms` }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </span>
+              )}
               <span
-                key={`leaving-${previousHeadlineIndex}`}
-                className={styles.downloadHeadingLeaving}
-                aria-hidden="true"
+                key={`active-${headlineIndex}-${isHeadlinePromptActive}`}
+                className={`${styles.downloadHeadingEntering} ${isHeadlinePromptActive ? styles.downloadHeadingAnimating : ''}`}
               >
-                {heroHeadlines[previousHeadlineIndex].split(' ').map((word, index, words) => (
+                {heroHeadlines[headlineIndex].split(' ').map((word, index) => (
                   <span
                     className={styles.downloadHeadingWord}
                     key={`${word}-${index}`}
-                    style={{ animationDelay: `${(words.length - index - 1) * 80}ms` }}
+                    style={{ animationDelay: `${index * 200}ms` }}
                   >
                     {word}
                   </span>
                 ))}
               </span>
-            )}
-            <span
-              key={`active-${headlineIndex}-${isHeadlinePromptActive}`}
-              className={`${styles.downloadHeadingEntering} ${isHeadlinePromptActive ? styles.downloadHeadingAnimating : ''}`}
-            >
-              {heroHeadlines[headlineIndex].split(' ').map((word, index) => (
-                <span
-                  className={styles.downloadHeadingWord}
-                  key={`${word}-${index}`}
-                  style={{ animationDelay: `${index * 200}ms` }}
-                >
-                  {word}
-                </span>
-              ))}
             </span>
           </h1>
+          <p className={styles.mobileDescription}>Find the best moments, add captions, and frame every clip for social.</p>
           <a className={styles.downloadButton} href={downloadUrl}>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
             Download Deyn Studio
           </a>
+          <p className={styles.mobilePlatforms}>For macOS, Windows, and Linux</p>
           <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
+          <div
+            aria-hidden="true"
+            className={`${styles.videoBackdrop} ${isVideoPlaying ? styles.videoBackdropHidden : ''}`}
+          />
           <video
             ref={videoRef}
             className={`${styles.demoVideo} ${isVideoPlaying ? styles.demoVideoPlaying : ''}`}
             controls={isVideoPlaying}
             playsInline
             preload="none"
+            poster="/app-shots/clips-p.png"
             aria-label="Deyn Studio product demo"
+            aria-hidden={!isVideoPlaying}
             onPlay={() => setIsVideoPlaying(true)}
             onPause={() => setIsVideoPlaying(false)}
             onEnded={() => setIsVideoPlaying(false)}

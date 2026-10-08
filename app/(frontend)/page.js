@@ -56,10 +56,10 @@ function MarketingPage({ downloadUrl, isSignedIn }) {
 
 
 
-      <section className="mx-auto scroll-mt-[24px] w-[min(900px,calc(100%_-_48px))] px-6 py-[clamp(76px,7vw,96px)] max-[700px]:py-[clamp(60px,9vw,72px)] max-[600px]:w-[calc(100%_-_24px)] max-[600px]:px-0" id="pricing">
+      <section className="mx-auto scroll-mt-[24px] w-[min(900px,calc(100%_-_48px))] px-6 py-[clamp(76px,7vw,96px)] max-[700px]:py-[clamp(60px,9vw,72px)] max-[600px]:w-[calc(100%_-_40px)] max-[600px]:px-0" id="pricing">
         <div className="mx-auto mb-10 max-w-[700px] text-center max-[600px]:mb-8">
           <span className="text-sm text-[#aab7d7]">Pricing</span>
-          <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[48px]">A lifetime license.<br />One payment.</h2>
+          <h2 className="mt-4 text-[clamp(54px,6vw,72px)] font-medium leading-[.96] tracking-[-.065em] text-[#f0f2f8] max-[600px]:text-[clamp(36px,10vw,48px)]">A lifetime license.<br />One payment.</h2>
           <p className="mx-auto mb-0 mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[#9398a4]">Use Deyn Studio on up to two devices. Future desktop updates are included.</p>
         </div>
         <div className="relative mx-auto max-w-[560px] max-[600px]:max-w-none">

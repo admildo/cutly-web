@@ -97,3 +97,13 @@
     animation: none;
   }
 }
+
+.mobileStories { display: none; }
+@media (max-width: 767px) {
+  .mobileStories { display: grid; gap: 40px; padding-top: 8px; }
+  .mobileImage { display: block; width: 100%; height: auto; border: 1px solid rgb(255 255 255 / 10%); border-radius: 14px; }
+  .mobileCopy { display: flex; gap: 14px; margin-top: 20px; }
+  .stepNumber { padding-top: 3px; color: #9c9483; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .mobileCopy h3 { margin: 0; color: #f7f4ed; font-size: 21px; font-weight: 500; line-height: 1.2; letter-spacing: -.04em; }
+  .mobileCopy p { margin: 10px 0 0; color: #b9babd; font-size: 14px; line-height: 1.7; }
+}

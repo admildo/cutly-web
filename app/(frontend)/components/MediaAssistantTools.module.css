@@ -80,3 +80,9 @@
     width: 77.4%;
   }
 }
+
+@media (max-width: 767px) {
+  .stackCard { width: 90%; }
+  .stackCard[data-position='right'] { transform: translate3d(-44%, -54%, 0) scale(.94) rotate(3deg); }
+  .stackCard[data-position='left'] { transform: translate3d(-56%, -57%, 0) scale(.9) rotate(-3deg); }
+}

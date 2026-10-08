@@ -120,6 +120,7 @@ export function ProductStory() {
     let didInitialSync = false
 
     const updateActiveStory = () => {
+      if (window.matchMedia('(max-width: 767px)').matches) return
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
         const stageRect = stickyStageRef.current?.getBoundingClientRect()
@@ -178,7 +179,7 @@ export function ProductStory() {
 
   return (
     <section
-      className="relative scroll-mt-[24px] overflow-clip bg-[#0d0d0e] px-[clamp(24px,3.2vw,64px)] pt-[clamp(88px,8vw,112px)] max-[700px]:pt-[clamp(80px,12vw,96px)] max-[600px]:px-4 max-[600px]:pt-[clamp(80px,11svh,104px)]"
+      className="relative scroll-mt-[24px] overflow-clip bg-[#0d0d0e] px-[clamp(24px,3.2vw,64px)] pt-[clamp(88px,8vw,112px)] max-[700px]:pt-[clamp(80px,12vw,96px)] max-[767px]:px-5 max-[767px]:pt-16"
       id="features"
       aria-labelledby="product-story-heading"
     >
@@ -188,7 +189,7 @@ export function ProductStory() {
         </h2>
 
 
-        <div role="group" aria-label="Deyn Studio editing workflow" className="relative">
+        <div role="group" aria-label="Deyn Studio editing workflow" className="relative max-[767px]:hidden">
           <div ref={stickyStageRef} className="sticky top-[72px] z-20 flex h-[calc(100svh-84px)] w-full items-center justify-center max-[600px]:top-[64px] max-[600px]:h-[calc(100svh-76px)]">
               <div className="relative mx-auto w-[115%] pb-[132px]" style={{ maxWidth: 'min(1380px, max(805px, 57.5vw), calc(184svh - 313px), calc(100vw - 24px))', perspective: '1400px', transform: 'translateY(10px)' }}>
                 <div className={`relative mx-auto w-[90%] ${stories[active].video ? 'aspect-video' : 'aspect-[3/2]'}`} aria-hidden="true" />
@@ -253,7 +254,7 @@ export function ProductStory() {
                       <div
                         id={`product-story-copy-${index}`}
                         aria-hidden={!showCopy}
-                        className={`relative z-20 mt-5 flex min-h-[152px] items-center justify-center px-7 py-6 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] max-[600px]:mt-4 max-[600px]:min-h-[156px] max-[600px]:px-4 max-[600px]:py-5 ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                        className={`relative z-20 mt-5 flex min-h-[152px] items-center justify-center px-7 py-6 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] max-[600px]:mt-4 max-[600px]:min-h-[156px] max-[767px]:px-5 max-[600px]:py-5 ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                       >
                         <div key={`${story.number}-${showCopy ? `active-${active}-${scrollDirection}` : 'idle'}`} className="relative">
                           <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(16px,2.6vw,26px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed] max-[600px]:text-[20px]`}>
@@ -282,9 +283,20 @@ export function ProductStory() {
           </div>
           <div aria-hidden="true" className="h-[60svh] max-[600px]:h-[55svh]" />
         </div>
-        <div className="sr-only" aria-live="polite" aria-atomic="true">Step {stories[active].number}: {stories[active].title}</div>
+        <div className={styles.mobileStories}>
+          {stories.map((story) => (
+            <article key={story.number} className={styles.mobileStory}>
+              <Image src={story.image} alt={story.alt} width={1200} height={800} sizes="(max-width: 767px) calc(100vw - 40px), 1px" className={styles.mobileImage} />
+              <div className={styles.mobileCopy}>
+                <span className={styles.stepNumber}>{story.number}</span>
+                <div><h3>{story.title}</h3><p>{story.description}</p></div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="sr-only max-[767px]:hidden" aria-live="polite" aria-atomic="true">Step {stories[active].number}: {stories[active].title}</div>
       </div>
-      <div className="h-[clamp(72px,10svh,120px)]" aria-hidden="true" />
+      <div className="h-[clamp(72px,10svh,120px)] max-[767px]:h-8" aria-hidden="true" />
     </section>
   )
 }

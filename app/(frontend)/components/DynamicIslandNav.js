@@ -49,11 +49,11 @@ export function DynamicIslandNav({ downloadUrl, isSignedIn = false }) {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-[max(env(safe-area-inset-top),4px)] text-[#f4f5f8]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(180deg,rgb(3_4_7/.68)_0%,rgb(3_4_7/.52)_42%,rgb(3_4_7/.26)_78%,rgb(3_4_7/0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] max-[760px]:h-[100px] bg-[linear-gradient(180deg,rgb(3_4_7/.68)_0%,rgb(3_4_7/.52)_42%,rgb(3_4_7/.26)_78%,rgb(3_4_7/0)_100%)]"
       />
-      <div className={`pointer-events-auto relative mx-auto w-[460px] max-w-[calc(100vw-24px)] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'translate-y-2' : 'translate-y-0'} ${isMenuOpen ? 'max-[760px]:w-[280px]' : 'max-[760px]:w-[190px]'}`}>
-        <div className={`relative transition-[border-radius,background-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'overflow-hidden rounded-[30px] bg-[linear-gradient(180deg,rgb(255_255_255/.12),rgb(255_255_255/.05))] shadow-[0_10px_30px_rgb(0_0_0/.14)] backdrop-blur-[8px] backdrop-saturate-105 max-[760px]:rounded-[27px]' : 'overflow-visible rounded-none bg-transparent shadow-none backdrop-blur-0'}`}>
-          <div className={`relative z-10 grid grid-cols-[auto_1fr_auto] items-center transition-[height,padding] duration-[620ms] ease-[cubic-bezier(.65,0,.35,1)] ${isScrolled ? 'h-[60px] px-5 max-[760px]:h-[56px] max-[760px]:px-3' : 'h-[68px] px-4 max-[760px]:h-[56px] max-[760px]:px-1'}`}>
+      <div className={`pointer-events-auto relative mx-auto w-[460px] max-w-[calc(100vw-24px)] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'translate-y-2' : 'translate-y-0'} ${isMenuOpen ? 'max-[760px]:w-full' : 'max-[760px]:w-full'}`}>
+        <div className={`relative transition-[border-radius,background-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${isScrolled ? 'overflow-hidden rounded-[30px] bg-[linear-gradient(180deg,rgb(255_255_255/.12),rgb(255_255_255/.05))] shadow-[0_10px_30px_rgb(0_0_0/.14)] backdrop-blur-[8px] backdrop-saturate-105 max-[760px]:rounded-[27px]' : 'overflow-visible rounded-none bg-transparent shadow-none backdrop-blur-0 max-[760px]:rounded-[22px] max-[760px]:bg-[#0b0c10]/90 max-[760px]:backdrop-blur-xl'}`}>
+          <div className={`relative z-10 grid grid-cols-[auto_1fr_auto] items-center transition-[height,padding] duration-[620ms] ease-[cubic-bezier(.65,0,.35,1)] ${isScrolled ? 'h-[60px] px-5 max-[760px]:h-[56px] max-[760px]:px-3' : 'h-[68px] px-4 max-[760px]:h-[56px] max-[760px]:px-4'}`}>
             <Link href="#top" aria-label="Deyn Studio home" onClick={closeMenu} className="flex shrink-0 items-center rounded-sm text-sm font-semibold tracking-[-.035em] text-white no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80">
               <span>Deyn Studio</span>
             </Link>
@@ -71,7 +71,7 @@ export function DynamicIslandNav({ downloadUrl, isSignedIn = false }) {
 
             <button
               type="button"
-              className="col-start-3 hidden h-[38px] w-[42px] shrink-0 place-items-center justify-self-end rounded-full bg-white/[0.07] text-white transition-colors hover:bg-white/[0.13] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 max-[760px]:grid"
+              className="col-start-3 hidden h-[44px] w-[44px] shrink-0 place-items-center justify-self-end rounded-full bg-white/[0.07] text-white transition-colors hover:bg-white/[0.13] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 max-[760px]:grid"
               aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-island-navigation"
@@ -92,11 +92,11 @@ export function DynamicIslandNav({ downloadUrl, isSignedIn = false }) {
             <div className="overflow-hidden">
               <nav aria-label="Mobile navigation" className="grid gap-1 px-3 pb-3 pt-2">
                 {navigationLinks.map(({ label, href }) => (
-                <Link key={label} href={href} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="flex min-h-[42px] items-center rounded-[13px] px-3 text-[13px] font-medium text-white/75 no-underline transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:bg-white/[0.07] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white/70">{label}</Link>
+                <Link key={label} href={href} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="flex min-h-[44px] items-center rounded-[13px] px-3 text-[13px] font-medium text-white/75 no-underline transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:bg-white/[0.07] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white/70">{label}</Link>
                 ))}
                 <div className="mt-1 grid grid-cols-2 gap-2 pt-2">
-                  <Link href={isSignedIn ? '/dashboard' : '/sign-in'} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-semibold text-white no-underline transition-colors hover:bg-white/[0.11] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
-                  <Link href={ctaUrl} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-[#f4f3ef] text-[12px] font-semibold text-[#111216] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</Link>
+                  <Link href={isSignedIn ? '/dashboard' : '/sign-in'} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-semibold text-white no-underline transition-colors hover:bg-white/[0.11] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
+                  <Link href={ctaUrl} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#f4f3ef] text-[12px] font-semibold text-[#111216] no-underline transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</Link>
                 </div>
               </nav>
             </div>

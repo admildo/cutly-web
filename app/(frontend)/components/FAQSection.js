@@ -97,7 +97,7 @@ export function FAQSection() {
           </svg>
           <label className="sr-only" htmlFor="faq-search">Search questions</label>
           <input
-            className="h-12 w-full rounded-[12px] bg-[#171717] pl-[46px] pr-4 text-[14px] text-[#f2f2f2] outline-none transition-shadow placeholder:text-[#777777] focus-visible:shadow-[0_0_0_3px_rgb(255_255_255/.28)]"
+            className="h-12 w-full rounded-[12px] bg-[#171717] pl-[46px] pr-4 text-[14px] max-[767px]:text-[16px] text-[#f2f2f2] outline-none transition-shadow placeholder:text-[#777777] focus-visible:shadow-[0_0_0_3px_rgb(255_255_255/.28)]"
             id="faq-search"
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Find an answer…"
@@ -112,7 +112,7 @@ export function FAQSection() {
             return (
               <button
                 aria-pressed={selected}
-                className={`shrink-0 rounded-full px-3.5 py-1.5 text-[11px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#eeeeee] ${selected ? 'bg-[#f2f2f2] text-[#111111]' : 'bg-[#171717] text-[#aaaaaa] hover:bg-[#242424] hover:text-[#f2f2f2]'}`}
+                className={`shrink-0 rounded-full max-[767px]:min-h-11 px-3.5 py-1.5 text-[11px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#eeeeee] ${selected ? 'bg-[#f2f2f2] text-[#111111]' : 'bg-[#171717] text-[#aaaaaa] hover:bg-[#242424] hover:text-[#f2f2f2]'}`}
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 type="button"

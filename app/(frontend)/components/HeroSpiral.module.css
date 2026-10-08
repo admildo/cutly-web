@@ -447,22 +447,41 @@
   position: absolute;
   z-index: 5;
   inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 42%, #182033 0%, #0b0e15 58%, #07090e 100%);
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
 }
 
+.videoBackdrop {
+  position: absolute;
+  inset: -5%;
+  background-image: url('/app-shots/clips-p.png');
+  background-position: center;
+  background-size: cover;
+  filter: blur(42px) brightness(.82) saturate(1.3);
+  opacity: .95;
+  transform: scale(1.08);
+  -webkit-mask-image: radial-gradient(ellipse 82% 72% at center, #000 14%, rgb(0 0 0 / .82) 48%, transparent 100%);
+  mask-image: radial-gradient(ellipse 82% 72% at center, #000 14%, rgb(0 0 0 / .82) 48%, transparent 100%);
+  transition: opacity 700ms ease, filter 700ms ease;
+}
+
+.videoBackdrop::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(180deg, rgb(5 7 12 / 18%), transparent 28%, rgb(5 7 12 / 24%));
+}
+
+.videoBackdropHidden { opacity: 0; filter: blur(12px) saturate(.65); }
+
 .videoContent {
   position: absolute;
-  top: 50%;
-  left: 50%;
   z-index: 2;
-  display: flex;
-  width: min(80vw, 760px);
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
   color: #fff;
   text-align: center;
   text-shadow: 0 3px 22px rgb(0 0 0 / 65%);
@@ -476,32 +495,32 @@
 .videoContentPlaying {
   opacity: 0;
   filter: blur(6px);
-  transform: translate(-50%, -53%) scale(0.97);
   pointer-events: none;
 }
 
-.videoHeading { max-width: 680px; text-align: center; color: #fff; }
+.videoHeading { position: absolute; top: clamp(72px, 9svh, 96px); right: 24px; left: 24px; max-width: 700px; margin-inline: auto; text-align: center; color: #fff; }
 .videoHeading p { margin: 0 0 12px; color: #c5d2f1; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
-.videoHeading h2 { margin: 0; font-size: clamp(29px, 3.3vw, 46px); font-weight: 500; letter-spacing: -0.055em; line-height: 1.04; }
+.videoHeading h2 { margin: 0; font-size: clamp(26px, 3vw, 38px); font-weight: 500; letter-spacing: -0.055em; line-height: 1.04; }
 
-.playPrompt { will-change: transform, opacity; }
+.playPrompt { position: absolute; top: 63%; left: 50%; width: 78px; height: 78px; margin: -39px 0 0 -39px; will-change: transform, opacity; }
 
 .demoVideo {
   position: absolute;
-  top: 50%;
+  top: 63%;
   left: 50%;
   z-index: 1;
   display: block;
-  width: min(85vw, 145.8svh);
+  width: min(64vw, 110svh);
   height: auto;
   aspect-ratio: 16 / 9;
-  border: 1px solid rgb(137 158 219 / 16%);
+  border: 1px solid rgb(220 229 255 / 24%);
   border-radius: 20px;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 48%), 0 0 72px rgb(102 130 255 / 15%);
   object-fit: cover;
   opacity: 0;
-  filter: blur(12px) brightness(0.88);
+  filter: brightness(.72) saturate(.84);
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(1.045);
+  transform: translate(-50%, -50%) scale(.96);
   will-change: opacity, filter, transform;
   transition:
     opacity 720ms cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -511,7 +530,7 @@
 
 .demoVideoPlaying {
   opacity: 1;
-  filter: blur(0) brightness(1);
+  filter: blur(0) brightness(1) saturate(1);
   pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
 }
@@ -540,8 +559,8 @@
   /* A native sticky scene avoids fixed-pixel pin sizing as Safari's bars move.
      The section remains in normal flow for the full scroll-linked transition. */
   .hero {
-    height: 290vh;
-    height: 290svh;
+    height: 220vh;
+    height: 220svh;
     min-height: 100vh;
     min-height: 100svh;
   }
@@ -564,8 +583,10 @@
   .downloadHeading { min-height: 1.1em; font-size: clamp(20px, 6vw, 28px); }
   .downloadButton { min-height: 48px; margin-top: 16px; font-size: 13px; }
   .keepScrolling { margin-top: 14px; font-size: 9px; letter-spacing: 0.07em; }
-  .demoVideo { width: calc(100vw - 24px); height: auto; aspect-ratio: 16 / 9; border-radius: 14px; }
-  .videoContent { top: 44%; width: min(84vw, 540px); gap: 16px; }
+  .demoVideo { top: 58%; width: calc(100vw - 32px); height: auto; aspect-ratio: 16 / 9; border-radius: 14px; }
+  .videoBackdrop { filter: blur(34px) brightness(.82) saturate(1.3); }
+  .videoHeading { top: clamp(88px, 14svh, 132px); right: 20px; left: 20px; }
+  .playPrompt { top: 58%; width: 64px; height: 64px; margin: -32px 0 0 -32px; }
   .videoHeading p { margin-bottom: 10px; font-size: 9px; }
   .videoHeading h2 { font-size: clamp(24px, 6.2vw, 30px); }
   .playButton { width: 64px; height: 64px; }
@@ -575,7 +596,7 @@
 @media (prefers-reduced-motion: reduce) {
   .mouseCursor { display: none; }
   .cardMotion, .subjectMotion, .subjectGazeVariant { transition: none; }
-  .videoContent, .demoVideo, .playButton { transition: none; }
+  .videoContent, .videoBackdrop, .demoVideo, .playButton { transition: none; }
   .downloadHeadingEntering, .downloadHeadingLeaving { animation: none; }
   .downloadHeadingAnimating .downloadHeadingWord,
   .downloadHeadingLeaving .downloadHeadingWord { animation: none; }
@@ -588,3 +609,24 @@
 /* Release the hero's 3D compositing tree when later sections are visible. */
 .scene[data-scene-active='false'] .world { display: none; }
 .cardMotion[data-in-view='false'] { will-change: auto; }
+
+.headingContainer { display: flex; justify-content: center; width: 100%; margin: 0; }
+.mobileDescription, .mobilePlatforms { display: none; }
+
+@media (max-width: 767px) {
+  .scrollPrompt { right: 20px; bottom: max(28px, env(safe-area-inset-bottom)); left: 20px; }
+  .downloadEyebrow { display: none; }
+  .downloadHeading { display: grid; width: 100%; min-height: 0; font-size: clamp(32px, 8.8vw, 48px); line-height: 1.06; }
+  .downloadHeadingEntering, .downloadHeadingLeaving { flex-wrap: wrap; width: 100%; gap: .08em .22em; white-space: normal; text-wrap: balance; }
+  .downloadHeadingEntering .downloadHeadingWord { animation: headline-blur-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .mobileDescription { display: block; max-width: 34ch; margin: 14px 0 0; color: #c5c8d0; font-size: 14px; line-height: 1.6; }
+  .mobilePlatforms { display: block; margin: 12px 0 0; color: #a8acb7; font-size: 11px; }
+  .downloadButton { width: min(100%, 340px); min-height: 52px; font-size: 14px; }
+  .keepScrolling { margin-top: 20px; }
+  .subject, .subjectGaze { bottom: 16svh; height: 64svh; }
+  .lowerMask { height: 72svh; background: linear-gradient(180deg, transparent, rgb(5 7 12 / 80%) 44%, #05070d 78%); }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .downloadHeadingEntering .downloadHeadingWord { animation: none; }
+}
