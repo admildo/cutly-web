@@ -86,9 +86,9 @@ export function FAQSection() {
   }
 
   return (
-    <section className="scroll-mt-[24px] w-full bg-[#0d0d0e] px-6 py-[clamp(104px,9vw,132px)] text-[#f2f2f2] max-[700px]:py-[clamp(76px,11vw,88px)] max-[600px]:px-5" id="faq">
+    <section className="scroll-mt-[24px] w-full bg-[#0d0d0e] px-6 py-[var(--section-y)] text-[#f2f2f2] max-[600px]:px-5" id="faq">
       <div className="mx-auto max-w-[680px] text-center">
-        <h2 className="mb-0 text-[clamp(36px,4vw,48px)] font-medium leading-[1.02] tracking-[-.06em] text-[#f2f2f2] max-[600px]:text-[32px]">Before you download</h2>
+        <h2 className="mb-0 text-balance text-[length:var(--section-title)] font-medium leading-[1.04] tracking-[-.055em] text-[#f2f2f2]">Before you download</h2>
         <p className="mx-auto mb-0 mt-4 max-w-[480px] text-[15px] leading-[1.7] text-[#a0a0a0]">What it does, what AI costs, and where your files are processed.</p>
 
         <div className="relative mx-auto mt-9 max-w-[520px] max-[600px]:mt-7">
@@ -113,7 +113,7 @@ export function FAQSection() {
             return (
               <button
                 aria-pressed={selected}
-                className={`shrink-0 rounded-full max-[767px]:min-h-11 px-3.5 py-1.5 text-[11px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#eeeeee] ${selected ? 'bg-[#f2f2f2] text-[#111111]' : 'bg-[#171717] text-[#aaaaaa] hover:bg-[#242424] hover:text-[#f2f2f2]'}`}
+                className={`shrink-0 rounded-full max-[767px]:min-h-11 px-3.5 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#eeeeee] ${selected ? 'bg-[#f2f2f2] text-[#111111]' : 'bg-[#171717] text-[#aaaaaa] hover:bg-[#242424] hover:text-[#f2f2f2]'}`}
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 type="button"

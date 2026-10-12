@@ -10,7 +10,7 @@ const stories = [
     title: 'Bring in a long video',
     description: 'Import a video or paste a supported public link. Let Deyn suggest clips, search for a moment, or choose the cut yourself.',
 
-    image: '/app-shots/home-p.png',
+    image: '/app-shots/home-p.webp',
     imageBackground: '13 13 13',
     alt: 'Deyn Studio home screen with a video ready and saved clip sets'
   },
@@ -18,7 +18,7 @@ const stories = [
     number: '02',
     title: 'Find the moments worth sharing',
     description: 'AI finds moments in the transcript and suggests clips. Review the timing and titles, then choose what to keep.',
-    image: '/app-shots/clips-p.png',
+    image: '/app-shots/clips-p.webp',
     imageBackground: '43 34 117',
     alt: 'A grid of clips generated from a video in Deyn Studio'
   },
@@ -26,7 +26,7 @@ const stories = [
     number: '03',
     title: 'Polish each clip and export',
     description: 'Edit the transcript, style captions, frame for portrait video, and export from the same app.',
-    image: '/app-shots/editor.png',
+    image: '/app-shots/editor.webp',
     imageBackground: '43 34 117',
     alt: 'Deyn Studio editor with transcript, portrait preview, and caption controls'
   }
@@ -179,12 +179,12 @@ export function ProductStory() {
 
   return (
     <section
-      className="relative scroll-mt-[24px] overflow-clip bg-[#0d0d0e] px-[clamp(24px,3.2vw,64px)] pt-[clamp(88px,8vw,112px)] max-[700px]:pt-[clamp(80px,12vw,96px)] max-[767px]:px-5 max-[767px]:pt-16"
+      className="relative scroll-mt-[24px] overflow-clip bg-[#0d0d0e] px-[clamp(24px,3.2vw,64px)] pt-[var(--section-y)] max-[767px]:px-5"
       id="features"
       aria-labelledby="product-story-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[1420px]">
-        <h2 id="product-story-heading" className="relative z-30 mx-auto mb-7 max-w-[640px] text-center font-serif text-[36px] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[900px]:text-[clamp(30px,3.8vw,36px)] max-[600px]:mb-6 max-[600px]:text-[clamp(26px,6.5vw,32px)] max-[600px]:tracking-[-.05em]">
+        <h2 id="product-story-heading" className="relative z-30 mx-auto mb-[var(--section-title-gap)] max-w-[640px] text-balance text-center font-serif text-[length:var(--section-title)] font-normal leading-[1.04] tracking-[-.055em] text-[#f0efe9]">
           From long video to finished clips
         </h2>
 

@@ -65,24 +65,24 @@ export function TrialSettingsForm({ initialConfig }) {
   }
 
   return (
-    <form onSubmit={save} className="mt-8 overflow-hidden rounded-2xl border border-[#807e7e]/50 bg-[#242322]">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#807e7e]/40 px-5 py-5 sm:px-7">
+    <form onSubmit={save} className="mt-6 overflow-hidden rounded-[24px] bg-[#151619] shadow-[0_18px_54px_rgb(0_0_0/.2)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
         <div>
           <h2 className="m-0 text-lg font-medium tracking-[-0.02em]">Trial availability</h2>
           <p className="mb-0 mt-1 text-sm text-[#a6a4a4]">Pause every sponsored AI action at once.</p>
         </div>
-        <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-[#807e7e] px-4 text-sm font-medium text-[#f2f0ef] focus-within:ring-2 focus-within:ring-[#cccbca]/30">
+        <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full bg-[#202125] px-4 text-sm font-medium text-[#f2f2ee] shadow-[0_4px_14px_rgb(0_0_0/.16)] focus-within:shadow-[0_0_0_2px_rgb(242_242_238/.4)]">
           <input
             type="checkbox"
             checked={values.enabled}
             onChange={(event) => update('enabled', event.target.checked)}
-            className="h-4 w-4 accent-[#f2f0ef]"
+            className="h-4 w-4 accent-[#f2f2ee]"
           />
           Trial is on
         </label>
       </div>
 
-      <div className="divide-y divide-[#807e7e]/30 px-5 sm:px-7">
+      <div className="divide-y divide-white/[.07] px-5 sm:px-7">
         {allowanceFields.map(({ key, label, help }) => (
           <label key={key} className="grid gap-3 py-5 sm:grid-cols-[1fr_112px] sm:items-center">
             <span>
@@ -100,7 +100,7 @@ export function TrialSettingsForm({ initialConfig }) {
                 required
                 value={values[key]}
                 onChange={(event) => update(key, event.target.value)}
-                className="min-h-11 w-20 rounded-lg border border-[#807e7e] bg-[#171716] px-3 text-center text-sm text-[#f2f0ef] outline-none focus:border-[#cccbca] focus:ring-2 focus:ring-[#cccbca]/20"
+                className="min-h-11 w-20 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
               />
               per account
             </span>
@@ -124,7 +124,7 @@ export function TrialSettingsForm({ initialConfig }) {
               required
               value={values.dailyBudgetDollars}
               onChange={(event) => update('dailyBudgetDollars', event.target.value)}
-              className="min-h-11 w-28 rounded-lg border border-[#807e7e] bg-[#171716] px-3 text-center text-sm text-[#f2f0ef] outline-none focus:border-[#cccbca] focus:ring-2 focus:ring-[#cccbca]/20"
+              className="min-h-11 w-28 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
             />
             USD / day
           </span>
@@ -147,19 +147,19 @@ export function TrialSettingsForm({ initialConfig }) {
               required
               value={values.monthlyBudgetDollars}
               onChange={(event) => update('monthlyBudgetDollars', event.target.value)}
-              className="min-h-11 w-28 rounded-lg border border-[#807e7e] bg-[#171716] px-3 text-center text-sm text-[#f2f0ef] outline-none focus:border-[#cccbca] focus:ring-2 focus:ring-[#cccbca]/20"
+              className="min-h-11 w-28 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
             />
             USD / month
           </span>
         </label>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#807e7e]/40 px-5 py-5 sm:px-7">
+      <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-7">
         <div aria-live="polite" className="min-h-5 text-sm">
           {error ? <p role="alert" className="m-0 text-[#e5a5a5]">{error}</p> : null}
-          {message ? <p role="status" className="m-0 text-[#cccbca]">{message}</p> : null}
+          {message ? <p role="status" className="m-0 text-[#d4d4d7]">{message}</p> : null}
         </div>
-        <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-[#f2f0ef] px-5 text-sm font-semibold text-[#171716] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f2f0ef] disabled:cursor-wait disabled:opacity-60">
+        <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-[#f2f2ee] px-5 text-sm font-semibold text-[#171716] shadow-[0_6px_20px_rgb(0_0_0/.24)] transition hover:bg-white hover:shadow-[0_9px_26px_rgb(0_0_0/.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60">
           {saving ? 'Saving…' : 'Save trial settings'}
         </button>
       </div>

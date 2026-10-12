@@ -36,6 +36,13 @@
 
 }
 
+/* Shared rhythm for every landing section. */
+:root {
+  --section-y: clamp(72px, 8vw, 120px);
+  --section-title: clamp(32px, 4vw, 52px);
+  --section-title-gap: clamp(28px, 3.2vw, 44px);
+}
+
 html {
   background-color: #08090c;
 }

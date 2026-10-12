@@ -1,0 +1,50 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at 50% 42%, #101218 0%, #050505 70%);
+  color: #f1f3fa;
+  transition: opacity .6s cubic-bezier(.22, .61, .36, 1), visibility 0s linear .6s;
+}
+.leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+.leaving .stage { transform: scale(1.35); transition: transform .6s cubic-bezier(.22, .61, .36, 1); }
+
+.center { display: grid; justify-items: center; gap: 22px; width: min(360px, 78vw); }
+
+/* A miniature of the hero: cards climbing a helix around a central axis. */
+.stage { width: 100%; height: min(340px, 44vh); perspective: 900px; }
+.tilt { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateX(-9deg); }
+.helix {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  animation: spin 11s linear infinite;
+}
+.tile {
+  --turns: 1.5;
+  --radius: clamp(78px, 24vw, 118px);
+  --step: calc(360deg * var(--turns) / var(--n));
+  --rise: calc((var(--i) - (var(--n) - 1) / 2) * clamp(15px, 4.2vh, 21px));
+  position: absolute; left: 50%; top: 50%;
+  width: clamp(40px, 12vw, 58px); aspect-ratio: 3 / 4;
+  margin: calc(clamp(40px, 12vw, 58px) * -2 / 3) 0 0 calc(clamp(40px, 12vw, 58px) / -2);
+  border-radius: 7px;
+  background-size: cover; background-position: center; background-color: #1a1c22;
+  box-shadow: 0 8px 22px rgb(0 0 0 / .5), inset 0 0 0 1px rgb(255 255 255 / .1);
+  transform: translateY(var(--rise)) rotateY(calc(var(--step) * var(--i))) translateZ(var(--radius));
+  opacity: .12;
+  transition: opacity .25s linear;
+}
+@keyframes spin { to { transform: rotateY(360deg); } }
+
+.meta { display: flex; width: 100%; justify-content: space-between; align-items: baseline; }
+.word { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #aeb4c2; }
+.count { font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .06em; color: #8c93a2; }
+.track { width: 100%; height: 1px; margin-top: -12px; background: rgb(241 243 250 / .14); overflow: hidden; }
+.bar { display: block; height: 100%; background: #f1f3fa; transform: scaleX(0); transform-origin: left; }
+
+@media (prefers-reduced-motion: reduce) {
+  .helix { animation: none; transform: rotateY(-20deg); }
+  .loader, .leaving .stage { transition-duration: .01s; }
+}

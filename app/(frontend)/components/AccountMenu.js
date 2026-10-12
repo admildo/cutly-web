@@ -1,7 +1,6 @@
 'use client'
 
 import { useClerk } from '@clerk/nextjs'
-import Link from 'next/link'
 import { useState } from 'react'
 
 export function AccountMenu() {
@@ -20,8 +19,7 @@ export function AccountMenu() {
 
   return (
     <div className="flex items-center gap-3">
-      <Link href="/account" className="text-sm font-medium text-[#d4d4d7] underline-offset-4 hover:text-white hover:underline">Account settings</Link>
-      <button type="button" onClick={handleSignOut} disabled={signingOut} className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-[#d4d4d7] transition hover:border-white/50 hover:text-white disabled:opacity-60">
+      <button type="button" onClick={handleSignOut} disabled={signingOut} className="min-h-10 rounded-full bg-[#1b1c20] px-4 text-sm font-medium text-[#c7c7cb] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#25262a] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60">
         {signingOut ? 'Signing out…' : 'Sign out'}
       </button>
     </div>

@@ -9,7 +9,7 @@ const slides = [
     number: '01',
     title: 'Describe the job. Get a plan.',
     description: 'Choose files and tell Media Assistant what you need. Review the steps before they run.',
-    image: '/app-shots/tools.png',
+    image: '/app-shots/tools.webp',
     width: 1920,
     height: 1440,
     alt: 'Deyn Studio media assistant and tool selection screen'
@@ -18,7 +18,7 @@ const slides = [
     number: '02',
     title: 'Review each step before it runs',
     description: 'Adjust the plan, remove a step, or save it to reuse with compatible files.',
-    image: '/app-shots/tools-3.png',
+    image: '/app-shots/tools-3.webp',
     width: 1920,
     height: 1440,
     alt: 'Media Assistant plan with proposed video changes for review, shown in Deyn Studio'
@@ -27,7 +27,7 @@ const slides = [
     number: '03',
     title: 'Track your work over time',
     description: 'See clip, export, and assistant activity at a glance, right in Deyn Studio.',
-    image: '/app-shots/usage-p.png',
+    image: '/app-shots/usage-p.webp',
     width: 1920,
     height: 1440,
     alt: 'Deyn Studio activity dashboard with clip and export statistics'
@@ -61,12 +61,12 @@ export function MediaAssistantTools() {
   return (
     <section
       id="media-assistant-tools"
-      className="relative overflow-hidden bg-[#0d0d0e] px-6 py-[clamp(88px,8vw,112px)] text-[#f0efe9] max-[700px]:py-[clamp(64px,10vw,72px)] max-[767px]:px-5"
+      className="relative overflow-hidden bg-[#0d0d0e] px-6 py-[var(--section-y)] text-[#f0efe9] max-[767px]:px-5"
       aria-label="Media Assistant and tools"
     >
       <div className="pointer-events-none absolute left-1/2 top-[22%] h-[460px] w-[min(850px,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgb(110_132_170/.14),transparent_68%)] blur-3xl" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-[1120px]">
-        <p className="mb-8 text-center text-[11px] font-medium uppercase tracking-[.2em] text-[#aeb4c2] max-[600px]:mb-6">Media Assistant &amp; Tools</p>
+        <p className="mb-8 text-center text-[12px] font-medium uppercase tracking-[.2em] text-[#aeb4c2] max-[600px]:mb-6">Media Assistant &amp; Tools</p>
 
         <div className="relative mx-auto aspect-[1.64] w-full max-w-[980px] [perspective:1400px] max-[767px]:aspect-[1.3]">
           <div className="absolute inset-[12%_13%] rounded-[50%] bg-[#8294b8]/[.12] blur-[70px]" aria-hidden="true" />

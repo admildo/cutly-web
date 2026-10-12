@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react'
 import styles from './HeroSpiral.module.css'
 import { ScrollPaperMedia } from './ScrollPaperMedia'
 import { useHeroVideoTiles } from './useHeroVideoTiles'
+import { HeroLoader } from './HeroLoader'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
 import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
 
@@ -53,6 +54,8 @@ const cards = cardAssets.map(({ src, poster, type }, index) => ({
   title: `Project ${String(index + 1).padStart(2, '0')}`,
   category: type === 'video' ? 'videos' : 'images',
 }))
+
+const loaderAssets = ['/bgt1.webp', ...new Set(cards.map(({ src, poster, type }) => (type === 'video' ? poster : src)))]
 
 const NAV_ISLAND_EVENT = 'cutly:hero-island-state'
 const PROMPT_REVEAL_START = 0.38
@@ -887,6 +890,8 @@ export function HeroSpiral({ downloadUrls }) {
   }, { scope: sectionRef, dependencies: [videoTilesEnabled], revertOnUpdate: true })
 
   return (
+    <>
+    <HeroLoader assets={loaderAssets} />
     <section ref={sectionRef} className={styles.hero} aria-label="Hero" data-hero-mode={HERO_CARD_MODE}>
       <div ref={sceneRef} className={styles.scene}>
         <div ref={backdropRef} className={styles.backdrop} aria-hidden="true">
@@ -946,7 +951,7 @@ export function HeroSpiral({ downloadUrls }) {
                               <img
                                 src={type === 'video' ? poster : src}
                                 alt={reverse ? '' : `Work with ${index + 1}`}
-                                loading="lazy"
+                                loading="eager"
                                 decoding="async"
                                 draggable="false"
                               />
@@ -965,7 +970,7 @@ export function HeroSpiral({ downloadUrls }) {
                 <div ref={subjectParallaxRef} className={styles.subjectParallax}>
                   <img
                     className={styles.subject}
-                    src="/bgt1.png"
+                    src="/bgt1.webp"
                     alt="Portrait"
                     draggable="false"
                     fetchPriority="high"
@@ -1152,5 +1157,6 @@ export function HeroSpiral({ downloadUrls }) {
         </span>
       </div>
     </section>
+    </>
   )
 }

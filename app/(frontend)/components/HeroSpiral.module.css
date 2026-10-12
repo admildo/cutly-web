@@ -373,7 +373,7 @@
   text-shadow: 0 2px 20px rgb(0 0 0 / 42%);
 }
 
-.downloadEyebrow { margin: 0 0 9px; color: #c7d5f4; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+.downloadEyebrow { margin: 0 0 9px; color: #c7d5f4; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
 .downloadHeading {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -466,7 +466,7 @@
   position: absolute;
   inset: -12px;
   content: '';
-  background: url('/app-shots/clips-p.png') center 30% / cover no-repeat;
+  background: url('/app-shots/clips-p.webp') center 30% / cover no-repeat;
   filter: blur(6px) brightness(.48) saturate(.82);
   transform: scale(1.02);
 }
@@ -509,7 +509,7 @@
 }
 
 .videoHeading { position: relative; flex: 0 0 auto; width: calc(100% - 48px); max-width: 700px; margin: 0; text-align: center; color: #fff; }
-.videoHeading > p:first-child { margin: 0 0 12px; color: #c5d2f1; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+.videoHeading > p:first-child { margin: 0 0 12px; color: #c5d2f1; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
 .videoHeading h2 { margin: 0; font-size: clamp(26px, 3vw, 38px); font-weight: 500; letter-spacing: -0.055em; line-height: 1.04; }
 .videoDescription { max-width: 480px; margin: 12px auto 8px; color: rgb(241 244 250 / 82%); font-size: 14px; line-height: 1.5; text-shadow: 0 2px 14px rgb(0 0 0 / 55%); }
 
@@ -600,12 +600,12 @@
   .scrollPrompt { right: 12px; bottom: 42px; left: 12px; }
   .downloadHeading { min-height: 1.1em; font-size: clamp(20px, 6vw, 28px); }
   .downloadButton { min-height: 48px; margin-top: 16px; font-size: 13px; }
-  .keepScrolling { margin-top: 14px; font-size: 9px; letter-spacing: 0.07em; }
+  .keepScrolling { margin-top: 14px; font-size: 11px; letter-spacing: 0.07em; }
   .demoVideo { top: 56%; width: calc(100vw - 32px); height: auto; aspect-ratio: 16 / 9; border-radius: 14px; }
   .videoContent { gap: clamp(56px, 8svh, 72px); }
   .videoHeading { width: calc(100% - 40px); }
   .playPrompt { width: 160px; height: 54px; margin: 0; }
-  .videoHeading > p:first-child { margin-bottom: 9px; font-size: 9px; }
+  .videoHeading > p:first-child { margin-bottom: 9px; font-size: 12px; }
   .videoHeading h2 { font-size: clamp(24px, 6.2vw, 30px); }
   .videoDescription { max-width: 320px; margin: 9px auto 7px; font-size: 12px; }
   .playButton { min-width: 160px; height: 54px; font-size: 13px; }

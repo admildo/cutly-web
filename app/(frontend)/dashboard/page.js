@@ -2,7 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { AccountDashboard } from '@/app/components/AccountDashboard'
 import { getActiveLicenseDevices, getLicenseStatus } from '@/lib/license'
-import { getTrialSnapshot } from '@/lib/trial'
+import { getTrialSnapshot, isTrialAdmin } from '@/lib/trial'
 import { LIFETIME_LICENSE_PRICE_EUR } from '@/lib/pricing'
 
 export const metadata = { title: 'Dashboard', robots: { index: false, follow: false } }
@@ -63,5 +63,5 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
 
-  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} downloadUrl={downloadUrl} />
+  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} downloadUrl={downloadUrl} isTrialAdmin={isTrialAdmin(userId)} />
 }
