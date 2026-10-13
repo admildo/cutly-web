@@ -86,9 +86,9 @@ export function FAQSection() {
   }
 
   return (
-    <section className="scroll-mt-[24px] w-full bg-[#0d0d0e] px-6 py-[var(--section-y)] text-[#f2f2f2] max-[600px]:px-5" id="faq">
+    <section className="scroll-mt-[24px] w-full bg-[#0d0d0e] px-6 section-pad text-[#f2f2f2] max-[600px]:px-5" id="faq">
       <div className="mx-auto max-w-[680px] text-center">
-        <h2 className="mb-0 text-balance text-[length:var(--section-title)] font-medium leading-[1.04] tracking-[-.055em] text-[#f2f2f2]">Before you download</h2>
+        <h2 className="mb-0 section-title text-[#f2f2f2]">Before you download</h2>
         <p className="mx-auto mb-0 mt-4 max-w-[480px] text-[15px] leading-[1.7] text-[#a0a0a0]">What it does, what AI costs, and where your files are processed.</p>
 
         <div className="relative mx-auto mt-9 max-w-[520px] max-[600px]:mt-7">

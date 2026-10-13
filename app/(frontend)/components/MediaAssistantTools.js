@@ -8,7 +8,7 @@ const slides = [
   {
     number: '01',
     title: 'Describe the job. Get a plan.',
-    description: 'Choose files and tell Media Assistant what you need. Review the steps before they run.',
+    description: 'Pick your files and say what you want done. Media Assistant drafts the steps, and nothing runs until you approve.',
     image: '/app-shots/tools.webp',
     width: 1920,
     height: 1440,
@@ -16,8 +16,8 @@ const slides = [
   },
   {
     number: '02',
-    title: 'Review each step before it runs',
-    description: 'Adjust the plan, remove a step, or save it to reuse with compatible files.',
+    title: 'You approve every step',
+    description: 'Edit the plan, delete a step, or save it to reuse on similar files.',
     image: '/app-shots/tools-3.webp',
     width: 1920,
     height: 1440,
@@ -25,8 +25,8 @@ const slides = [
   },
   {
     number: '03',
-    title: 'Track your work over time',
-    description: 'See clip, export, and assistant activity at a glance, right in Deyn Studio.',
+    title: 'See what you have made',
+    description: 'Track clips, exports, and assistant activity from one dashboard.',
     image: '/app-shots/usage-p.webp',
     width: 1920,
     height: 1440,
@@ -61,12 +61,12 @@ export function MediaAssistantTools() {
   return (
     <section
       id="media-assistant-tools"
-      className="relative overflow-hidden bg-[#0d0d0e] px-6 py-[var(--section-y)] text-[#f0efe9] max-[767px]:px-5"
+      className="relative overflow-hidden bg-[#0d0d0e] px-6 section-pad text-[#f0efe9] max-[767px]:px-5"
       aria-label="Media Assistant and tools"
     >
       <div className="pointer-events-none absolute left-1/2 top-[22%] h-[460px] w-[min(850px,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgb(110_132_170/.14),transparent_68%)] blur-3xl" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-[1120px]">
-        <p className="mb-8 text-center text-[12px] font-medium uppercase tracking-[.2em] text-[#aeb4c2] max-[600px]:mb-6">Media Assistant &amp; Tools</p>
+        <p className="mb-10 text-center text-[12px] font-medium uppercase tracking-[.2em] text-[#aeb4c2] max-[600px]:mb-8">Media Assistant &amp; Tools</p>
 
         <div className="relative mx-auto aspect-[1.64] w-full max-w-[980px] [perspective:1400px] max-[767px]:aspect-[1.3]">
           <div className="absolute inset-[12%_13%] rounded-[50%] bg-[#8294b8]/[.12] blur-[70px]" aria-hidden="true" />
@@ -100,16 +100,16 @@ export function MediaAssistantTools() {
 
         </div>
 
-        <div className="mx-auto mt-9 flex max-w-[690px] flex-col items-center text-center max-[600px]:mt-7">
+        <div className="mx-auto mt-12 flex max-w-[690px] flex-col items-center text-center max-[600px]:mt-9">
           <div aria-live="polite" aria-atomic="true">
-            <h2 key={`title-${active}`} className={`m-0 text-balance font-serif text-[clamp(21px,4.10vw,30px)] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[600px]:text-[30px] ${styles.titleAnimation}`}>
+            <h2 key={`title-${active}`} className={`m-0 text-balance font-serif text-[clamp(21px,4.10vw,30px)] font-normal leading-[1.02] tracking-[-.055em] text-[#f0efe9] max-[600px]:text-[26px] ${styles.titleAnimation}`}>
               {activeSlide.title}
             </h2>
-            <p key={`description-${active}`} className={`mb-0 mt-4 max-w-[600px] text-[15px] leading-[1.7] text-[#a6a8ae] max-[600px]:mt-3 max-[600px]:text-[14px] ${styles.descriptionAnimation}`}>
+            <p key={`description-${active}`} className={`mb-0 mt-4 max-w-[600px] text-[16px] leading-[1.65] text-[#a6a8ae] max-[600px]:text-[15px] ${styles.descriptionAnimation}`}>
               {activeSlide.description}
             </p>
           </div>
-          <nav aria-label="Slide controls" className="mt-7 flex min-h-11 items-center justify-center gap-3">
+          <nav aria-label="Slide controls" className="mt-8 flex min-h-11 items-center justify-center gap-3">
             <button
               type="button"
               aria-label="Previous slide"

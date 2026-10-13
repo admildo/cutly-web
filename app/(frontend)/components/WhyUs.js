@@ -7,8 +7,8 @@ import styles from './WhyUs.module.css'
 const reasons = [
   {
     label: 'Your budget',
-    title: 'One video. Near-unlimited clips.',
-    description: 'OpenRouter powers Deyn Studio’s cloud AI. After the included trial, pay for the work you run—not another $15–$20 monthly plan with a small clip allowance. Even $1 can cover many hours of transcript-led work; $5 can fuel clip-making for months, depending on your use. Buy the software once, own it, and keep AI costs in your hands.'
+    title: 'Pay once. Pay for AI only when you use it.',
+    description: 'Deyn Studio is a one-time purchase, not another monthly plan with a clip allowance. Cloud AI runs through your own OpenRouter key after the included trial, so you pay only for the work you run. Local transcription costs nothing.'
   },
   {
     label: 'Your files',
@@ -17,8 +17,8 @@ const reasons = [
   },
   {
     label: 'Your choice',
-    title: 'Cloud AI runs when you ask it to.',
-    description: 'Cloud AI and transcription send the data needed for that task to OpenRouter. Your credentials stay in your operating system’s secure storage.'
+    title: 'Cloud AI runs only when you ask.',
+    description: 'When you use cloud AI or transcription, only the data that task needs goes to OpenRouter. Your key stays in your system’s secure storage.'
   },
   {
     label: 'Less busywork',
@@ -27,7 +27,7 @@ const reasons = [
   },
   {
     label: 'Lifetime license',
-    title: 'One payment includes future updates.',
+    title: 'One payment. Updates included.',
     description: `The ${LIFETIME_LICENSE_PRICE_LABEL} launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.`
   }
 ]
