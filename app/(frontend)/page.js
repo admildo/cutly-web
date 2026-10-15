@@ -43,7 +43,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
             image: new URL(defaultSocialImage.url, siteOrigin).toString(),
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'macOS',
-            description: 'A desktop app for finding moments in long videos, editing captions and framing, and exporting shareable clips.',
+            description: 'A desktop app for finding moments in long videos, editing captions and framing, and exporting shareable clips and much more.',
             creator: { '@id': `${siteOrigin}/#organization` },
             offers: {
               '@type': 'Offer',
