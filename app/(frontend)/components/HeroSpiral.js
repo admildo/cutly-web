@@ -18,27 +18,27 @@ const HERO_CARD_MODE = 'spiral'
 const HERO_MOUSE_EFFECTS = true
 
 const uniqueCardAssets = [
-  { src: '/card-media/se-15.mp4', poster: '/card-media/se-15-poster.webp', type: 'video' },
-  { src: '/card-media/se-2.webp', type: 'image' },
-  { src: '/card-media/se-16.mp4', poster: '/card-media/se-16-poster.webp', type: 'video' },
-  { src: '/card-media/se-3.webp', type: 'image' },
-  { src: '/card-media/se-17.mp4', poster: '/card-media/se-17-poster.webp', type: 'video' },
-  { src: '/card-media/se-4.webp', type: 'image' },
-  { src: '/card-media/se-18.mp4', poster: '/card-media/se-18-poster.webp', type: 'video' },
-  { src: '/card-media/se-5.webp', type: 'image' },
-  { src: '/card-media/se-19.mp4', poster: '/card-media/se-19-poster.webp', type: 'video' },
-  { src: '/card-media/se-6.webp', type: 'image' },
-  { src: '/card-media/se-20.mp4', poster: '/card-media/se-20-poster.webp', type: 'video' },
-  { src: '/card-media/se-7.webp', type: 'image' },
-  { src: '/card-media/se-21.mp4', poster: '/card-media/se-21-poster.webp', type: 'video' },
-  { src: '/card-media/se-8.webp', type: 'image' },
-  { src: '/card-media/se-9.webp', type: 'image' },
-  { src: '/card-media/se-10.webp', type: 'image' },
-  { src: '/card-media/se-11.webp', type: 'image' },
-  { src: '/card-media/se-12.webp', type: 'image' },
-  { src: '/card-media/se-13.webp', type: 'image' },
-  { src: '/card-media/se-14.webp', type: 'image' },
-  { src: '/card-media/si-1.webp', type: 'image' },
+  { src: '/card-media/se-15.mp4', poster: '/card-media/se-15-poster.webp', type: 'video', label: 'Clip video' },
+  { src: '/card-media/se-2.webp', type: 'image', label: 'Convert image' },
+  { src: '/card-media/se-16.mp4', poster: '/card-media/se-16-poster.webp', type: 'video', label: 'Compress video' },
+  { src: '/card-media/se-3.webp', type: 'image', label: 'Compress image' },
+  { src: '/card-media/se-17.mp4', poster: '/card-media/se-17-poster.webp', type: 'video', label: 'Edit video' },
+  { src: '/card-media/se-4.webp', type: 'image', label: 'Edit image' },
+  { src: '/card-media/se-18.mp4', poster: '/card-media/se-18-poster.webp', type: 'video', label: 'Convert video' },
+  { src: '/card-media/se-5.webp', type: 'image', label: 'Download image' },
+  { src: '/card-media/se-19.mp4', poster: '/card-media/se-19-poster.webp', type: 'video', label: 'Download video' },
+  { src: '/card-media/se-6.webp', type: 'image', label: 'Convert image' },
+  { src: '/card-media/se-20.mp4', poster: '/card-media/se-20-poster.webp', type: 'video', label: 'Compress audio' },
+  { src: '/card-media/se-7.webp', type: 'image', label: 'Compress image' },
+  { src: '/card-media/se-21.mp4', poster: '/card-media/se-21-poster.webp', type: 'video', label: 'Convert audio' },
+  { src: '/card-media/se-8.webp', type: 'image', label: 'Edit image' },
+  { src: '/card-media/se-9.webp', type: 'image', label: 'Download image' },
+  { src: '/card-media/se-10.webp', type: 'image', label: 'Convert image' },
+  { src: '/card-media/se-11.webp', type: 'image', label: 'Compress image' },
+  { src: '/card-media/se-12.webp', type: 'image', label: 'Edit image' },
+  { src: '/card-media/se-13.webp', type: 'image', label: 'Download image' },
+  { src: '/card-media/se-14.webp', type: 'image', label: 'Convert image' },
+  { src: '/card-media/si-1.webp', type: 'image', label: 'Compress image' },
 ]
 
 const cardAssets = [
@@ -47,12 +47,11 @@ const cardAssets = [
   ...uniqueCardAssets.slice(15),
 ]
 
-const cards = cardAssets.map(({ src, poster, type }, index) => ({
+const cards = cardAssets.map(({ src, poster, type, label }) => ({
   src,
   poster,
   type,
-  title: `Project ${String(index + 1).padStart(2, '0')}`,
-  category: type === 'video' ? 'videos' : 'images',
+  title: label,
 }))
 
 const loaderAssets = ['/bgt1.webp', ...new Set(cards.map(({ src, poster, type }) => (type === 'video' ? poster : src)))]
@@ -1152,7 +1151,6 @@ export function HeroSpiral({ downloadUrls }) {
           </svg>
           <span className={styles.projectLabelText}>
             <span className={styles.projectTitle}>{hoveredCard?.title}</span>
-            <span className={styles.projectCategory}>{hoveredCard?.category}</span>
           </span>
         </span>
       </div>
