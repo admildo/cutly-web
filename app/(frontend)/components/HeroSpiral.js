@@ -10,6 +10,7 @@ import { useHeroVideoTiles } from './useHeroVideoTiles'
 import { HeroLoader } from './HeroLoader'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
 import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
+import { LIFETIME_LICENSE_PRICE_LABEL } from '../../../lib/pricing.js'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -84,11 +85,10 @@ const GAZE_REGISTRATION = {
 }
 const CARD_FADE_START = 0.58
 const CARD_FADE_END = 0.68
+// One headline, on purpose: the first of the old rotation was the only one that said something specific.
+// Add more lines here and the rotation starts again by itself.
 const heroHeadlines = [
   'Stop scrubbing. Find your next clip.',
-  'Let AI find the moments worth sharing.',
-  'Add captions. Frame for social. Export.',
-  'All your clip tools in one desktop app.',
 ]
 
 const publishHeroIslandState = (active) => {
@@ -182,7 +182,7 @@ export function HeroSpiral({ downloadUrls }) {
   const cameraRef = useRef(null)
 
   useEffect(() => {
-    if (!isHeadlinePromptActive) return undefined
+    if (!isHeadlinePromptActive || heroHeadlines.length < 2) return undefined
 
     const interval = window.setInterval(() => {
       const nextHeadlineIndex = (headlineIndexRef.current + 1) % heroHeadlines.length
@@ -1050,7 +1050,7 @@ export function HeroSpiral({ downloadUrls }) {
         <div className={styles.vignette} aria-hidden="true" />
         <div ref={lowerMaskRef} className={styles.lowerMask} aria-hidden="true" />
         <div ref={scrollPromptRef} className={styles.scrollPrompt}>
-          <p className={styles.downloadEyebrow}>From long video to shareable clips</p>
+          <p className={styles.downloadEyebrow}>A video clip maker you pay for once.</p>
           <h1 className={styles.headingContainer}>
             <span className={styles.downloadHeading}>
               {previousHeadlineIndex !== null && (
@@ -1086,12 +1086,12 @@ export function HeroSpiral({ downloadUrls }) {
               </span>
             </span>
           </h1>
-          <p className={styles.mobileDescription}>Find the best moments, add captions, and frame every clip for social.</p>
+          <p className={styles.mobileDescription}>Deyn finds the moments worth posting, captions them, and frames them for vertical. Transcription stays on your Mac.</p>
           <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.downloadButton}>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
             Download Deyn Studio
           </DownloadOptionsButton>
-          <p className={styles.mobilePlatforms}>For macOS. Windows and Linux coming soon.</p>
+          <p className={styles.mobilePlatforms}>{LIFETIME_LICENSE_PRICE_LABEL} one-time, no subscription. For macOS; Windows and Linux coming soon.</p>
           <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
@@ -1118,7 +1118,7 @@ export function HeroSpiral({ downloadUrls }) {
             <div ref={videoPromptRef} className={styles.videoHeading}>
               <p>Deyn Studio in action</p>
               <h2>Watch Deyn turn a long video<br className={styles.desktopBreak} /> into clips ready to share.</h2>
-              <p className={styles.videoDescription}>See Deyn find highlights, add captions, and frame clips for social.</p>
+              <p className={styles.videoDescription}>See Deyn find moments, add captions, and frame clips for social.</p>
             </div>
             <div ref={playPromptRef} className={styles.playPrompt}>
               <button

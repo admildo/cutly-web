@@ -25,8 +25,10 @@ const slides = [
   },
   {
     number: '03',
-    title: 'See what you have made',
-    description: 'Track clips, exports, and assistant activity from one dashboard.',
+    // DECISION: the usage screen shows clips, exports, tokens and assistant actions, kept on the device, but not a
+    // money cost. If you add cost tracking, say "what every AI action cost" here instead.
+    title: 'See what you made, and what it used',
+    description: 'Clips, exports, tokens and assistant actions, all in one place. It stays on your device.',
     image: '/app-shots/usage-p.webp',
     width: 1920,
     height: 1440,

@@ -4,6 +4,9 @@ import { createPageMetadata } from '@/lib/seo'
 
 export const metadata = createPageMetadata({ title: 'About', description: 'Learn how Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.', path: '/about' })
 
+// DECISION: this page says what the product does but not who makes it or why. A short, true note from whoever builds Deyn
+// Studio (a name, what problem started it, one line on how it is made) would earn more trust than another feature line.
+// It needs your words, so nothing is invented here.
 export default function AboutPage() {
   return <InfoPage eyebrow="ABOUT DEYN STUDIO" title="Make more from every recording." intro="Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.">
     <Section title="Find moments and finish clips"><p>Import a video or paste a supported public link. Ask AI to find strong moments, choose the clips you want, then edit captions and framing before you export.</p></Section>

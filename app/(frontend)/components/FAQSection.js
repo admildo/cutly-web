@@ -4,11 +4,56 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 
+// Ordered the way a buyer asks: what it is, what it costs, whether it runs on my Mac, then how it works and
+// where my files go. The chips above the list follow the order each category first appears.
 const FAQ_ITEMS = [
   {
     category: 'Product',
     question: 'What is Deyn Studio?',
-    answer: 'Deyn Studio is a desktop app for turning long videos into clips. Find moments, edit captions and framing, then export. It also includes tools for audio, images, and documents.'
+    answer: 'Deyn Studio is a desktop app for turning long videos into clips. Find moments, edit captions and framing, then export. It also includes Spot Assistant for quick edits from any app, plus tools for audio, images, and documents.'
+  },
+  {
+    category: 'Pricing & License',
+    question: 'Is it really a one-time payment?',
+    answer: `Yes. The ${LIFETIME_LICENSE_PRICE_LABEL} launch license is paid once and includes lifetime access, future desktop updates, and use on up to two devices. There is no subscription and no clip allowance. The only cost that can recur is optional: cloud AI, which you pay your own provider for.`
+  },
+  {
+    category: 'Pricing & License',
+    question: 'What is OpenRouter?',
+    answer: 'OpenRouter is a service that gives you one key for AI models from many providers. You add your own key in Deyn Studio and choose a model, and OpenRouter bills you directly for what you use. That usage is not part of the license.'
+  },
+  // DECISION: this answer has no figure yet. Add a measured example (for instance what one hour of video costs
+  // with the default model) once you have it; a real number is the most convincing line on the page.
+  {
+    category: 'Pricing & License',
+    question: 'What does the AI actually cost?',
+    answer: 'It depends on the model you choose and how long your video is. Local transcription is free, so the cost is only the steps that run in the cloud, like finding clips, translating captions, or planning an edit. After the AI trial, those steps use your OpenRouter key, and Studio activity shows your token use.'
+  },
+  // DECISION: the app's default trial is 2 uses of each action (lib/trial.js), and production may differ through the
+  // admin trial-config. If the number is stable, say it here: "2 free uses of each".
+  {
+    category: 'Pricing & License',
+    question: 'What does the AI trial include?',
+    answer: 'Eligible accounts get limited sponsored uses for clip suggestions, Smart Clean, caption translation, and Media Assistant and Spot Assistant planning. Deyn shows your remaining uses in the app.'
+  },
+  // DECISION: the offline window comes from the app README (a license check at start, then up to seven days
+  // offline). Confirm it is still true before publishing.
+  {
+    category: 'Pricing & License',
+    question: 'Do I need an account, and does it work offline?',
+    answer: 'You sign in with a Deyn Studio account, and your license belongs to that account rather than a key. The app checks it online when it starts, and local work continues offline for up to seven days after a successful check.'
+  },
+  {
+    category: 'Compatibility',
+    question: 'Which computers can run Deyn Studio?',
+    answer: 'Deyn Studio is currently available for macOS, with separate downloads for Apple silicon and Intel Macs. Windows and Linux versions are coming soon.'
+  },
+  // DECISION: the four Spot Assistant answers below are written from docs/command-bar.md. Confirm each claim
+  // (especially the AI and Trash wording) before publishing, and update the Privacy Policy to match.
+  {
+    category: 'Product',
+    question: 'What is Spot Assistant?',
+    answer: 'A small window that opens over any app when you press ⌥ Space. Select files in Finder or open a video link in your browser, say what you want (“compress under 25 MB”, “make it vertical”, “download it”), and it works in the background. Media Assistant is the in-app version, where you review a plan before it runs.'
   },
   {
     category: 'Product',
@@ -16,9 +61,14 @@ const FAQ_ITEMS = [
     answer: 'Choose files and describe the job. Media Assistant lays out steps you can review, adjust, or remove before they run. Save useful plans and reuse them with compatible files.'
   },
   {
-    category: 'AI & Privacy',
-    question: 'Does Deyn analyze my files automatically?',
-    answer: 'No. Media Assistant only plans the task you ask for. Features such as transcription and clip finding analyze media when you run them.'
+    category: 'Product',
+    question: 'Does Spot Assistant change my original files?',
+    answer: 'No. By default, every edit saves a new copy beside the original, and Undo moves the new copies to the Trash. An optional setting moves originals to the Trash after a verified edit; Undo can’t bring those back.'
+  },
+  {
+    category: 'Product',
+    question: 'Which video links can I download?',
+    answer: 'Public video links that do not need a sign-in and are not protected by DRM. If a download fails, the source may have changed or may be limiting requests. Only download media you have permission to use.'
   },
   {
     category: 'AI & Privacy',
@@ -27,28 +77,23 @@ const FAQ_ITEMS = [
   },
   {
     category: 'AI & Privacy',
-    question: 'What does the AI trial include?',
-    answer: 'Eligible accounts get limited sponsored uses for clip suggestions, Smart Clean, caption translation, and Media Assistant planning. Deyn shows your remaining uses in the app.'
-  },
-  {
-    category: 'Pricing & License',
-    question: 'Are AI costs included in the license?',
-    answer: 'The license includes Deyn Studio and future desktop updates. After the AI trial, add your OpenRouter API key and choose a model. OpenRouter bills that usage separately.'
-  },
-  {
-    category: 'Pricing & License',
-    question: 'What does Deyn Studio cost?',
-    answer: `The launch license costs ${LIFETIME_LICENSE_PRICE_LABEL} once. It includes lifetime access, future desktop updates, and use on up to two devices.`
-  },
-  {
-    category: 'Compatibility',
-    question: 'Which computers can run Deyn Studio?',
-    answer: 'Deyn Studio is currently available for macOS, with separate downloads for Apple silicon and Intel Macs. Windows and Linux versions are coming soon.'
+    question: 'Can I transcribe without a cloud service?',
+    answer: 'Yes. Deyn includes Whisper transcription that runs on your computer. No OpenRouter key or per-use fee is needed.'
   },
   {
     category: 'AI & Privacy',
-    question: 'Can I transcribe without a cloud service?',
-    answer: 'Yes. Deyn includes Whisper transcription that runs on your computer. No OpenRouter key or per-use fee is needed.'
+    question: 'Does Deyn analyze my files automatically?',
+    answer: 'No. Deyn only works on files you choose. Media Assistant and Spot Assistant plan the task you ask for, and Spot Assistant checks basic details of the first few selected files, like format and whether they have audio, to hide edits that would change nothing. Features such as transcription and clip finding analyze media when you run them. Watch folders edit new files automatically, but only in folders you set up.'
+  },
+  {
+    category: 'AI & Privacy',
+    question: 'What can Spot Assistant see?',
+    answer: 'Only the files you’ve selected in Finder, the address of your front browser tab, and, if you leave it on, a link on your clipboard. macOS asks for Automation permission once. Watch folders only handle folders you set up, and leave files that are already there alone.'
+  },
+  {
+    category: 'AI & Privacy',
+    question: 'Does Spot Assistant use AI?',
+    answer: 'Common edits, like compress, convert, mute, make vertical, or fit a size limit, are read by rules and use no AI and no credits. Requests it can’t read are planned by the same AI as Media Assistant, which sends your instruction and the file details, not the files. That uses your AI trial, then your OpenRouter key.'
   }
 ]
 

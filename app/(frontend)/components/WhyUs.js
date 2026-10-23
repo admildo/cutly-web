@@ -22,17 +22,35 @@ const reasons = [
   },
   {
     label: 'Less busywork',
-    title: 'Review a plan, then reuse it.',
-    description: 'Media Assistant turns a request into steps you can adjust or remove. Save a plan and reuse it with compatible files.'
+    title: 'Review a plan, or skip straight to done.',
+    description: 'Media Assistant turns a request into steps you can adjust or remove. Spot Assistant runs common edits straight away from any app. Save an edit once and reuse it on similar files.'
   },
   {
-    label: 'Lifetime license',
-    title: 'One payment. Updates included.',
-    description: `The ${LIFETIME_LICENSE_PRICE_LABEL} launch license includes lifetime access, future updates, and use on up to two devices. OpenRouter usage is billed separately after the AI trial.`
+    label: 'Your Macs',
+    title: 'One license covers two Macs.',
+    description: `The ${LIFETIME_LICENSE_PRICE_LABEL} launch license includes lifetime access and future desktop updates, on up to two devices. OpenRouter usage is billed separately after the AI trial.`
   }
 ]
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
+
+// The opening stretch of the scroll is two lines of copy, one after the other, and then the topic list
+// reveals itself. The topics take the rest of the runway. INTRO is that opening stretch as a share of the
+// whole scroll; the section is made taller by the same amount (see WhyUs.module.css) so each topic keeps its pace.
+const INTRO = 0.12
+
+// Each line fades in over `enter` and out over `leave`, as fractions of the opening stretch. The first
+// line is already there when the section arrives.
+const INTRO_LINES = [
+  { text: 'NOT SURE?', leave: [0.28, 0.46] },
+  { text: 'HERE’S THE DEAL.', enter: [0.36, 0.54], leave: [0.72, 0.88] }
+]
+
+const lineState = (progress, { enter, leave }) => {
+  const entered = enter ? easeInOut((progress - enter[0]) / (enter[1] - enter[0])) : 1
+  const left = easeInOut((progress - leave[0]) / (leave[1] - leave[0]))
+  return { visible: entered > 0 && left < 1, opacity: entered * (1 - left), blur: ((1 - entered) + left) * 14, shift: (1 - entered) * 30 - left * 30 }
+}
 const easeInOut = (value) => {
   const progress = clamp(value)
   return progress * progress * (3 - 2 * progress)
@@ -81,7 +99,7 @@ export function WhyUs() {
         const sectionTop = section.getBoundingClientRect().top
         const progress = clamp(-sectionTop / scrollDistance)
         setScrollProgress(progress)
-        if (progress > .004 && !hasStartedRef.current) {
+        if (progress > INTRO * .12 && !hasStartedRef.current) {
           hasStartedRef.current = true
           setHasStarted(true)
         }
@@ -99,24 +117,30 @@ export function WhyUs() {
     }
   }, [])
 
-  const scaledProgress = scrollProgress * reasons.length
+  const introProgress = clamp(scrollProgress / INTRO)
+  // The last line has gone by the time the topics start to arrive, so the two never overlap.
+  const topicsReveal = easeInOut(clamp((introProgress - .8) / .2))
+  const introLines = INTRO_LINES.map((line) => ({ ...line, ...lineState(introProgress, line) }))
+  const inIntro = scrollProgress < INTRO
+  const storyProgress = clamp((scrollProgress - INTRO) / (1 - INTRO))
+  const scaledProgress = storyProgress * reasons.length
   const activeIndex = Math.min(Math.floor(scaledProgress), reasons.length - 1)
   const phaseProgress = scaledProgress - activeIndex
   const activeReason = reasons[activeIndex]
   const tickerExitProgress = easeInOut((phaseProgress - .08) / .1)
   const tickerEnterProgress = easeInOut((phaseProgress - .92) / .08)
-  const tickerVisible = phaseProgress < .18 || phaseProgress >= .92
-  const tickerInteractive = tickerVisible && (phaseProgress <= .08 || phaseProgress >= .99)
-  const tickerBlur = reducedMotion ? 0 : phaseProgress < .18
+  const tickerVisible = inIntro ? topicsReveal > .01 : phaseProgress < .18 || phaseProgress >= .92
+  const tickerInteractive = inIntro ? topicsReveal >= .99 : tickerVisible && (phaseProgress <= .08 || phaseProgress >= .99)
+  const tickerBlur = reducedMotion ? 0 : inIntro ? (1 - topicsReveal) * 14 : phaseProgress < .18
     ? tickerExitProgress * 14
     : phaseProgress >= .92 ? (1 - tickerEnterProgress) * 14 : 14
-  const tickerRotateX = reducedMotion ? 0 : phaseProgress < .18
+  const tickerRotateX = reducedMotion ? 0 : inIntro ? (1 - topicsReveal) * 12 : phaseProgress < .18
     ? -tickerExitProgress * 12
     : phaseProgress >= .92 ? (1 - tickerEnterProgress) * 12 : 12
-  const tickerRotateZ = reducedMotion ? 0 : phaseProgress < .18
+  const tickerRotateZ = reducedMotion ? 0 : inIntro ? (1 - topicsReveal) * 2 : phaseProgress < .18
     ? -tickerExitProgress * 2
     : phaseProgress >= .92 ? (1 - tickerEnterProgress) * 2 : 2
-  const tickerShiftY = reducedMotion ? 0 : phaseProgress < .18
+  const tickerShiftY = reducedMotion ? 0 : inIntro ? (1 - topicsReveal) * 30 : phaseProgress < .18
     ? -tickerExitProgress * 30
     : phaseProgress >= .92 ? (1 - tickerEnterProgress) * 30 : -30
   const contentEnterProgress = easeInOut((phaseProgress - .18) / .1)
@@ -141,7 +165,7 @@ export function WhyUs() {
 
     const scrollDistance = section.offsetHeight - window.innerHeight
     const sectionTop = window.scrollY + section.getBoundingClientRect().top
-    const targetProgress = (index + .26) / reasons.length
+    const targetProgress = INTRO + (1 - INTRO) * ((index + .26) / reasons.length)
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     window.scrollTo({
@@ -153,6 +177,23 @@ export function WhyUs() {
   return (
     <section ref={sectionRef} id="why-us" className={styles.section} aria-label="Why us">
       <div className={styles.stickyStage}>
+        <div className={styles.intro} aria-hidden={!inIntro || topicsReveal > 0}>
+          {introLines.map((line) => (
+            <h2
+              className={styles.introWord}
+              key={line.text}
+              style={{
+                visibility: inIntro && line.visible ? 'visible' : 'hidden',
+                opacity: line.opacity,
+                filter: `blur(${reducedMotion ? 0 : line.blur}px)`,
+                transform: `translate3d(0, ${reducedMotion ? 0 : line.shift}px, 0) rotateX(${reducedMotion ? 0 : line.shift * .4}deg)`
+              }}
+            >
+              {line.text}
+            </h2>
+          ))}
+        </div>
+
         <div
           className={styles.ticker}
           role="group"
@@ -160,6 +201,7 @@ export function WhyUs() {
           aria-hidden={!tickerVisible}
           style={{
             visibility: tickerVisible ? 'visible' : 'hidden',
+            opacity: inIntro ? topicsReveal : 1,
             filter: `blur(${tickerBlur}px)`,
             pointerEvents: tickerInteractive ? 'auto' : 'none',
             transform: `translate3d(0, ${tickerShiftY}px, 0) rotateX(${tickerRotateX}deg) rotateZ(${tickerRotateZ}deg)`
@@ -206,7 +248,7 @@ export function WhyUs() {
           </p>
         </article>
 
-        <nav className={styles.progress} aria-label="Navigate Why us topics">
+        <nav className={styles.progress} aria-label="Navigate Why us topics" style={{ opacity: inIntro ? topicsReveal : 1, pointerEvents: inIntro && topicsReveal < 0.99 ? 'none' : 'auto' }}>
           <span className={styles.progressCount} aria-label={`Reason ${progressIndex + 1} of ${reasons.length}`}>
             {String(progressIndex + 1).padStart(2, '0')} <span aria-hidden="true">/</span> {String(reasons.length).padStart(2, '0')}
           </span>
