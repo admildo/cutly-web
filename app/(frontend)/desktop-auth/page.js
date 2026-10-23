@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { AuthForm } from '../components/AuthForm'
 import { AuthLayout } from '../components/AuthLayout'
 import { DesktopAuthChoice } from '../components/DesktopAuthChoice'
+import { DesktopAuthHandoff } from '../components/DesktopAuthHandoff'
 import { normalizeInternalReturnPath } from '@/lib/auth-redirect'
 
 export const metadata = { title: 'Connecting to Deyn Studio', robots: { index: false, follow: false } }
@@ -23,9 +24,13 @@ const getCallback = (redirectUri, state) => {
   }
 }
 
+const APP_CALLBACK = 'deynstudio://auth/callback'
+
 export default async function DesktopAuthPage({ searchParams }) {
   const params = await searchParams
   const { redirect_uri: redirectUri, state } = params
+  // Newer desktop builds ask to be opened directly; older ones only send the loopback callback.
+  const useAppLink = params.app_redirect_uri === APP_CALLBACK
   const callback = getCallback(redirectUri, state)
 
   if (!callback) {
@@ -55,6 +60,7 @@ export default async function DesktopAuthPage({ searchParams }) {
     const returnUrl = new URL('/desktop-auth', 'https://cutly.invalid')
     returnUrl.searchParams.set('redirect_uri', callback.toString())
     returnUrl.searchParams.set('state', state)
+    if (useAppLink) returnUrl.searchParams.set('app_redirect_uri', APP_CALLBACK)
     returnUrl.searchParams.set('continue', '1')
     const returnTo = normalizeInternalReturnPath(`${returnUrl.pathname}${returnUrl.search}`)
     return (
@@ -73,7 +79,15 @@ export default async function DesktopAuthPage({ searchParams }) {
     )
   }
 
-  callback.searchParams.set('token', createDesktopAuthGrant(userId))
-  callback.searchParams.set('state', state)
-  redirect(callback.toString())
+  const target = useAppLink ? new URL(APP_CALLBACK) : callback
+  target.searchParams.set('token', createDesktopAuthGrant(userId))
+  target.searchParams.set('state', state)
+  if (useAppLink) {
+    return (
+      <AuthLayout>
+        <DesktopAuthHandoff href={target.toString()} />
+      </AuthLayout>
+    )
+  }
+  redirect(target.toString())
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { DownloadOptionsButton } from '@/app/components/DownloadOptionsButton'
 
@@ -18,19 +18,15 @@ const navigationLinks = [
 
 const islandStateEvent = 'cutly:hero-island-state'
 
+const subscribeToIslandState = (onChange) => {
+  window.addEventListener(islandStateEvent, onChange)
+  return () => window.removeEventListener(islandStateEvent, onChange)
+}
+const readIslandState = () => document.documentElement.dataset.cutlyHeroIsland === 'true'
+
 export function DynamicIslandNav({ downloadUrls, isSignedIn = false }) {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const isScrolled = useSyncExternalStore(subscribeToIslandState, readIslandState, () => false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const updateIslandState = (event) => {
-      setIsScrolled(Boolean(event.detail?.active))
-    }
-
-    setIsScrolled(document.documentElement.dataset.cutlyHeroIsland === 'true')
-    window.addEventListener(islandStateEvent, updateIslandState)
-    return () => window.removeEventListener(islandStateEvent, updateIslandState)
-  }, [])
 
   useEffect(() => {
     if (!isMenuOpen) return undefined

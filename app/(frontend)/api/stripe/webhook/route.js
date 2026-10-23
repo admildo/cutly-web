@@ -44,11 +44,11 @@ const activateLifetimeLicense = async (session) => {
     .onConflictDoNothing({ target: licenses.providerTransactionId })
 }
 
-const revokeLicenseForPayment = async (paymentIntent) => {
+const revokeLicenseForPayment = async (paymentIntent, status = 'refunded') => {
   if (!paymentIntent) return
   await getDb()
     .update(licenses)
-    .set({ status: 'refunded', updatedAt: sql`CURRENT_TIMESTAMP` })
+    .set({ status, updatedAt: sql`CURRENT_TIMESTAMP` })
     .where(sql`${licenses.providerTransactionId} = ${paymentIntent}`)
 }
 
@@ -82,7 +82,15 @@ export async function POST(request) {
         await activateLifetimeLicense(session)
       }
     } else if (event.type === 'charge.refunded') {
-      await revokeLicenseForPayment(event.data.object.payment_intent)
+      // A partial refund (goodwill, tax correction) must not take the license away.
+      if (event.data.object.refunded === true) {
+        await revokeLicenseForPayment(event.data.object.payment_intent)
+      }
+    } else if (event.type === 'charge.dispute.closed') {
+      // A lost chargeback returns the money to the buyer, so the license goes with it.
+      if (event.data.object.status === 'lost') {
+        await revokeLicenseForPayment(event.data.object.payment_intent, 'revoked')
+      }
     }
 
     await recordStripeEvent(event)

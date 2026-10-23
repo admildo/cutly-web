@@ -20,15 +20,20 @@ export async function GET(request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const user = await (await clerkClient()).users.getUser(userId)
-  await syncUser(userId, { login: true })
-  return Response.json({
-    id: userId,
-    email: user?.primaryEmailAddress?.emailAddress || null,
-    name: [user?.firstName, user?.lastName].filter(Boolean).join(' ') || null,
-    imageUrl: user?.imageUrl || null,
-    sessionToken: await createDesktopSession(userId)
-  })
+  try {
+    const user = await (await clerkClient()).users.getUser(userId)
+    await syncUser(userId, { login: true })
+    return Response.json({
+      id: userId,
+      email: user?.primaryEmailAddress?.emailAddress || null,
+      name: [user?.firstName, user?.lastName].filter(Boolean).join(' ') || null,
+      imageUrl: user?.imageUrl || null,
+      sessionToken: await createDesktopSession(userId)
+    })
+  } catch (error) {
+    console.error('Could not create the desktop session:', error)
+    return Response.json({ error: 'Could not create the desktop session.' }, { status: 503 })
+  }
 }
 
 export async function DELETE(request) {

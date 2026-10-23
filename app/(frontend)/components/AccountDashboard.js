@@ -132,7 +132,7 @@ function TrialUsagePanel({ snapshot, error }) {
   )
 }
 
-function LicensePanel({ license, licenseError, checkoutState, priceLabel, devices = [], devicesError = false }) {
+function LicensePanel({ license, licenseError, checkoutState, autoBuy = false, priceLabel, devices = [], devicesError = false }) {
   if (licenseError) {
     return (
       <section className={`${surface} mt-7 p-6 sm:p-8`}>
@@ -233,7 +233,10 @@ function LicensePanel({ license, licenseError, checkoutState, priceLabel, device
         <p className="inline-flex rounded-full bg-white/[.07] px-3 py-1.5 text-xs font-medium text-[#d4d4d7]">License {state.toLowerCase()}</p>
         <h2 className="mt-3 text-2xl font-medium tracking-[-0.03em]">Your previous license is {state.toLowerCase()}.</h2>
         <p className="mt-3 max-w-xl text-sm leading-6 text-[#a5a6ab]">{license.message || 'Contact Deyn Studio support if you think this status is incorrect.'}</p>
-        <Link href="/support" className="mt-5 inline-flex min-h-11 items-center rounded-full bg-[#242529] px-5 text-sm font-medium text-[#e1e1e3] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#2d2e33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white">Contact support</Link>
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          {license.status === 'refunded' || license.status === 'expired' ? <BuyLicenseButton priceLabel={priceLabel} autoStart={autoBuy && !checkoutState} /> : null}
+          <Link href="/support" className="inline-flex min-h-11 items-center rounded-full bg-[#242529] px-5 text-sm font-medium text-[#e1e1e3] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#2d2e33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white">Contact support</Link>
+        </div>
       </section>
     )
   }
@@ -244,7 +247,7 @@ function LicensePanel({ license, licenseError, checkoutState, priceLabel, device
       <h2 id="lifetime-license-title" className="mt-3 max-w-lg text-2xl font-medium tracking-[-0.04em] sm:text-3xl">Own your media toolkit.</h2>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-[#a5a6ab]">One purchase includes Deyn Studio’s desktop media tools, future software updates, and use on up to two devices. There’s no recurring desktop license fee.</p>
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <BuyLicenseButton priceLabel={priceLabel} />
+        <BuyLicenseButton priceLabel={priceLabel} autoStart={autoBuy && !checkoutState && !licenseError} />
         <Link href="/support" className="inline-flex min-h-12 items-center rounded-full bg-[#242529] px-5 text-sm font-medium text-[#d4d4d7] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#2d2e33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white">Contact support</Link>
       </div>
       {checkoutState === 'cancelled' ? <p className="mt-4 text-sm text-[#a5a6ab]">Checkout was canceled. You haven’t been charged.</p> : null}
@@ -256,7 +259,7 @@ function LicensePanel({ license, licenseError, checkoutState, priceLabel, device
   )
 }
 
-export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, priceLabel, checkoutState, downloadUrl, isTrialAdmin = false }) {
+export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, priceLabel, checkoutState, autoBuy = false, downloadUrl, isTrialAdmin = false }) {
   const showTrial = !licenseError && license?.status === 'none'
 
   return (
@@ -275,11 +278,11 @@ export function AccountDashboard({ user, license, licenseError, trialSnapshot, t
             <>
               <div className="mt-5"><AppAccess downloadUrl={downloadUrl} licensed={false} /></div>
               <TrialUsagePanel snapshot={trialSnapshot} error={trialError} />
-              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} />
+              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
             </>
           ) : (
             <>
-              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} />
+              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
               <div className="mt-5"><AppAccess downloadUrl={downloadUrl} licensed={Boolean(license?.licensed)} /></div>
             </>
           )}

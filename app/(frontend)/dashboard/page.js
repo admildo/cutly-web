@@ -17,13 +17,18 @@ const safeExternalUrl = (value) => {
 }
 
 export default async function DashboardPage({ searchParams }) {
+  const { checkout: checkoutState, buy } = searchParams ? await searchParams : {}
+  // Keep the purchase intent through sign-in so a new customer lands in checkout, not on a bare dashboard.
+  const signInPath = `/sign-in?returnTo=${encodeURIComponent(
+    buy === '1' ? '/dashboard?buy=1' : checkoutState ? `/dashboard?checkout=${encodeURIComponent(String(checkoutState))}` : '/dashboard'
+  )}`
+
   const { userId } = await auth()
-  if (!userId) redirect('/sign-in?returnTo=%2Fdashboard')
+  if (!userId) redirect(signInPath)
 
   const user = await currentUser()
-  if (!user) redirect('/sign-in?returnTo=%2Fdashboard')
+  if (!user) redirect(signInPath)
 
-  const { checkout: checkoutState } = searchParams ? await searchParams : {}
   const downloadUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
   let license = null
   let licenseError = false
@@ -63,5 +68,5 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
 
-  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} downloadUrl={downloadUrl} isTrialAdmin={isTrialAdmin(userId)} />
+  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} autoBuy={buy === '1'} downloadUrl={downloadUrl} isTrialAdmin={isTrialAdmin(userId)} />
 }
