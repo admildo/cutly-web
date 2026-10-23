@@ -64,6 +64,9 @@ export async function POST(request) {
       metadata: { clerkUserId: userId, licenseType: 'lifetime' },
       success_url: `${configuredOrigin}/dashboard?checkout=success`,
       cancel_url: `${configuredOrigin}/dashboard?checkout=cancelled`
+    }, {
+      // Two tabs or a double click within the window get the same session, not two payments.
+      idempotencyKey: `checkout:${userId}:${Math.floor(Date.now() / (30 * 60 * 1000))}`
     })
 
     return Response.json({ url: session.url })

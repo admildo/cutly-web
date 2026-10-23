@@ -1,10 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-export function DesktopAuthHandoff({ href }) {
+export function DesktopAuthHandoff({ href, fallbackHref }) {
+  const [showFallback, setShowFallback] = useState(false)
+
   useEffect(() => {
     window.location.assign(href)
+    const timer = setTimeout(() => setShowFallback(true), 6000)
+    return () => clearTimeout(timer)
   }, [href])
 
   return (
@@ -24,6 +28,12 @@ export function DesktopAuthHandoff({ href }) {
       >
         Open Deyn Studio
       </a>
+      {showFallback && fallbackHref ? (
+        <p className="mb-0 mt-4 text-center text-[13px] leading-5 text-[#a6a4a4]">
+          Nothing happened?{' '}
+          <a href={fallbackHref} className="text-[#f2f0ef] underline underline-offset-4">Finish sign-in without opening the app</a>.
+        </p>
+      ) : null}
     </section>
   )
 }

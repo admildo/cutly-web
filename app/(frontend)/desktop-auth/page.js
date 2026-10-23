@@ -83,9 +83,13 @@ export default async function DesktopAuthPage({ searchParams }) {
   target.searchParams.set('token', createDesktopAuthGrant(userId))
   target.searchParams.set('state', state)
   if (useAppLink) {
+    // The one-time grant can only be used once, so the fallback replaces the app link rather than racing it.
+    const fallback = new URL(callback)
+    fallback.searchParams.set('token', target.searchParams.get('token'))
+    fallback.searchParams.set('state', state)
     return (
       <AuthLayout>
-        <DesktopAuthHandoff href={target.toString()} />
+        <DesktopAuthHandoff href={target.toString()} fallbackHref={fallback.toString()} />
       </AuthLayout>
     )
   }

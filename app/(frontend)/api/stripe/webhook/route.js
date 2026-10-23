@@ -1,56 +1,5 @@
-import { randomUUID } from 'node:crypto'
-import { and, eq, sql } from 'drizzle-orm'
 import Stripe from 'stripe'
-import { getDb } from '@/lib/db'
-import { licenses, paymentEvents } from '@/db/schema'
-import { syncUser } from '@/lib/users'
-
-const stripeEventWasRecorded = async (event) => {
-  const [existing] = await getDb()
-    .select({ id: paymentEvents.id })
-    .from(paymentEvents)
-    .where(and(eq(paymentEvents.provider, 'stripe'), eq(paymentEvents.providerEventId, event.id)))
-    .limit(1)
-  return Boolean(existing)
-}
-
-const recordStripeEvent = async (event) => {
-  const result = await getDb().run(sql`
-    INSERT OR IGNORE INTO payment_events (id, provider, provider_event_id, event_type)
-    VALUES (${randomUUID()}, 'stripe', ${event.id}, ${event.type})
-  `)
-  return result.rowsAffected === 1
-}
-
-const activateLifetimeLicense = async (session) => {
-  const userId = session.metadata?.clerkUserId || session.client_reference_id
-  if (!userId) throw new Error('Stripe Checkout Session has no Deyn Studio user reference.')
-
-  const transactionId = session.payment_intent || session.id
-  await syncUser(userId)
-  await getDb()
-    .insert(licenses)
-    .values({
-      id: randomUUID(),
-      userId,
-      type: 'lifetime',
-      status: 'active',
-      planName: 'Deyn Studio Lifetime',
-      deviceLimit: 2,
-      paymentProvider: 'stripe',
-      providerCustomerId: typeof session.customer === 'string' ? session.customer : null,
-      providerTransactionId: transactionId
-    })
-    .onConflictDoNothing({ target: licenses.providerTransactionId })
-}
-
-const revokeLicenseForPayment = async (paymentIntent, status = 'refunded') => {
-  if (!paymentIntent) return
-  await getDb()
-    .update(licenses)
-    .set({ status, updatedAt: sql`CURRENT_TIMESTAMP` })
-    .where(sql`${licenses.providerTransactionId} = ${paymentIntent}`)
-}
+import { handleStripeEvent } from '@/lib/stripe-fulfillment'
 
 export async function POST(request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET
@@ -71,29 +20,7 @@ export async function POST(request) {
   }
 
   try {
-    if (await stripeEventWasRecorded(event)) return Response.json({ received: true })
-
-    if (
-      event.type === 'checkout.session.completed' ||
-      event.type === 'checkout.session.async_payment_succeeded'
-    ) {
-      const session = event.data.object
-      if (session.payment_status === 'paid' || event.type === 'checkout.session.async_payment_succeeded') {
-        await activateLifetimeLicense(session)
-      }
-    } else if (event.type === 'charge.refunded') {
-      // A partial refund (goodwill, tax correction) must not take the license away.
-      if (event.data.object.refunded === true) {
-        await revokeLicenseForPayment(event.data.object.payment_intent)
-      }
-    } else if (event.type === 'charge.dispute.closed') {
-      // A lost chargeback returns the money to the buyer, so the license goes with it.
-      if (event.data.object.status === 'lost') {
-        await revokeLicenseForPayment(event.data.object.payment_intent, 'revoked')
-      }
-    }
-
-    await recordStripeEvent(event)
+    await handleStripeEvent(event)
     return Response.json({ received: true })
   } catch (error) {
     console.error('Stripe webhook handling failed:', error)

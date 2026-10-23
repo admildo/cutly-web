@@ -29,6 +29,8 @@ const config = buildConfig({
       access: {
         create: async ({ req }) => {
           if (req.user) return true
+          // First-user signup stays closed in production unless it is deliberately opened for setup.
+          if (process.env.NODE_ENV === 'production' && process.env.CMS_ALLOW_FIRST_USER !== 'true') return false
           const { totalDocs } = await req.payload.count({ collection: 'users', overrideAccess: true })
           return totalDocs === 0
         },
@@ -38,7 +40,8 @@ const config = buildConfig({
           return totalDocs === 0
         },
         update: requireUser,
-        delete: requireUser
+        // Nobody can delete their own account, so the CMS cannot lock itself out.
+        delete: ({ req, id }) => Boolean(req.user) && String(req.user.id) !== String(id)
       },
       fields: []
     },

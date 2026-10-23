@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { getTrialConfigForAdmin, isTrialAdmin, updateTrialConfig } from '@/lib/trial'
+import { enforceRateLimit, rateLimitResponse } from '@/lib/rate-limiting'
 
 const json = (body, status = 200) => Response.json(body, {
   status,
@@ -29,6 +30,8 @@ export async function GET(request) {
 export async function PATCH(request) {
   const userId = await requireAdmin(request, { requireOrigin: true })
   if (!userId) return json({ error: 'Not found.' }, 404)
+  const limit = await enforceRateLimit(request, { name: 'trial-config-write', limit: 20, windowSeconds: 60, subject: userId })
+  if (!limit.ok) return rateLimitResponse(limit.retryAfter)
 
   let payload
   try {

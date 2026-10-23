@@ -198,3 +198,16 @@ export const trialConfig = sqliteTable(
     updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
   }
 )
+
+// Append-only history of admin changes to the free-trial limits.
+export const trialConfigAudit = sqliteTable(
+  'trial_config_audit',
+  {
+    id: text('id').primaryKey(),
+    changedBy: text('changed_by').notNull(),
+    previousJson: text('previous_json').notNull(),
+    nextJson: text('next_json').notNull(),
+    changedAt: text('changed_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [index('trial_config_audit_changed_idx').on(table.changedAt)]
+)

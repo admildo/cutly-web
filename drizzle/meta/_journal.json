@@ -50,6 +50,13 @@
       "when": 1791379439521,
       "tag": "0006_add_media_assistant_trial_allowance",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792756166396,
+      "tag": "0007_add_trial_config_audit",
+      "breakpoints": true
     }
   ]
 }
