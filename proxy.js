@@ -42,7 +42,8 @@ export default clerkMiddleware(
   {
     // Use a per-request nonce and strict-dynamic instead of trusting arbitrary
     // HTTPS script origins. Clerk's CSP integration also adds its required hosts.
-    contentSecurityPolicy: { strict: true }
+    // Blog cover images are editor-supplied HTTPS URLs, so images may load from any HTTPS host.
+    contentSecurityPolicy: { strict: true, directives: { 'img-src': ['https:'] } }
   }
 )
 

@@ -1,59 +1,145 @@
 import Link from 'next/link'
-import { getPayload } from 'payload'
-import config from '@payload-config'
-import { createPageMetadata } from '@/lib/seo'
+import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
+import { formatShortDate, getCoverImage, getPublishedPosts, getReadingMinutes } from '@/lib/blog'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = createPageMetadata({
-  title: 'Video Editing Tips and News',
-  description: 'Practical video editing tips, creator stories, and product news from Deyn Studio.',
-  path: '/blog'
-})
+const description = 'Practical video editing tips, creator stories, and product news from the team building Deyn Studio.'
+
+export const metadata = {
+  ...createPageMetadata({
+    title: 'Journal: Video Editing Tips and Product News',
+    description,
+    path: '/blog'
+  }),
+  alternates: {
+    canonical: '/blog',
+    types: { 'application/rss+xml': [{ url: '/blog/rss.xml', title: 'Deyn Studio Journal' }] }
+  }
+}
+
+function PostMeta({ post }) {
+  return (
+    <p className="m-0 flex flex-wrap items-center gap-x-3 text-sm text-[var(--blog-faint)]">
+      <time dateTime={post.publishedAt}>{formatShortDate(post.publishedAt)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{getReadingMinutes(post)} min read</span>
+    </p>
+  )
+}
+
+function Cover({ post, priority = false }) {
+  const cover = getCoverImage(post)
+  if (!cover) return null
+  return (
+    <div className="aspect-[16/10] overflow-hidden rounded-xl border border-[var(--blog-line)] bg-[var(--blog-card)]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={cover.url}
+        alt={cover.alt}
+        width={1280}
+        height={800}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
+        decoding="async"
+        className="blog-cover h-full w-full object-cover"
+      />
+    </div>
+  )
+}
 
 export default async function BlogPage() {
-  const payload = await getPayload({ config })
-  const { docs: posts } = await payload.find({
-    collection: 'posts',
-    where: { _status: { equals: 'published' } },
-    sort: '-publishedAt',
-    limit: 50
-  })
+  const posts = await getPublishedPosts(100)
+  const [featured, ...rest] = posts
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Blog',
+        '@id': `${siteOrigin}/blog#blog`,
+        name: 'Deyn Studio Journal',
+        description,
+        url: `${siteOrigin}/blog`,
+        inLanguage: 'en',
+        publisher: { '@id': `${siteOrigin}/#organization` },
+        blogPost: posts.slice(0, 20).map((post) => ({
+          '@type': 'BlogPosting',
+          headline: post.title,
+          url: `${siteOrigin}/blog/${encodeURIComponent(post.slug)}`,
+          datePublished: post.publishedAt
+        }))
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Deyn Studio', item: siteOrigin },
+          { '@type': 'ListItem', position: 2, name: 'Journal', item: `${siteOrigin}/blog` }
+        ]
+      }
+    ]
+  }
 
   return (
-    <main className="min-h-screen [color-scheme:dark] bg-[#171716] px-6 py-20 text-[#f2f0ef] sm:px-10">
-      <div className="mx-auto max-w-6xl">
-      <Link href="/" className="text-sm text-[#a6a4a4] hover:text-[#f2f0ef]">← Deyn Studio home</Link>
-      <header className="mb-12 mt-10 max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#a6a4a4]">Deyn Studio Journal</p>
-        <h1 className="mt-3 text-5xl font-semibold tracking-tight">Stories, tips, and updates</h1>
+    <main className="mx-auto max-w-[1200px] px-6 pb-8 sm:px-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <header className="pb-14 pt-16 sm:pb-20 sm:pt-24">
+        <h1 className="blog-serif m-0 max-w-3xl text-[clamp(2.75rem,6.5vw,5rem)] font-normal leading-[1.02] tracking-[-0.025em]">
+          The Deyn Studio Journal
+        </h1>
+        <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--blog-muted)]">
+          Video editing tips, creator stories, and notes from the team building Deyn Studio.
+        </p>
       </header>
+
       {posts.length === 0 ? (
-        <p className="rounded-2xl border border-[#807e7e]/50 bg-[#242322] p-8 text-[#a6a4a4]">
+        <p className="rounded-2xl border border-[var(--blog-line)] bg-[var(--blog-card)] p-8 text-[var(--blog-muted)]">
           No posts yet. Check back soon.
         </p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <article key={post.id} className="overflow-hidden rounded-2xl border border-[#807e7e]/50 bg-[#242322]">
-              {post.coverImageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.coverImageUrl} alt={post.coverImageAlt || `Cover image for ${post.title}`} className="aspect-[16/9] w-full object-cover" />
-              ) : null}
-              <div className="p-6">
-                <time className="text-sm text-[#a6a4a4]" dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString('en', { dateStyle: 'long' })}
-                </time>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                  <Link href={`/blog/${post.slug}`} className="text-[#f2f0ef] hover:underline">{post.title}</Link>
-                </h2>
-                <p className="mt-3 leading-7 text-[#a6a4a4]">{post.excerpt}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+        <>
+          <Link
+            href={`/blog/${featured.slug}`}
+            className={`blog-link group grid gap-8 no-underline md:items-center md:gap-14 ${getCoverImage(featured) ? 'md:grid-cols-[1.15fr_1fr]' : ''}`}
+          >
+            <Cover post={featured} priority />
+            <div className="max-w-3xl">
+              <p className="m-0 mb-4 text-xs font-medium uppercase tracking-[0.16em] text-[var(--blog-accent)]">Latest</p>
+              <h2 className="blog-title blog-serif m-0 text-[clamp(1.9rem,3.6vw,2.9rem)] font-normal leading-[1.1] tracking-[-0.02em] text-balance">
+                {featured.title}
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-[var(--blog-muted)]">{featured.excerpt}</p>
+              <div className="mt-6"><PostMeta post={featured} /></div>
+            </div>
+          </Link>
+
+          {rest.length > 0 ? (
+            <section aria-labelledby="all-posts" className="mt-20 sm:mt-28">
+              <h2 id="all-posts" className="m-0 border-b border-[var(--blog-line)] pb-4 text-xs font-medium uppercase tracking-[0.16em] text-[var(--blog-faint)]">
+                All posts
+              </h2>
+              <ul className="m-0 list-none p-0">
+                {rest.map((post) => (
+                  <li key={post.id} className="border-b border-[var(--blog-line)]">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="blog-link grid gap-3 py-8 no-underline sm:grid-cols-[11rem_1fr] sm:gap-10 sm:py-10"
+                    >
+                      <div className="pt-1.5"><PostMeta post={post} /></div>
+                      <div className="max-w-2xl">
+                        <h3 className="blog-title blog-serif m-0 text-[1.75rem] font-normal leading-[1.15] tracking-[-0.015em] text-balance">
+                          {post.title}
+                        </h3>
+                        <p className="mt-3 leading-7 text-[var(--blog-muted)]">{post.excerpt}</p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </>
       )}
-      </div>
     </main>
   )
 }
