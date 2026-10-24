@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
+import { MacIcon } from './MacIcon'
 
 export function AppAccess({ downloadUrls, compact = false, allowReleasePage = true, licensed = false, dark = true }) {
   const [opening, setOpening] = useState(false)
@@ -34,7 +35,7 @@ export function AppAccess({ downloadUrls, compact = false, allowReleasePage = tr
             {opening ? 'Opening Deyn Studio…' : 'Open Deyn Studio'}
           </button>
           {downloadUrls?.silicon || downloadUrls?.intel ? (
-            <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${secondary}`}>Download app</DownloadOptionsButton>
+            <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${secondary}`}><MacIcon className="mr-2 h-4 w-4" />Download</DownloadOptionsButton>
           ) : allowReleasePage ? (
             <LinkToRelease dark={dark} />
           ) : (
@@ -48,5 +49,5 @@ export function AppAccess({ downloadUrls, compact = false, allowReleasePage = tr
 }
 
 function LinkToRelease({ dark }) {
-  return <a href="/download" className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium shadow-[0_4px_14px_rgb(0_0_0/.16)] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${dark ? 'bg-[#242529] text-[#d4d4d7] hover:bg-[#2d2e33] hover:text-white' : 'bg-[#f2f2f2] text-[#171717] hover:bg-white'}`}>Download app</a>
+  return <a href="/download" className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium shadow-[0_4px_14px_rgb(0_0_0/.16)] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${dark ? 'bg-[#242529] text-[#d4d4d7] hover:bg-[#2d2e33] hover:text-white' : 'bg-[#f2f2f2] text-[#171717] hover:bg-white'}`}><MacIcon className="mr-2 h-4 w-4" />Download</a>
 }

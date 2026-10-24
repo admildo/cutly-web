@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { DownloadOptionsButton } from '@/app/components/DownloadOptionsButton'
+import { MacIcon } from '@/app/components/MacIcon'
 
 const desktopNavigationLinks = [
   { label: 'Features', href: '#features' },
@@ -61,7 +62,7 @@ export function DynamicIslandNav({ downloadUrls, isSignedIn = false }) {
 
             <div className="col-start-3 flex shrink-0 items-center justify-self-end gap-1.5 max-[760px]:hidden">
               <Link href={isSignedIn ? '/dashboard' : '/sign-in'} className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full px-3 text-[12px] font-semibold text-white/90 no-underline transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
-              <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full bg-[#f4f3ef] px-[14px] text-[12px] font-semibold text-[#111216] shadow-[0_2px_10px_rgb(0_0_0/.18)] transition-[transform,background-color] hover:-translate-y-px hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</DownloadOptionsButton>
+              <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className="inline-flex h-[38px] items-center whitespace-nowrap rounded-full bg-[#f4f3ef] px-[14px] text-[12px] font-semibold text-[#111216] shadow-[0_2px_10px_rgb(0_0_0/.18)] transition-[transform,background-color] hover:-translate-y-px hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MacIcon className="mr-1.5 h-3.5 w-3.5" />Download</DownloadOptionsButton>
             </div>
 
             <button
@@ -91,7 +92,7 @@ export function DynamicIslandNav({ downloadUrls, isSignedIn = false }) {
                 ))}
                 <div className="mt-1 grid grid-cols-2 gap-2 pt-2">
                   <Link href={isSignedIn ? '/dashboard' : '/sign-in'} onClick={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-semibold text-white no-underline transition-colors hover:bg-white/[0.11] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70">{isSignedIn ? 'Dashboard' : 'Log in'}</Link>
-                  <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} onDismiss={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#f4f3ef] text-[12px] font-semibold text-[#111216] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Download</DownloadOptionsButton>
+                  <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} onDismiss={closeMenu} tabIndex={isMenuOpen ? 0 : -1} className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#f4f3ef] text-[12px] font-semibold text-[#111216] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"><MacIcon className="mr-1.5 h-3.5 w-3.5" />Download</DownloadOptionsButton>
                 </div>
               </nav>
             </div>

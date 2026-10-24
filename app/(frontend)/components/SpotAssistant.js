@@ -2,6 +2,7 @@ import { SpotAssistantDemo } from './SpotAssistantDemo'
 import { LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 import { Reveal } from './ScrollReveal'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
+import { MacIcon } from './MacIcon'
 import styles from './SpotAssistant.module.css'
 
 const ICONS = {
@@ -221,7 +222,8 @@ export function SpotAssistant({ downloadUrls = {} }) {
             <p className={styles.ctaText}>Download Deyn Studio, select a file in Finder, and press ⌥&nbsp;D.</p>
             <div className={styles.ctaActions}>
               <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.ctaPrimary}>
-                Download for Mac
+                <MacIcon className="mr-2 h-4 w-4" />
+                Download
               </DownloadOptionsButton>
               <a href="#pricing" className={styles.ctaSecondary}>See pricing</a>
             </div>

@@ -9,8 +9,8 @@ import { ScrollPaperMedia } from './ScrollPaperMedia'
 import { useHeroVideoTiles } from './useHeroVideoTiles'
 import { HeroLoader } from './HeroLoader'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
+import { MacIcon } from './MacIcon'
 import { getPortraitOrbitRadius } from '../../../lib/hero-orbit.js'
-import { LIFETIME_LICENSE_PRICE_LABEL } from '../../../lib/pricing.js'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -1096,12 +1096,12 @@ export function HeroSpiral({ downloadUrls }) {
               </span>
             </span>
           </h1>
-          <p className={styles.mobileDescription}>Deyn finds the moments worth posting, captions them, and frames them for vertical. Transcription stays on your Mac.</p>
+          <p className={styles.mobileDescription}>Deyn finds the moments worth posting, captions them, and frames them for vertical.</p>
           <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.downloadButton}>
-            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" /></svg>
-            Download Deyn Studio
+            <MacIcon />
+            Download
           </DownloadOptionsButton>
-          <p className={styles.mobilePlatforms}>{LIFETIME_LICENSE_PRICE_LABEL} one-time, no subscription. For macOS; Windows and Linux coming soon.</p>
+          <p className={styles.mobilePlatforms}>One-time, no subscription. For macOS.</p>
           <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
         </div>
         <div ref={videoStageRef} className={styles.videoStage}>
