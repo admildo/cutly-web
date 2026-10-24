@@ -21,6 +21,9 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/sso-callback(.*)',
   '/account(.*)',
+  // The page checks the session itself and sends visitors to the site's own /sign-in,
+  // instead of Clerk's hosted account portal.
+  '/dashboard(.*)',
   '/api/account(.*)',
   '/desktop-auth(.*)',
   // These endpoints authenticate the Electron bearer token themselves. Clerk
