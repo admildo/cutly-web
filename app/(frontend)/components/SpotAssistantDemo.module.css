@@ -13,37 +13,9 @@
   width: 100%;
 }
 
-.tryRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 0 0 16px;
-}
 
-.tryLabel {
-  margin-right: 4px;
-  color: #8f949f;
-  font-size: 13px;
-}
 
-.tryChip {
-  padding: 7px 14px;
-  color: #d6d7dc;
-  font: inherit;
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
 
-.tryChip:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.24);
-}
 
 .tabs {
   display: flex;
@@ -82,7 +54,6 @@
 }
 
 .tab:focus-visible,
-.tryChip:focus-visible,
 .key:focus-visible {
   outline: 2px solid #a9c4ff;
   outline-offset: 2px;
@@ -539,14 +510,6 @@
   border-radius: 5px;
 }
 
-.caption {
-  max-width: 560px;
-  margin: 18px auto 0;
-  color: #8f949f;
-  font-size: 12.5px;
-  line-height: 1.6;
-  text-align: center;
-}
 
 @media (max-width: 767px) {
   .stage {

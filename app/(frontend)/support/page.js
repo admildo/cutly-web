@@ -10,7 +10,7 @@ export default function SupportPage() {
   return <InfoPage eyebrow="SUPPORT" title="Help with Deyn Studio" intro="Find quick answers about sign-in, downloads, and your license. For account help, contact Deyn Studio support.">
     <Section title="Sign-in and license"><p>Start sign-in in Deyn Studio, then finish in your browser. If the app does not reopen, launch it again. Your license follows the account you used to sign in and covers the device limit shown on your plan.</p></Section>
     <Section title="Downloads and media"><p>Use public video links that do not require sign-in or DRM access. If a download fails, the source may have changed or may be limiting requests. Process only media you have permission to use.</p></Section>
-    <Section title="Privacy and legal"><p>Review our <Link href="/privacy">Privacy Policy</Link>, <Link href="/terms">Terms of Service</Link>, and <Link href="/acceptable-use">Acceptable Use</Link> policy. Open-source acknowledgements are available in our <Link href="/open-source">Open-source notices</Link>.</p></Section>
+    <Section title="Privacy and legal"><p>Review our <Link href="/privacy">Privacy Policy</Link>, <Link href="/terms">Terms of Service</Link>, <Link href="/acceptable-use">Acceptable Use</Link> policy, and <Link href="/copyright">Copyright and Takedown</Link> notice. Open-source acknowledgements are available in our <Link href="/open-source">Open-source notices</Link>.</p></Section>
     <Section title="Contact"><p>{supportUrl ? <a href={supportUrl}>Contact Deyn Studio support</a> : 'Support contact details are not available yet.'}</p></Section>
   </InfoPage>
 }

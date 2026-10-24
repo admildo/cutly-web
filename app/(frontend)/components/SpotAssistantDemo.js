@@ -101,7 +101,6 @@ const SCENARIOS = [
 ]
 
 const INTRO_TEXT = 'compress under 25 MB'
-const EXAMPLES = ['compress under 25 MB', 'make it vertical', 'mute and convert to MP4', 'add captions']
 const TILES = [['#4a5f8f', '#2b3350'], ['#8f6a4a', '#503a2b'], ['#5f8f6a', '#2b5038'], ['#8f4a6a', '#502b3a'], ['#4a8f8a', '#2b5050'], ['#8a8f4a', '#4e502b']]
 
 const formatMB = (mb) => (mb >= 1000 ? `${(mb / 1000).toFixed(1)} GB` : mb >= 100 ? `${Math.round(mb)} MB` : `${+mb.toFixed(1)} MB`)
@@ -326,24 +325,6 @@ export function SpotAssistantDemo() {
     }, 42)
   }
 
-  const tryExample = (text) => {
-    if (scenarioId !== 'finder') {
-      reset('finder')
-      schedule(() => pressShortcut(true), 450)
-      schedule(() => typeInto(text), 1000)
-      return
-    }
-    setActionsOpen(false)
-    if (!open) {
-      pressShortcut(true)
-      schedule(() => typeInto(text), 650)
-      return
-    }
-    setQuery('')
-    inputRef.current?.focus({ preventScroll: true })
-    typeInto(text)
-  }
-
   const text = query.trim()
   const understood = useMemo(() => (text ? understand(text, scenario.kind) : null), [text, scenario.kind])
 
@@ -520,13 +501,6 @@ export function SpotAssistantDemo() {
 
   return (
     <div className={styles.demo} onPointerDownCapture={stopIntro} onKeyDownCapture={stopIntro}>
-      <div className={styles.tryRow}>
-        <span className={styles.tryLabel}>Try typing</span>
-        {EXAMPLES.map((example) => (
-          <button type="button" className={styles.tryChip} onClick={() => tryExample(example)} key={example}>“{example}”</button>
-        ))}
-      </div>
-
       <div className={styles.tabs} role="tablist" aria-label="Choose what is selected" onKeyDown={onTabKeyDown}>
         {SCENARIOS.map((item) => (
           <button type="button" role="tab" id={`spot-tab-${item.id}`} tabIndex={item.id === scenarioId ? 0 : -1} aria-selected={item.id === scenarioId} className={styles.tab} onClick={() => chooseScenario(item.id)} key={item.id}>{item.tab}</button>
@@ -538,7 +512,7 @@ export function SpotAssistantDemo() {
 
         <div className={styles.keyRow}>
           <button type="button" className={styles.key} data-pressed={pressed} onClick={() => pressShortcut(true)}>
-            <span aria-hidden="true">⌥</span> Space
+            <span aria-hidden="true">⌥</span> D
           </button>
           <span className={styles.keyHint}>Press to open Spot Assistant</span>
         </div>
@@ -650,7 +624,6 @@ export function SpotAssistantDemo() {
         ) : null}
       </div>
 
-      <p className={styles.caption}>Interactive demo with sample files. Sizes and times are examples, and real results depend on your video. Only download videos you have permission to use.</p>
     </div>
   )
 }

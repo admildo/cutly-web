@@ -13,7 +13,8 @@ const publicPages = [
   ['/open-source', 0.3],
   ['/privacy', 0.2],
   ['/terms', 0.2],
-  ['/acceptable-use', 0.2]
+  ['/acceptable-use', 0.2],
+  ['/copyright', 0.2]
 ]
 
 export default async function sitemap() {

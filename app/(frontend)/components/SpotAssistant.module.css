@@ -308,13 +308,6 @@
   color: #8f949f;
 }
 
-.privacyNote {
-  max-width: 640px;
-  margin: 36px 0 0;
-  color: #8f949f;
-  font-size: 13.5px;
-  line-height: 1.7;
-}
 
 /* The closing call to action: type and two buttons, nothing else. */
 .cta {

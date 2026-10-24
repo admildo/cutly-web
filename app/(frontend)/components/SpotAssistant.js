@@ -158,12 +158,6 @@ const privacy = [
   }
 ]
 
-// DECISION: confirm this wording before publishing. Requests Spot Assistant can't read as a common edit go to the
-// same AI planner as Media Assistant (media-assistant:plan), and the privacy policy says that sends the instruction
-// and file metadata, not the file. It uses the AI trial, then your OpenRouter key. "Add captions" also depends on
-// your transcription setting (local Whisper by default, or OpenRouter), so check that line against the app.
-const privacyNote = 'macOS asks for permission once. Anything it can’t read as a common edit is planned by the same AI as Media Assistant, which sees your request and the file details, never the files, and uses your AI trial or OpenRouter key.'
-
 // DECISION: Spot Assistant also runs on Windows per docs/command-bar.md, but the rest of the site says macOS only,
 // so the closing button below says "Download for Mac". Change it when Windows ships.
 
@@ -174,7 +168,7 @@ export function SpotAssistant({ downloadUrls = {} }) {
       <div className="relative mx-auto w-full max-w-[1040px]">
         <div className="mx-auto max-w-[720px] text-center">
           <p className="mb-4 text-[12px] font-medium uppercase tracking-[.2em] text-[#aab7d7]">Spot Assistant</p>
-          <h2 id="spot-assistant-title" className="m-0 section-title text-[#f0f2f8]">Select files. Press&nbsp;⌥&nbsp;Space. Done.</h2>
+          <h2 id="spot-assistant-title" className="m-0 section-title text-[#f0f2f8]">Select files. Press&nbsp;⌥&nbsp;D. Done.</h2>
           <p className="mx-auto mb-0 mt-6 max-w-[600px] text-[16px] leading-[1.7] text-[#a6a8ae]">Select files in Finder, or open a video in your browser. Press the shortcut, say what you want, and keep working.</p>
         </div>
 
@@ -216,7 +210,6 @@ export function SpotAssistant({ downloadUrls = {} }) {
                 </div>
               ))}
             </div>
-            <p className={styles.privacyNote}>{privacyNote}</p>
           </div>
         </Reveal>
 
@@ -225,7 +218,7 @@ export function SpotAssistant({ downloadUrls = {} }) {
         <Reveal className="mt-[clamp(88px,11vw,140px)]">
           <div className={styles.cta}>
             <h3 className={styles.ctaTitle}>Your next edit is one shortcut away.</h3>
-            <p className={styles.ctaText}>Download Deyn Studio, select a file in Finder, and press ⌥&nbsp;Space.</p>
+            <p className={styles.ctaText}>Download Deyn Studio, select a file in Finder, and press ⌥&nbsp;D.</p>
             <div className={styles.ctaActions}>
               <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.ctaPrimary}>
                 Download for Mac

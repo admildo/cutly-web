@@ -53,7 +53,7 @@ const FAQ_ITEMS = [
   {
     category: 'Product',
     question: 'What is Spot Assistant?',
-    answer: 'A small window that opens over any app when you press ⌥ Space. Select files in Finder or open a video link in your browser, say what you want (“compress under 25 MB”, “make it vertical”, “download it”), and it works in the background. Media Assistant is the in-app version, where you review a plan before it runs.'
+    answer: 'A small window that opens over any app when you press ⌥ D. Select files in Finder or open a video link in your browser, say what you want (“compress under 25 MB”, “make it vertical”, “download it”), and it works in the background. Media Assistant is the in-app version, where you review a plan before it runs.'
   },
   {
     category: 'Product',

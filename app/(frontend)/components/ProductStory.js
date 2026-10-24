@@ -185,59 +185,56 @@ export function ProductStory() {
     >
       <div className="relative z-10 mx-auto w-full max-w-[1420px]">
         <h2 id="product-story-heading" className="relative z-30 mx-auto section-title-gap max-w-[640px] text-balance text-center font-serif section-title text-[#f0efe9]">
-          From hour-long video to ready-to-post clips
+          Turn long videos into clips ready to post
         </h2>
 
 
         <div role="group" aria-label="Deyn Studio editing workflow" className="relative pt-[clamp(56px,6vw,96px)] max-[767px]:hidden">
-          <div ref={stickyStageRef} className="sticky top-[72px] z-20 flex h-[calc(100svh-84px)] w-full items-center justify-center max-[600px]:top-[64px] max-[600px]:h-[calc(100svh-76px)]">
-              <div className="relative mx-auto w-[115%] pb-[132px]" style={{ maxWidth: 'min(1380px, max(805px, 57.5vw), calc(184svh - 313px), calc(100vw - 24px))', perspective: '1400px', transform: 'translateY(10px)' }}>
-                <div className={`relative mx-auto w-[90%] ${stories[active].video ? 'aspect-video' : 'aspect-[3/2]'}`} aria-hidden="true" />
+          <div ref={stickyStageRef} className="sticky top-[72px] z-20 flex h-[calc(100svh-84px)] w-full items-center overflow-hidden max-[600px]:top-[64px] max-[600px]:h-[calc(100svh-76px)]">
+            <div
+              className="relative w-full"
+              style={{ '--card': 'min(1040px, 70vw, calc((100svh - 300px) * 1.5))', '--gap': 'clamp(20px, 2.4vw, 40px)' }}
+            >
+              <div
+                className="flex items-start will-change-transform transition-transform duration-[650ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none"
+                style={{
+                  gap: 'var(--gap)',
+                  paddingLeft: 'calc(50% - var(--card) / 2)',
+                  transform: `translate3d(calc(${active} * (var(--card) + var(--gap)) * -1), 0, 0)`
+                }}
+              >
+                {stories.map((story, index) => {
+                  const isActive = index === active
+                  const showCopy = isActive && copyReadyIndex === index
+                  const titleAnimation = scrollDirection === 'up' ? styles.titleRollInUp : styles.titleRollInDown
+                  const descriptionAnimation = scrollDirection === 'up' ? styles.descriptionBlurInUp : styles.descriptionBlurInDown
 
-              {stories.map((story, index) => {
-                const isActive = index === active
-                const showCopy = isActive && copyReadyIndex === index
-                const offset = (index - active + stories.length) % stories.length
-                const stackScale = offset === 1 ? 0.94 : 0.88
-                const stackY = offset === 1 ? -30 : -60
-                const titleAnimation = scrollDirection === 'up' ? styles.titleRollInUp : styles.titleRollInDown
-                const descriptionAnimation = scrollDirection === 'up' ? styles.descriptionBlurInUp : styles.descriptionBlurInDown
-
-                return (
-                  <article
-                    key={story.number}
-                    aria-current={isActive ? 'step' : undefined}
-                    aria-hidden={!isActive}
-                    className={`absolute left-1/2 top-0 w-full rounded-[26px] transition-[transform,opacity,width] duration-[550ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${isActive ? '' : 'pointer-events-none'}`}
-                    style={{
-                      zIndex: isActive ? 10 : 10 - offset,
-                      width: isActive ? '100%' : `${offset === 1 ? 94 : 88}%`,
-                      transform: isActive
-                        ? 'translate3d(-50%, 0, 0) scale(1)'
-                        : `translate3d(-50%, ${stackY}px, 0) scale(${stackScale})`,
-                      transformOrigin: 'center top'
-                    }}
-                  >
-                    <>
+                  return (
+                    <article
+                      key={story.number}
+                      aria-current={isActive ? 'step' : undefined}
+                      aria-hidden={!isActive}
+                      className={`shrink-0 transition-[opacity,transform] duration-[550ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${isActive ? 'opacity-100' : 'pointer-events-none opacity-40'}`}
+                      style={{ width: 'var(--card)', transform: isActive ? 'scale(1)' : 'scale(.92)', transformOrigin: 'center top' }}
+                    >
                       <div
-                        className={`relative mx-auto w-[90%] overflow-hidden rounded-[26px] bg-black transition-[box-shadow] duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none ${story.video ? 'aspect-video' : 'aspect-[3/2]'} ${isActive ? '' : 'opacity-95'}`}
+                        className={`relative w-full overflow-hidden rounded-[14px] bg-black ${story.video ? 'aspect-video' : 'aspect-[3/2]'}`}
                         style={{
                           boxShadow: isActive
                             ? '0 34px 72px -28px rgb(0 0 0 / .8), 0 8px 22px -10px rgb(0 0 0 / .48)'
                             : '0 14px 30px -12px rgb(0 0 0 / .58)'
                         }}
-                        aria-hidden={!isActive}
                         aria-label={isActive ? story.alt : undefined}
                       >
                         {story.video && isActive ? (
-                            <DemoVideoPlayer story={story} />
+                          <DemoVideoPlayer story={story} />
                         ) : (
                           <Image
                             className="object-cover object-center"
                             src={story.image}
                             alt={isActive ? story.alt : ''}
                             fill
-                            sizes="(max-width: 600px) 94vw, 1200px"
+                            sizes="(max-width: 600px) 94vw, 1040px"
                             priority={index === 0}
                             draggable={false}
                           />
@@ -254,21 +251,27 @@ export function ProductStory() {
                       <div
                         id={`product-story-copy-${index}`}
                         aria-hidden={!showCopy}
-                        className={`relative z-20 mt-5 flex min-h-[152px] items-center justify-center px-7 py-6 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] max-[600px]:mt-4 max-[600px]:min-h-[156px] max-[767px]:px-5 max-[600px]:py-5 ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                        className={`relative z-20 mt-5 flex min-h-[152px] items-start justify-center px-7 py-4 text-center transition-opacity duration-[425ms] ease-[cubic-bezier(.22,.61,.36,1)] motion-reduce:transition-none max-[900px]:min-h-[166px] ${showCopy ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                       >
                         <div key={`${story.number}-${showCopy ? `active-${active}-${scrollDirection}` : 'idle'}`} className="relative">
-                          <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(16px,2.6vw,26px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed] max-[600px]:text-[20px]`}>
+                          <h3 className={`${showCopy ? titleAnimation : ''} mx-auto mb-0 max-w-[680px] text-[clamp(16px,2.6vw,26px)] font-medium leading-[1.08] tracking-[-.05em] text-[#f7f4ed]`}>
                             {story.title}
                           </h3>
-                          <p className={`${showCopy ? descriptionAnimation : ''} mx-auto mb-0 mt-3 max-w-[52ch] text-[15px] leading-[1.65] text-[#b9babd] max-[900px]:text-[14px] max-[600px]:mt-2 max-[600px]:text-[14px] max-[600px]:leading-[1.6]`}>
+                          <p className={`${showCopy ? descriptionAnimation : ''} mx-auto mb-0 mt-3 max-w-[52ch] text-[15px] leading-[1.65] text-[#b9babd] max-[900px]:text-[14px]`}>
                             {story.description}
                           </p>
                         </div>
                       </div>
-                    </>
-                  </article>
-                )
-              })}
+                    </article>
+                  )
+                })}
+              </div>
+
+              <div className="mt-2 flex justify-center gap-2" aria-hidden="true">
+                {stories.map((story, index) => (
+                  <span key={story.number} className={`h-[6px] rounded-full transition-[width,background-color] duration-300 ${index === active ? 'w-6 bg-[#f0efe9]' : 'w-[6px] bg-white/25'}`} />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -281,7 +284,6 @@ export function ProductStory() {
               />
             ))}
           </div>
-          <div aria-hidden="true" className="h-[60svh] max-[600px]:h-[55svh]" />
         </div>
         <div className={styles.mobileStories}>
           {stories.map((story) => (
@@ -296,7 +298,7 @@ export function ProductStory() {
         </div>
         <div className="sr-only max-[767px]:hidden" aria-live="polite" aria-atomic="true">Step {stories[active].number}: {stories[active].title}</div>
       </div>
-      <div className="h-[clamp(72px,10svh,120px)] max-[767px]:h-0" aria-hidden="true" />
+      <div className="h-[clamp(24px,3svh,40px)] max-[767px]:h-0" aria-hidden="true" />
     </section>
   )
 }
