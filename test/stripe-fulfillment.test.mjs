@@ -30,7 +30,7 @@ const checkoutEvent = (userId, paymentIntent, overrides = {}) => ({
       payment_status: 'paid',
       payment_intent: paymentIntent,
       client_reference_id: userId,
-      metadata: { clerkUserId: userId },
+      metadata: { clerkUserId: userId, licenseType: 'lifetime' },
       customer: 'cus_1',
       ...overrides
     }
@@ -49,6 +49,14 @@ test('a paid checkout activates a lifetime license', async () => {
 test('an unpaid checkout does not activate a license', async () => {
   await handleStripeEvent(checkoutEvent('user_unpaid', 'pi_unpaid', { payment_status: 'unpaid' }))
   assert.equal((await getLicenseStatus('user_unpaid')).licensed, false)
+})
+
+test('a paid checkout for something other than the lifetime license grants nothing', async (t) => {
+  t.mock.method(console, 'warn', () => {})
+  await handleStripeEvent(checkoutEvent('user_other', 'pi_other', { metadata: { clerkUserId: 'user_other' } }))
+  await handleStripeEvent(checkoutEvent('user_other_type', 'pi_other_type', { metadata: { clerkUserId: 'user_other_type', licenseType: 'monthly' } }))
+  assert.equal((await getLicenseStatus('user_other')).licensed, false)
+  assert.equal((await getLicenseStatus('user_other_type')).licensed, false)
 })
 
 test('a delayed payment that later succeeds activates the license', async () => {
