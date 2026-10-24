@@ -44,7 +44,8 @@ export default clerkMiddleware(
     // Use a per-request nonce and strict-dynamic instead of trusting arbitrary
     // HTTPS script origins. Clerk's CSP integration also adds its required hosts.
     // Blog cover images are editor-supplied HTTPS URLs, so images may load from any HTTPS host.
-    contentSecurityPolicy: { strict: true, directives: { 'img-src': ['https:'] } }
+    // The hero demo is framed from YouTube's privacy-enhanced embed domain, the only video host the site frames.
+    contentSecurityPolicy: { strict: true, directives: { 'img-src': ['https:'], 'frame-src': ['https://www.youtube-nocookie.com'] } }
   }
 )
 

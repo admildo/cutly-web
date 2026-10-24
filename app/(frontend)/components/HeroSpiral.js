@@ -18,6 +18,12 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 const HERO_CARD_MODE = 'spiral'
 const HERO_MOUSE_EFFECTS = true
 
+// The product demo is a YouTube video. Its frame is created on the first press of play, and it is
+// paused or resumed afterwards with YouTube's postMessage commands.
+const DEMO_VIDEO_ORIGIN = 'https://www.youtube-nocookie.com'
+const DEMO_VIDEO_SRC = `${DEMO_VIDEO_ORIGIN}/embed/7rs6y-qcOlA?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1`
+const demoVideoCommand = (func) => JSON.stringify({ event: 'command', func, args: '' })
+
 const uniqueCardAssets = [
   { src: '/card-media/se-15.mp4', poster: '/card-media/se-15-poster.webp', type: 'video', label: 'Clip video' },
   { src: '/card-media/se-2.webp', type: 'image', label: 'Convert image' },
@@ -147,6 +153,7 @@ export function HeroSpiral({ downloadUrls }) {
   const gazeMaskId = `hero-gaze-eye-mask-${gazeId}`
   const [hoveredCard, setHoveredCard] = useState(null)
   const [isCardHovered, setIsCardHovered] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isHeadlinePromptActive, setIsHeadlinePromptActive] = useState(false)
   const [headlineIndex, setHeadlineIndex] = useState(0)
@@ -504,7 +511,10 @@ export function HeroSpiral({ downloadUrls }) {
       const sceneObserver = new IntersectionObserver(([entry]) => {
         sceneVisible = entry.isIntersecting
         syncMotionActivity()
-        if (!sceneVisible) videoRef.current?.pause()
+        if (!sceneVisible && videoRef.current) {
+          videoRef.current.contentWindow?.postMessage(demoVideoCommand('pauseVideo'), DEMO_VIDEO_ORIGIN)
+          setIsVideoPlaying(false)
+        }
         scheduleCards()
       })
       sceneObserver.observe(sceneRef.current)
@@ -1099,21 +1109,18 @@ export function HeroSpiral({ downloadUrls }) {
             aria-hidden="true"
             className={`${styles.videoBackdrop} ${isVideoPlaying ? styles.videoBackdropHidden : ''}`}
           />
-          <video
-            ref={videoRef}
-            className={`${styles.demoVideo} ${isVideoPlaying ? styles.demoVideoPlaying : ''}`}
-            controls={isVideoPlaying}
-            playsInline
-            preload="none"
-            aria-label="Deyn Studio product demo"
-            aria-hidden={!isVideoPlaying}
-            onPlay={() => setIsVideoPlaying(true)}
-            onPause={() => setIsVideoPlaying(false)}
-            onEnded={() => setIsVideoPlaying(false)}
-          >
-            <source src="/app-shots/demo-video.mp4" type="video/mp4" />
-            Your browser does not support MP4 video playback.
-          </video>
+          <div className={`${styles.demoVideo} ${isVideoPlaying ? styles.demoVideoPlaying : ''}`} aria-hidden={!isVideoPlaying}>
+            {isVideoLoaded ? (
+              <iframe
+                ref={videoRef}
+                className={styles.demoFrame}
+                src={DEMO_VIDEO_SRC}
+                title="Deyn Studio product demo"
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                tabIndex={isVideoPlaying ? undefined : -1}
+              />
+            ) : null}
+          </div>
           <div className={`${styles.videoContent} ${isVideoPlaying ? styles.videoContentPlaying : ''}`}>
             <div ref={videoPromptRef} className={styles.videoHeading}>
               <p>Deyn Studio in action</p>
@@ -1125,7 +1132,11 @@ export function HeroSpiral({ downloadUrls }) {
                 className={`${styles.playButton} ${isVideoPlaying ? styles.playButtonHidden : ''}`}
                 type="button"
                 aria-label="Watch the Deyn Studio demo"
-                onClick={() => videoRef.current?.play().catch(() => {})}
+                onClick={() => {
+                  videoRef.current?.contentWindow?.postMessage(demoVideoCommand('playVideo'), DEMO_VIDEO_ORIGIN)
+                  setIsVideoLoaded(true)
+                  setIsVideoPlaying(true)
+                }}
               >
                 <span className={styles.playIcon}>
                   <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.5 4.9c0-.78.86-1.25 1.52-.82l10.1 6.6a1.56 1.56 0 0 1 0 2.62l-10.1 6.6a1 1 0 0 1-1.52-.82V4.9Z" /></svg>

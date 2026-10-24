@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { DownloadOptionsButton } from './DownloadOptionsButton'
 
-export function AppAccess({ downloadUrl, compact = false, allowReleasePage = true, licensed = false, dark = true }) {
+export function AppAccess({ downloadUrls, compact = false, allowReleasePage = true, licensed = false, dark = true }) {
   const [opening, setOpening] = useState(false)
   const [launchMessage, setLaunchMessage] = useState('')
   const shell = dark ? 'bg-[#151619] text-[#f2f2ee] shadow-[0_18px_54px_rgb(0_0_0/.2)]' : 'bg-white text-[#171717] shadow-[0_14px_40px_rgb(0_0_0/.08)]'
@@ -32,8 +33,8 @@ export function AppAccess({ downloadUrl, compact = false, allowReleasePage = tru
           <button type="button" onClick={openApp} disabled={opening} className={`min-h-12 rounded-full px-6 text-sm font-semibold shadow-[0_6px_20px_rgb(0_0_0/.24)] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60 ${primary}`}>
             {opening ? 'Opening Deyn Studio…' : 'Open Deyn Studio'}
           </button>
-          {downloadUrl ? (
-            <a href={downloadUrl} className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${secondary}`}>Download app</a>
+          {downloadUrls?.silicon || downloadUrls?.intel ? (
+            <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${secondary}`}>Download app</DownloadOptionsButton>
           ) : allowReleasePage ? (
             <LinkToRelease dark={dark} />
           ) : (

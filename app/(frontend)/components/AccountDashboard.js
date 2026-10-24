@@ -259,7 +259,7 @@ function LicensePanel({ license, licenseError, checkoutState, autoBuy = false, p
   )
 }
 
-export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, priceLabel, checkoutState, autoBuy = false, downloadUrl, isTrialAdmin = false }) {
+export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, priceLabel, checkoutState, autoBuy = false, downloadUrls, isTrialAdmin = false }) {
   const showTrial = !licenseError && license?.status === 'none'
 
   return (
@@ -276,14 +276,14 @@ export function AccountDashboard({ user, license, licenseError, trialSnapshot, t
           </div>
           {showTrial ? (
             <>
-              <div className="mt-5"><AppAccess downloadUrl={downloadUrl} licensed={false} /></div>
+              <div className="mt-5"><AppAccess downloadUrls={downloadUrls} licensed={false} /></div>
               <TrialUsagePanel snapshot={trialSnapshot} error={trialError} />
               <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
             </>
           ) : (
             <>
               <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
-              <div className="mt-5"><AppAccess downloadUrl={downloadUrl} licensed={Boolean(license?.licensed)} /></div>
+              <div className="mt-5"><AppAccess downloadUrls={downloadUrls} licensed={Boolean(license?.licensed)} /></div>
             </>
           )}
         </section>

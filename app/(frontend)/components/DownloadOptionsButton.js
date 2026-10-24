@@ -83,7 +83,9 @@ export function DownloadOptionsButton({ intelUrl, siliconUrl, className, childre
                 <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current stroke-[1.7]"><path strokeLinecap="round" strokeLinejoin="round" d="M10 3v9m0 0 3.5-3.5M10 12 6.5 8.5M4 14.5v2h12v-2" /></svg>
               </a>
             </div>
-          ) : null}
+          ) : (
+            <p className="relative mb-0 mt-6 text-center text-[13px] text-[#a5a6ab]">The {selectedLabel} version isn’t available yet.</p>
+          )}
           <p className="relative mb-0 mt-5 text-center text-[11px] text-[#a5a6ab]">Not sure which one to choose? Open the Apple menu  and select <span className="text-[#e0e0e3]">About This Mac</span>.</p>
         </div>
       </dialog>

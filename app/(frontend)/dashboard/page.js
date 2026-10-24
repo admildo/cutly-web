@@ -1,20 +1,12 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { AccountDashboard } from '@/app/components/AccountDashboard'
+import { getDownloadUrls } from '@/lib/downloads'
 import { getActiveLicenseDevices, getLicenseStatus } from '@/lib/license'
 import { getTrialSnapshot, isTrialAdmin } from '@/lib/trial'
 import { LIFETIME_LICENSE_PRICE_EUR } from '@/lib/pricing'
 
 export const metadata = { title: 'Dashboard', robots: { index: false, follow: false } }
-
-const safeExternalUrl = (value) => {
-  try {
-    const url = new URL(value)
-    return url.protocol === 'https:' ? url.toString() : null
-  } catch {
-    return null
-  }
-}
 
 export default async function DashboardPage({ searchParams }) {
   const { checkout: checkoutState, buy } = searchParams ? await searchParams : {}
@@ -29,7 +21,7 @@ export default async function DashboardPage({ searchParams }) {
   const user = await currentUser()
   if (!user) redirect(signInPath)
 
-  const downloadUrl = safeExternalUrl(process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL)
+  const downloadUrls = await getDownloadUrls()
   let license = null
   let licenseError = false
   let trialSnapshot = null
@@ -68,5 +60,5 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
 
-  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} autoBuy={buy === '1'} downloadUrl={downloadUrl} isTrialAdmin={isTrialAdmin(userId)} />
+  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} autoBuy={buy === '1'} downloadUrls={downloadUrls} isTrialAdmin={isTrialAdmin(userId)} />
 }
