@@ -45,7 +45,8 @@ export default clerkMiddleware(
     // HTTPS script origins. Clerk's CSP integration also adds its required hosts.
     // Blog cover images are editor-supplied HTTPS URLs, so images may load from any HTTPS host.
     // The hero demo is framed from YouTube's privacy-enhanced embed domain, the only video host the site frames.
-    contentSecurityPolicy: { strict: true, directives: { 'img-src': ['https:'], 'frame-src': ['https://www.youtube-nocookie.com'] } }
+    // The account portal is a separate host, and the signed-in pages must be allowed to call it (sign-out, sign-in redirects).
+    contentSecurityPolicy: { strict: true, directives: { 'img-src': ['https:'], 'frame-src': ['https://www.youtube-nocookie.com'], 'connect-src': ['https://accounts.deynstudio.com'] } }
   }
 )
 
