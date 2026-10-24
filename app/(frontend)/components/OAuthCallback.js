@@ -296,6 +296,8 @@ export function OAuthCallback({ returnTo = '/' }) {
           </div>
         )}
       </section>
+      {/* New Google accounts are created here (sign-in transfers to sign-up), and Clerk's bot check needs this element. */}
+      <div id="clerk-captcha" />
     </AuthLayout>
   )
 }
