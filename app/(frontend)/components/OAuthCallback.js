@@ -50,10 +50,6 @@ export function OAuthCallback({ returnTo = '/' }) {
 
     const completeAuthentication = async () => {
       try {
-        // The page can run before Clerk has applied the result of the Google callback, so read the latest state first.
-        await clerk.client?.reload()
-        console.info('[oauth-callback]', JSON.stringify({ hookSignIn: signIn.status, hookTransferable: signIn.isTransferable, liveFirstFactor: clerk.client?.signIn?.firstFactorVerification?.status, hookSignUp: signUp.status, hookSignUpTransferable: signUp.isTransferable }))
-
         if (signIn.status === 'complete') {
           await finalize(signIn)
           return
@@ -94,9 +90,14 @@ export function OAuthCallback({ returnTo = '/' }) {
           return
         }
 
-        // A new Google account is first refused by sign-in as "transferable". The hook's copies of the attempts can be
-        // empty when this runs and its create() then does nothing, so the account is created through the live client.
-        if (signIn.isTransferable || clerk.client?.signIn?.firstFactorVerification?.status === 'transferable') {
+        // A new Google account is first refused by sign-in as "transferable". That result reaches the client a moment
+        // after this page starts, and the hook's copies of the attempts can stay empty, so wait for it on the live client
+        // and create the account through it.
+        const isTransferable = () => signIn.isTransferable || clerk.client?.signIn?.firstFactorVerification?.status === 'transferable'
+        for (let waited = 0; waited < 8000 && !isTransferable(); waited += 500) {
+          await new Promise((resolve) => setTimeout(resolve, 500))
+        }
+        if (isTransferable()) {
           const created = await clerk.client.signUp.create({ transfer: true })
           if (created.status === 'complete') {
             await clerk.setActive({
