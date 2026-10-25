@@ -89,7 +89,9 @@ export function OAuthCallback({ returnTo = '/' }) {
           return
         }
 
-        if (signIn.isTransferable) {
+        // A new Google account is first refused by sign-in as "transferable". Read that from the live client as well,
+        // because the hook's copy can still be empty when this runs, which left new accounts on the generic error.
+        if (signIn.isTransferable || clerk.client?.signIn?.firstFactorVerification?.status === 'transferable') {
           const { error: transferError } = await signUp.create({ transfer: true })
           if (transferError) throw transferError
           if (signUp.status === 'complete') {
