@@ -23,6 +23,7 @@ export function OAuthCallback({ returnTo = '/' }) {
   const [lastName, setLastName] = useState('')
   const [legalAccepted, setLegalAccepted] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [profileFields, setProfileFields] = useState([])
 
   const finalize = useCallback(async (resource) => {
     const { error: finalizeError } = await resource.finalize({
@@ -89,19 +90,23 @@ export function OAuthCallback({ returnTo = '/' }) {
           return
         }
 
-        // A new Google account is first refused by sign-in as "transferable". Read that from the live client as well,
-        // because the hook's copy can still be empty when this runs, which left new accounts on the generic error.
+        // A new Google account is first refused by sign-in as "transferable". The hook's copies of the attempts can be
+        // empty when this runs and its create() then does nothing, so the account is created through the live client.
         if (signIn.isTransferable || clerk.client?.signIn?.firstFactorVerification?.status === 'transferable') {
-          const { error: transferError } = await signUp.create({ transfer: true })
-          if (transferError) throw transferError
-          if (signUp.status === 'complete') {
-            await finalize(signUp)
+          const created = await clerk.client.signUp.create({ transfer: true })
+          if (created.status === 'complete') {
+            await clerk.setActive({
+              session: created.createdSessionId,
+              navigate: ({ decorateUrl }) => window.location.replace(decorateUrl(returnTo)),
+            })
             return
           }
-          if (signUp.status === 'missing_requirements' && signUp.missingFields?.length) {
+          if (created.status === 'missing_requirements' && created.missingFields?.length) {
+            setProfileFields(created.missingFields)
             setNeedsProfile(true)
             return
           }
+          throw new Error('We couldn’t create your account. Please try again.')
         }
 
         if (signUp.status === 'complete') {
@@ -142,7 +147,7 @@ export function OAuthCallback({ returnTo = '/' }) {
     event.preventDefault()
     if (saving) return
 
-    const missing = signUp.missingFields || []
+    const missing = profileFields.length ? profileFields : signUp.missingFields || []
     const updates = {}
     if (missing.includes('first_name')) updates.firstName = firstName.trim()
     if (missing.includes('last_name')) updates.lastName = lastName.trim()
@@ -157,10 +162,12 @@ export function OAuthCallback({ returnTo = '/' }) {
     setSaving(true)
     setError('')
     try {
-      const { error: updateError } = await signUp.update(updates)
-      if (updateError) throw updateError
-      if (signUp.status === 'complete') {
-        await finalize(signUp)
+      const updated = await clerk.client.signUp.update(updates)
+      if (updated.status === 'complete') {
+        await clerk.setActive({
+          session: updated.createdSessionId,
+          navigate: ({ decorateUrl }) => window.location.replace(decorateUrl(returnTo)),
+        })
       } else {
         setError('Please check the details and try again.')
       }
@@ -216,7 +223,7 @@ export function OAuthCallback({ returnTo = '/' }) {
     }
   }
 
-  const missing = signUp?.missingFields || []
+  const missing = profileFields.length ? profileFields : signUp?.missingFields || []
   const availableVerificationStrategies = (signIn?.supportedSecondFactors || [])
     .map((factor) => factor.strategy)
     .filter((strategy, index, strategies) => ['totp', 'backup_code', 'email_code', 'phone_code'].includes(strategy) && strategies.indexOf(strategy) === index)
