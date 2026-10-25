@@ -52,6 +52,7 @@ export function OAuthCallback({ returnTo = '/' }) {
       try {
         // The page can run before Clerk has applied the result of the Google callback, so read the latest state first.
         await clerk.client?.reload()
+        console.info('[oauth-callback]', JSON.stringify({ hookSignIn: signIn.status, hookTransferable: signIn.isTransferable, liveFirstFactor: clerk.client?.signIn?.firstFactorVerification?.status, hookSignUp: signUp.status, hookSignUpTransferable: signUp.isTransferable }))
 
         if (signIn.status === 'complete') {
           await finalize(signIn)
