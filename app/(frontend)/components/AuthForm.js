@@ -39,6 +39,8 @@ export function AuthForm({ mode = 'sign-in', returnTo = '/dashboard', oidcPrompt
 
     try {
       const attempt = isSignUp ? signUp : signIn
+      // A failed or half-finished earlier attempt leaves local state behind, and sso() then silently does nothing.
+      await attempt.reset()
       const { error: authError } = await attempt.sso({
         strategy: 'oauth_google',
         redirectUrl: returnTo,
