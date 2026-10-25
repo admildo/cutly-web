@@ -50,6 +50,9 @@ export function OAuthCallback({ returnTo = '/' }) {
 
     const completeAuthentication = async () => {
       try {
+        // The page can run before Clerk has applied the result of the Google callback, so read the latest state first.
+        await clerk.client?.reload()
+
         if (signIn.status === 'complete') {
           await finalize(signIn)
           return
