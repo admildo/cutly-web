@@ -17,7 +17,7 @@
 .bento {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 18px;
+  gap: 24px;
 }
 
 .span3 {
@@ -25,18 +25,36 @@
   min-width: 0;
 }
 
-.span2 {
-  grid-column: span 2;
+.span6 {
+  grid-column: 1 / -1;
   min-width: 0;
+}
+
+/* Full-width panel: the copy on the left, the mock-up on the right. */
+.panelWide {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+.panelWide > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.panelWide .visual {
+  flex: 1;
+  max-width: 420px;
+  margin-top: 0;
 }
 
 .panel {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 36px;
   height: 100%;
-  padding: clamp(26px, 3vw, 40px);
+  padding: clamp(32px, 3.6vw, 52px);
   overflow: hidden;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
   border: 1px solid rgba(255, 255, 255, 0.075);
@@ -69,17 +87,17 @@
 }
 
 .panelText {
-  margin: 14px 0 0;
+  margin: 16px 0 0;
   max-width: 440px;
   color: #a6a8ae;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.65;
 }
 
 .visual {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+  gap: 12px;
   margin-top: auto;
 }
 
@@ -88,9 +106,9 @@
   --text: rgba(255, 255, 255, 0.93);
   --muted: rgba(255, 255, 255, 0.58);
   --ok: #7bd88f;
-  padding: 8px;
+  padding: 12px;
   color: var(--text);
-  font-size: 13.5px;
+  font-size: 14.5px;
   line-height: 1.35;
   background: rgba(20, 20, 23, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -107,15 +125,15 @@
 .miniRow {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 7px 10px;
+  gap: 14px;
+  min-height: 56px;
+  padding: 10px 14px;
   background: rgba(255, 255, 255, 0.06);
   border-radius: 11px;
 }
 
 .miniRow + .miniRow {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .miniIcon {
@@ -250,8 +268,17 @@
 
 @media (max-width: 900px) {
   .span3,
-  .span2 {
+  .span6 {
     grid-column: 1 / -1;
+  }
+
+  .panelWide {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panelWide .visual {
+    max-width: none;
   }
 
 }

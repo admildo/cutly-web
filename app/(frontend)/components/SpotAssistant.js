@@ -119,21 +119,22 @@ const panels = [
   },
   {
     key: 'batch',
-    span: styles.span2,
+    span: styles.span3,
     title: 'Whole folders, handled.',
     text: 'A bad file only costs itself. Retry just the failures, or undo the whole batch.',
     visual: <BatchVisual />
   },
   {
     key: 'originals',
-    span: styles.span2,
+    span: styles.span3,
     title: 'Your originals stay put.',
     text: 'Every edit saves a new copy beside the original, so there is nothing to lose by trying.',
     visual: <OriginalsVisual />
   },
   {
     key: 'watch',
-    span: styles.span2,
+    span: styles.span6,
+    wide: true,
     // DECISION: watch folders are real (src/main/command-bar/watch-folders.js) but need a saved recipe first,
     // handle videos and images only, skip files already in the folder, and only run while Deyn is running in
     // the background. The copy says so instead of promising "forget it".
@@ -161,7 +162,7 @@ export function SpotAssistant() {
         <div className={`${styles.bento} mt-[clamp(72px,9vw,120px)]`}>
           {panels.map((panel, index) => (
             <Reveal className={panel.span} delay={(index % 3) * 90} key={panel.key}>
-              <article className={styles.panel}>
+              <article className={`${styles.panel} ${panel.wide ? styles.panelWide : ''}`}>
                 <div>
                   <h3 className={styles.panelTitle}>{panel.title}</h3>
                   <p className={styles.panelText}>{panel.text}</p>
