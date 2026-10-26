@@ -1,8 +1,5 @@
 import { SpotAssistantDemo } from './SpotAssistantDemo'
-import { LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/pricing'
 import { Reveal } from './ScrollReveal'
-import { DownloadOptionsButton } from './DownloadOptionsButton'
-import { MacIcon } from './MacIcon'
 import styles from './SpotAssistant.module.css'
 
 const ICONS = {
@@ -146,23 +143,7 @@ const panels = [
   }
 ]
 
-const privacy = [
-  {
-    title: 'It looks at',
-    icon: 'check',
-    items: ['The files you select', 'The address of your front browser tab', 'A copied link, if you leave that on']
-  },
-  {
-    title: 'It doesn’t',
-    icon: 'minus',
-    items: ['Open anything you haven’t selected', 'Send your files anywhere to plan an edit', 'Use an AI planner for common edits']
-  }
-]
-
-// DECISION: Spot Assistant also runs on Windows per docs/command-bar.md, but the rest of the site says macOS only,
-// so the closing button below says "Download for Mac". Change it when Windows ships.
-
-export function SpotAssistant({ downloadUrls = {} }) {
+export function SpotAssistant() {
   return (
     <section id="spot-assistant" className="relative overflow-hidden bg-[#08090c] px-6 section-pad text-[#f0efe9] max-[767px]:px-5" aria-labelledby="spot-assistant-title">
       <div className="pointer-events-none absolute left-1/2 top-[18%] h-[420px] w-[min(820px,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgb(157_139_103/.12),transparent_68%)] blur-3xl" aria-hidden="true" />
@@ -190,46 +171,6 @@ export function SpotAssistant({ downloadUrls = {} }) {
             </Reveal>
           ))}
         </div>
-
-        <Reveal className="mt-[clamp(72px,9vw,120px)]">
-          <div className={styles.privacy}>
-            <p className={styles.privacyLabel}>Privacy</p>
-            <div className={styles.privacyGrid}>
-              {privacy.map((column) => (
-                <div key={column.title}>
-                  <h3 className={styles.privacyTitle}>{column.title}</h3>
-                  <ul className={styles.privacyList}>
-                    {column.items.map((item) => (
-                      <li key={item}>
-                        <svg className={styles.privacyIcon} data-kind={column.icon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                          {column.icon === 'check' ? <path d="m5 12.5 4.5 4.5L19 7.5" /> : <path d="M6 12h12" />}
-                        </svg>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        {/* DECISION: this sits before "Why us" on purpose. That section is about eleven screens of scrolling, so
-            someone who just enjoyed the demo would wait that long to find a way to act. Move it if you disagree. */}
-        <Reveal className="mt-[clamp(88px,11vw,140px)]">
-          <div className={styles.cta}>
-            <h3 className={styles.ctaTitle}>Your next edit is one shortcut away.</h3>
-            <p className={styles.ctaText}>Download Deyn Studio, select a file in Finder, and press ⌥&nbsp;D.</p>
-            <div className={styles.ctaActions}>
-              <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.ctaPrimary}>
-                <MacIcon className="mr-2 h-4 w-4" />
-                Download
-              </DownloadOptionsButton>
-              <a href="#pricing" className={styles.ctaSecondary}>See pricing</a>
-            </div>
-            <p className={styles.ctaFacts}>{LIFETIME_LICENSE_PRICE_LABEL} once · No subscription · Up to two Macs</p>
-          </div>
-        </Reveal>
       </div>
     </section>
   )

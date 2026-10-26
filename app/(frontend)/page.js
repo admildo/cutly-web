@@ -56,7 +56,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
       <MediaAssistantTools />
 
       {/* DECISION: placed after Media Assistant so the in-app tool comes first and Spot Assistant reads as "the same power, anywhere on your Mac". Move above it if you want Spot Assistant to lead. */}
-      <SpotAssistant downloadUrls={downloadUrls} />
+      <SpotAssistant />
 
       <WhyUs />
 
