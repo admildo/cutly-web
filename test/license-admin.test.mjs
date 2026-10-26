@@ -16,7 +16,7 @@ const setup = createClient({ url: process.env.TURSO_DATABASE_URL })
 await migrate(drizzle(setup), { migrationsFolder: './drizzle' })
 setup.close()
 
-const { grantLicense, revokeGrantedLicense, listRecentGrantAudit, normalizeEmail, LicenseAdminError } =
+const { grantLicense, revokeGrantedLicense, listGrantedLicenses, listRecentGrantAudit, normalizeEmail, LicenseAdminError } =
   await import('../lib/license-admin.js')
 const { getLicenseStatus } = await import('../lib/license.js')
 const { handleStripeEvent } = await import('../lib/stripe-fulfillment.js')
@@ -83,4 +83,17 @@ test('emails are normalized and malformed ones refused', () => {
   assert.equal(normalizeEmail('  Person@Example.COM '), 'person@example.com')
   assert.throws(() => normalizeEmail('not an email'), LicenseAdminError)
   assert.throws(() => normalizeEmail(undefined), LicenseAdminError)
+})
+
+test('the grant list shows who granted each license and why, and who revoked it', async () => {
+  const license = await grantLicense('user_admin_2', 'user_f', { reason: 'Reviewer' })
+  await revokeGrantedLicense(ADMIN, license.id, 'Review published')
+  const row = (await listGrantedLicenses()).find((entry) => entry.id === license.id)
+  assert.equal(row.userId, 'user_f')
+  assert.equal(row.status, 'revoked')
+  assert.equal(row.grantedBy, 'user_admin_2')
+  assert.equal(row.reason, 'Reviewer')
+  assert.equal(row.revokedBy, ADMIN)
+  assert.equal(row.revokeReason, 'Review published')
+  assert.ok((await listGrantedLicenses()).every((entry) => entry.reason), 'paid licenses never appear')
 })

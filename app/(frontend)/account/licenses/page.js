@@ -1,7 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { notFound, redirect } from 'next/navigation'
 import { isTrialAdmin } from '@/lib/trial'
-import { listRecentGrantAudit } from '@/lib/license-admin'
+import { listGrantedLicenses } from '@/lib/license-admin'
+import { findClerkUsersByIds } from '@/lib/clerk-users'
 import { LicenseGrantForm } from '@/app/components/LicenseGrantForm'
 import { AccountNavigation } from '@/app/components/AccountNavigation'
 import { AccountMenu } from '@/app/components/AccountMenu'
@@ -14,12 +15,16 @@ export default async function LicensesAdminPage() {
   if (!userId) redirect('/sign-in?returnTo=%2Faccount%2Flicenses')
   if (!isTrialAdmin(userId)) notFound()
 
-  let audit = []
+  let grants = null
+  let people = new Map()
   try {
-    audit = await listRecentGrantAudit()
+    grants = await listGrantedLicenses()
+    people = await findClerkUsersByIds(grants.flatMap((grant) => [grant.userId, grant.grantedBy, grant.revokedBy].filter(Boolean))).catch(() => new Map())
   } catch {
-    audit = null
+    grants = null
   }
+  const who = (id) => (id === userId ? 'You' : people.get(id)?.email || id)
+  const day = (value) => (value || '').slice(0, 10)
 
   return (
     <main className="relative min-h-screen overflow-hidden [color-scheme:dark] bg-[#08090c] px-5 py-5 text-[#f2f2ee] sm:px-8 sm:py-7">
@@ -30,20 +35,24 @@ export default async function LicensesAdminPage() {
         <section className="pb-10 pt-8 sm:pb-14 sm:pt-10">
           <p className="text-xs font-semibold tracking-[0.14em] text-[#929399]">ADMIN SETTINGS</p>
           <h1 className="mt-2 text-3xl font-medium tracking-[-0.055em] sm:text-4xl">Grant licenses</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a5a6ab]">Find an account by email, then give it the lifetime license without a payment. Every grant and revoke is recorded below with your reason.</p>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a5a6ab]">Find an account by email, then give it the lifetime license without a payment. Every grant and revoke is recorded below with who did it and why.</p>
           <LicenseGrantForm />
 
-          <h2 className="mb-0 mt-10 text-lg font-medium tracking-[-0.02em]">Recent changes</h2>
-          {audit === null ? (
-            <p className="mt-3 text-sm text-[#a5a6ab]">The history could not be loaded.</p>
-          ) : audit.length === 0 ? (
+          <h2 className="mb-0 mt-10 text-lg font-medium tracking-[-0.02em]">Granted accounts</h2>
+          {grants === null ? (
+            <p className="mt-3 text-sm text-[#a5a6ab]">The list could not be loaded.</p>
+          ) : grants.length === 0 ? (
             <p className="mt-3 text-sm text-[#a5a6ab]">No licenses have been granted by hand yet.</p>
           ) : (
             <ul className="m-0 mt-3 list-none divide-y divide-white/[.07] rounded-[24px] bg-[#151619] p-0 px-5 text-sm text-[#d4d4d7] sm:px-7">
-              {audit.map((entry) => (
-                <li key={entry.id} className="py-4">
-                  <span className="font-medium">{entry.action === 'grant' ? 'Granted' : 'Revoked'}</span> · {entry.targetUserId} · {entry.changedAt}
-                  <span className="block text-xs text-[#a6a4a4]">{entry.reason}</span>
+              {grants.map((grant) => (
+                <li key={grant.id} className="py-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-medium text-[#f2f0ef]">{people.get(grant.userId)?.email || grant.userId}</span>
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${grant.status === 'active' ? 'bg-[#1f2d22] text-[#a9d9b4]' : 'bg-white/[.07] text-[#a5a6ab]'}`}>{grant.status === 'active' ? 'Active' : 'Revoked'}</span>
+                  </div>
+                  <span className="mt-1 block text-xs text-[#a6a4a4]">Granted {day(grant.grantedAt)} by {who(grant.grantedBy)}: {grant.reason}</span>
+                  {grant.revokedAt ? <span className="block text-xs text-[#a6a4a4]">Revoked {day(grant.revokedAt)} by {who(grant.revokedBy)}: {grant.revokeReason}</span> : null}
                 </li>
               ))}
             </ul>
