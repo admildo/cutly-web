@@ -25,7 +25,7 @@ const DEMO_VIDEO_SRC = `${DEMO_VIDEO_ORIGIN}/embed/7rs6y-qcOlA?enablejsapi=1&aut
 const demoVideoCommand = (func) => JSON.stringify({ event: 'command', func, args: '' })
 
 const uniqueCardAssets = [
-  { src: '/card-media/se-15.mp4', poster: '/card-media/se-15-poster.webp', type: 'video', label: 'Clip video' },
+  { src: '/card-media/se-15.webp', type: 'image', label: 'Clip video' },
   { src: '/card-media/se-2.webp', type: 'image', label: 'Convert image' },
   { src: '/card-media/se-16.mp4', poster: '/card-media/se-16-poster.webp', type: 'video', label: 'Compress video' },
   { src: '/card-media/se-3.webp', type: 'image', label: 'Compress image' },
@@ -37,7 +37,7 @@ const uniqueCardAssets = [
   { src: '/card-media/se-6.webp', type: 'image', label: 'Convert image' },
   { src: '/card-media/se-20.mp4', poster: '/card-media/se-20-poster.webp', type: 'video', label: 'Compress audio' },
   { src: '/card-media/se-7.webp', type: 'image', label: 'Compress image' },
-  { src: '/card-media/se-21.mp4', poster: '/card-media/se-21-poster.webp', type: 'video', label: 'Convert audio' },
+  { src: '/card-media/se-21.webp', type: 'image', label: 'Convert audio' },
   { src: '/card-media/se-8.webp', type: 'image', label: 'Edit image' },
   { src: '/card-media/se-9.webp', type: 'image', label: 'Download image' },
   { src: '/card-media/se-10.webp', type: 'image', label: 'Convert image' },
