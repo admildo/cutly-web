@@ -16,9 +16,9 @@ const setup = createClient({ url: process.env.TURSO_DATABASE_URL })
 await migrate(drizzle(setup), { migrationsFolder: './drizzle' })
 setup.close()
 
-const { grantLicense, revokeGrantedLicense, listGrantedLicenses, listRecentGrantAudit, normalizeEmail, LicenseAdminError } =
+const { grantLicense, revokeGrantedLicense, listLicenseOverview, summarizeLicenses, listRecentGrantAudit, normalizeEmail, LicenseAdminError } =
   await import('../lib/license-admin.js')
-const { getLicenseStatus } = await import('../lib/license.js')
+const { activateDevice, getLicenseStatus } = await import('../lib/license.js')
 const { handleStripeEvent } = await import('../lib/stripe-fulfillment.js')
 const { getDb } = await import('../lib/db.js')
 const { licenses } = await import('../db/schema.js')
@@ -85,15 +85,33 @@ test('emails are normalized and malformed ones refused', () => {
   assert.throws(() => normalizeEmail(undefined), LicenseAdminError)
 })
 
-test('the grant list shows who granted each license and why, and who revoked it', async () => {
+test('the overview shows who granted each license and why, and who revoked it', async () => {
   const license = await grantLicense('user_admin_2', 'user_f', { reason: 'Reviewer' })
   await revokeGrantedLicense(ADMIN, license.id, 'Review published')
-  const row = (await listGrantedLicenses()).find((entry) => entry.id === license.id)
+  const row = (await listLicenseOverview()).find((entry) => entry.id === license.id)
   assert.equal(row.userId, 'user_f')
   assert.equal(row.status, 'revoked')
   assert.equal(row.grantedBy, 'user_admin_2')
-  assert.equal(row.reason, 'Reviewer')
+  assert.equal(row.grantReason, 'Reviewer')
   assert.equal(row.revokedBy, ADMIN)
   assert.equal(row.revokeReason, 'Review published')
-  assert.ok((await listGrantedLicenses()).every((entry) => entry.reason), 'paid licenses never appear')
+})
+
+test('the overview records the country of the first device activation, not of later ones', async () => {
+  const granted = await grantLicense(ADMIN, 'user_g', { reason: 'Beta tester' })
+  await activateDevice('user_g', 'device-hash-first-0001', { platform: 'darwin', appVersion: '1.1.5', country: 'PT' })
+  await activateDevice('user_g', 'device-hash-second-02', { platform: 'win32', appVersion: '1.1.5', country: 'BR' })
+  await activateDevice('user_g', 'device-hash-first-0001', { platform: 'darwin', appVersion: '1.1.5', country: 'BR' })
+  const row = (await listLicenseOverview()).find((entry) => entry.id === granted.id)
+  assert.equal(row.devicesUsed, 2)
+  assert.equal(row.firstCountry, 'PT')
+  assert.ok(row.firstActivatedAt)
+})
+
+test('the summary totals active licenses, devices and countries', async () => {
+  const summary = summarizeLicenses(await listLicenseOverview())
+  assert.ok(summary.activeCount >= 2)
+  assert.equal(summary.countries.find((entry) => entry.code === 'PT')?.count, 1)
+  assert.ok(summary.devicesInUse >= 2)
+  assert.ok(summary.grantedActive + summary.purchasedActive === summary.activeCount)
 })

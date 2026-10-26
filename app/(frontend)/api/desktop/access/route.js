@@ -7,6 +7,7 @@ import {
   getLicenseStatus,
   getMostRecentLicense,
 } from '@/lib/license'
+import { countryFromRequest } from '@/lib/country'
 import { syncUser } from '@/lib/users'
 import { enforceRateLimit, rateLimitResponse } from '@/lib/rate-limiting'
 import {
@@ -115,7 +116,11 @@ export async function POST(request) {
     if (license) {
       stage = 'license-device-activation'
       return respond(
-        await activateDevice(desktopUserId, deviceId, { platform, appVersion }),
+        await activateDevice(desktopUserId, deviceId, {
+          platform,
+          appVersion,
+          country: countryFromRequest(request),
+        }),
       )
     }
 

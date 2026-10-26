@@ -11,7 +11,7 @@ export function AccountNavigation({ active, showTrialControls = false }) {
     ? [
         ...sections,
         { href: '/account/trial-settings', label: 'Trial controls', key: 'trial', Icon: SlidersHorizontal },
-        { href: '/account/licenses', label: 'Grant licenses', key: 'licenses', Icon: Key },
+        { href: '/account/licenses', label: 'Licenses', key: 'licenses', Icon: Key },
         { href: '/account/downloads', label: 'Downloads', key: 'downloads', Icon: DownloadSimple }
       ]
     : sections

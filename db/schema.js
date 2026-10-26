@@ -43,6 +43,8 @@ export const devices = sqliteTable(
     deviceHash: text('device_hash').notNull(),
     platform: text('platform'),
     appVersion: text('app_version'),
+    // Two-letter country code from the first activation. Reactivations never overwrite it.
+    country: text('country'),
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     lastSeenAt: text('last_seen_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     deactivatedAt: text('deactivated_at')
