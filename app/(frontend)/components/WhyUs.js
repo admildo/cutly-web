@@ -43,7 +43,7 @@ const INTRO = 0.12
 // line is already there when the section arrives.
 const INTRO_LINES = [
   { text: 'NOT SURE?', leave: [0.28, 0.46] },
-  { text: 'HERE’S THE DEAL.', enter: [0.36, 0.54], leave: [0.72, 0.88] }
+  { text: 'THE DEAL...', enter: [0.36, 0.54], leave: [0.72, 0.88] }
 ]
 
 const lineState = (progress, { enter, leave }) => {
