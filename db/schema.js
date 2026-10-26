@@ -211,3 +211,35 @@ export const trialConfigAudit = sqliteTable(
   },
   (table) => [index('trial_config_audit_changed_idx').on(table.changedAt)]
 )
+
+// Append-only history of licenses an admin granted or revoked by hand.
+export const licenseGrantAudit = sqliteTable(
+  'license_grant_audit',
+  {
+    id: text('id').primaryKey(),
+    action: text('action', { enum: ['grant', 'revoke'] }).notNull(),
+    changedBy: text('changed_by').notNull(),
+    targetUserId: text('target_user_id').notNull(),
+    licenseId: text('license_id').notNull(),
+    reason: text('reason').notNull(),
+    detailsJson: text('details_json').notNull(),
+    changedAt: text('changed_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [
+    index('license_grant_audit_changed_idx').on(table.changedAt),
+    index('license_grant_audit_target_idx').on(table.targetUserId)
+  ]
+)
+
+// Installer downloads started from the website, counted per UTC day, platform and version.
+// No visitor data is stored: only the totals.
+export const downloadCounts = sqliteTable(
+  'download_counts',
+  {
+    day: text('day').notNull(),
+    platform: text('platform', { enum: ['silicon', 'intel', 'windows'] }).notNull(),
+    version: text('version').notNull(),
+    count: integer('count').notNull().default(0)
+  },
+  (table) => [uniqueIndex('download_counts_day_platform_version_idx').on(table.day, table.platform, table.version)]
+)

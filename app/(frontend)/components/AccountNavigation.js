@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { House, SlidersHorizontal, UserCircle } from '@phosphor-icons/react/ssr'
+import { DownloadSimple, House, Key, SlidersHorizontal, UserCircle } from '@phosphor-icons/react/ssr'
 
 const sections = [
   { href: '/dashboard', label: 'Overview', key: 'overview', Icon: House },
@@ -8,7 +8,12 @@ const sections = [
 
 export function AccountNavigation({ active, showTrialControls = false }) {
   const items = showTrialControls
-    ? [...sections, { href: '/account/trial-settings', label: 'Trial controls', key: 'trial', Icon: SlidersHorizontal }]
+    ? [
+        ...sections,
+        { href: '/account/trial-settings', label: 'Trial controls', key: 'trial', Icon: SlidersHorizontal },
+        { href: '/account/licenses', label: 'Grant licenses', key: 'licenses', Icon: Key },
+        { href: '/account/downloads', label: 'Downloads', key: 'downloads', Icon: DownloadSimple }
+      ]
     : sections
 
   return (
