@@ -78,6 +78,27 @@
       "when": 1793200000000,
       "tag": "0010_add_device_country",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1793300000000,
+      "tag": "0011_add_creator_applications",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1793400000000,
+      "tag": "0012_add_creator_key_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1793500000000,
+      "tag": "0013_add_creator_key_disabled_at",
+      "breakpoints": true
     }
   ]
 }

@@ -29,6 +29,7 @@ export function SiteFooter({ dark = false }) {
         <Link href="/terms">Terms</Link>
         <Link href="/acceptable-use">Acceptable use</Link>
         <Link href="/copyright">Copyright</Link>
+        <Link href="/creator">Creator program</Link>
         <Link href="/open-source">Open source</Link>
         <Link href="/support">Support</Link>
       </nav>

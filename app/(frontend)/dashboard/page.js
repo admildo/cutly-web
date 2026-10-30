@@ -4,6 +4,7 @@ import { AccountDashboard } from '@/app/components/AccountDashboard'
 import { getDownloadUrls } from '@/lib/downloads'
 import { getActiveLicenseDevices, getLicenseStatus } from '@/lib/license'
 import { getTrialSnapshot, isTrialAdmin } from '@/lib/trial'
+import { getCreatorApplication, getCreatorKeyUsageForUser } from '@/lib/creator-program'
 import { LIFETIME_LICENSE_PRICE_EUR } from '@/lib/pricing'
 
 export const metadata = { title: 'Dashboard', robots: { index: false, follow: false } }
@@ -28,15 +29,18 @@ export default async function DashboardPage({ searchParams }) {
   let trialError = false
   let licenseDevices = []
   let devicesError = false
+  let creatorApplication = null
+  let creatorError = false
   const priceLabel = new Intl.NumberFormat('en-IE', {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 2
   }).format(LIFETIME_LICENSE_PRICE_EUR)
 
-  const [licenseResult, trialResult] = await Promise.allSettled([
+  const [licenseResult, trialResult, creatorResult] = await Promise.allSettled([
     getLicenseStatus(userId),
-    getTrialSnapshot(userId)
+    getTrialSnapshot(userId),
+    getCreatorApplication(userId)
   ])
 
   if (licenseResult.status === 'fulfilled') license = licenseResult.value
@@ -51,6 +55,20 @@ export default async function DashboardPage({ searchParams }) {
     trialError = true
   }
 
+  if (creatorResult.status === 'fulfilled') creatorApplication = creatorResult.value
+  else {
+    console.error('Could not load the creator program application:', creatorResult.reason)
+    creatorError = true
+  }
+
+  // The usage is read from OpenRouter, so a failure there only hides the usage line.
+  const creatorKeyUsage = creatorApplication?.hasKey
+    ? await getCreatorKeyUsageForUser(userId).catch((error) => {
+      console.error('Could not load the creator key usage:', error)
+      return null
+    })
+    : null
+
   if (license?.licensed) {
     try {
       licenseDevices = await getActiveLicenseDevices(userId)
@@ -60,5 +78,5 @@ export default async function DashboardPage({ searchParams }) {
     }
   }
 
-  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} priceLabel={priceLabel} checkoutState={checkoutState} autoBuy={buy === '1'} downloadUrls={downloadUrls} isTrialAdmin={isTrialAdmin(userId)} />
+  return <AccountDashboard user={user} license={license} licenseError={licenseError} trialSnapshot={trialSnapshot} trialError={trialError} licenseDevices={licenseDevices} devicesError={devicesError} creatorApplication={creatorApplication} creatorError={creatorError} creatorKeyUsage={creatorKeyUsage}priceLabel={priceLabel} checkoutState={checkoutState} autoBuy={buy === '1'} downloadUrls={downloadUrls} isTrialAdmin={isTrialAdmin(userId)} />
 }

@@ -6,9 +6,10 @@ import {
   LicenseAdminError,
   grantLicense,
   listUserLicenses,
-  normalizeEmail,
-  revokeGrantedLicense
+  normalizeEmail
 } from '@/lib/license-admin'
+import { revokeCreatorLicense } from '@/lib/creator-program'
+import { CreatorProgramError } from '@/lib/creator-program-options'
 
 export const runtime = 'nodejs'
 
@@ -28,7 +29,7 @@ const requireAdmin = async (request, { requireOrigin = false } = {}) => {
 }
 
 const failure = (error, fallback) => {
-  if (error instanceof LicenseAdminError) return json({ error: error.message }, error.status)
+  if (error instanceof LicenseAdminError || error instanceof CreatorProgramError) return json({ error: error.message }, error.status)
   console.error(fallback, error)
   return json({ error: fallback }, 503)
 }
@@ -94,7 +95,7 @@ export async function DELETE(request) {
   }
 
   try {
-    await revokeGrantedLicense(adminId, body.licenseId, body.reason)
+    await revokeCreatorLicense(adminId, body.licenseId, body.reason)
     return json({ revoked: true })
   } catch (error) {
     return failure(error, 'Could not revoke the license. Please try again.')

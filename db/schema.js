@@ -245,3 +245,33 @@ export const downloadCounts = sqliteTable(
   },
   (table) => [uniqueIndex('download_counts_day_platform_version_idx').on(table.day, table.platform, table.version)]
 )
+
+// One creator program application per account. The review sets status and the decision fields;
+// the applicant sees them in their dashboard.
+export const creatorApplications = sqliteTable(
+  'creator_applications',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull(),
+    status: text('status', { enum: ['pending', 'approved', 'declined'] }).notNull().default('pending'),
+    profileUrl: text('profile_url').notNull(),
+    platformsJson: text('platforms_json').notNull(),
+    audience: text('audience').notNull(),
+    plan: text('plan').notNull(),
+    decisionNote: text('decision_note'),
+    decidedAt: text('decided_at'),
+    // Set on approval: the spending limit in US cents, the OpenRouter key's hash (for later usage and
+    // deletion), and the key itself encrypted at rest.
+    creditLimitCents: integer('credit_limit_cents'),
+    openrouterKeyHash: text('openrouter_key_hash'),
+    openrouterKeyCiphertext: text('openrouter_key_ciphertext'),
+    // Set when the key is disabled because the creator's license was revoked.
+    openrouterKeyDisabledAt: text('openrouter_key_disabled_at'),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [
+    uniqueIndex('creator_applications_user_idx').on(table.userId),
+    index('creator_applications_status_idx').on(table.status, table.createdAt)
+  ]
+)

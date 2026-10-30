@@ -10,6 +10,7 @@ const publicPages = [
   ['/blog', 0.8],
   ['/download', 0.7],
   ['/support', 0.5],
+  ['/creator', 0.6],
   ['/open-source', 0.3],
   ['/privacy', 0.2],
   ['/terms', 0.2],

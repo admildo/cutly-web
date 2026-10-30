@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   '/acceptable-use(.*)',
   '/copyright(.*)',
   '/open-source(.*)',
+  '/creator(.*)',
   '/support(.*)',
   '/download(.*)',
   '/blog(.*)',
@@ -25,6 +26,8 @@ const isPublicRoute = createRouteMatcher([
   // instead of Clerk's hosted account portal.
   '/dashboard(.*)',
   '/api/account(.*)',
+  // The route checks the session itself and answers with JSON, instead of Clerk's redirect.
+  '/api/creator-program(.*)',
   '/desktop-auth(.*)',
   // These endpoints authenticate the Electron bearer token themselves. Clerk
   // middleware only has access to browser cookies, so protecting them here

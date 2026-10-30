@@ -4,6 +4,7 @@ import { BuyLicenseButton } from '@/app/components/BuyLicenseButton'
 import { RefreshLicenseStatusButton } from '@/app/components/RefreshLicenseStatusButton'
 import { RefreshTrialUsageButton } from '@/app/components/RefreshTrialUsageButton'
 import { AccountMenu } from '@/app/components/AccountMenu'
+import { CreatorProgramPanel } from '@/app/components/CreatorProgramPanel'
 import { AccountNavigation } from '@/app/components/AccountNavigation'
 import { AccountAvatar } from '@/app/components/AccountAvatar'
 import { SiteFooter, SiteHeader } from '@/app/components/SiteChrome'
@@ -259,8 +260,10 @@ function LicensePanel({ license, licenseError, checkoutState, autoBuy = false, p
   )
 }
 
-export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, priceLabel, checkoutState, autoBuy = false, downloadUrls, isTrialAdmin = false }) {
+export function AccountDashboard({ user, license, licenseError, trialSnapshot, trialError, licenseDevices, devicesError, creatorApplication, creatorError = false, creatorKeyUsage = null, priceLabel, checkoutState, autoBuy = false, downloadUrls, isTrialAdmin = false }) {
   const showTrial = !licenseError && license?.status === 'none'
+  // The creator program is for accounts without a license; an existing application stays visible either way.
+  const showCreatorProgram = Boolean(creatorApplication || creatorError || !license?.licensed)
 
   return (
     <main className="relative min-h-screen overflow-hidden [color-scheme:dark] bg-[#08090c] px-5 py-5 text-[#f2f2ee] sm:px-8 sm:py-7">
@@ -286,6 +289,7 @@ export function AccountDashboard({ user, license, licenseError, trialSnapshot, t
               <div className="mt-5"><AppAccess downloadUrls={downloadUrls} licensed={Boolean(license?.licensed)} /></div>
             </>
           )}
+          {showCreatorProgram ? <div className="mt-5"><CreatorProgramPanel application={creatorApplication} keyUsage={creatorKeyUsage} error={creatorError} /></div> : null}
         </section>
         <SiteFooter dark />
       </div>
