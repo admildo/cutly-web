@@ -234,7 +234,7 @@ export const licenseGrantAudit = sqliteTable(
 )
 
 // Installer downloads started from the website, counted per UTC day, platform and version.
-// No visitor data is stored: only the totals.
+// Each counted download is also kept as a download_events row.
 export const downloadCounts = sqliteTable(
   'download_counts',
   {
@@ -244,6 +244,24 @@ export const downloadCounts = sqliteTable(
     count: integer('count').notNull().default(0)
   },
   (table) => [uniqueIndex('download_counts_day_platform_version_idx').on(table.day, table.platform, table.version)]
+)
+
+// One row per counted download, for the admin downloads page. The country is the two-letter code from
+// Vercel's header, and userId is set only when the visitor was signed in. The IP address is never stored.
+export const downloadEvents = sqliteTable(
+  'download_events',
+  {
+    id: text('id').primaryKey(),
+    platform: text('platform', { enum: ['silicon', 'intel', 'windows'] }).notNull(),
+    version: text('version').notNull(),
+    country: text('country'),
+    userId: text('user_id'),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+  },
+  (table) => [
+    index('download_events_created_idx').on(table.createdAt),
+    index('download_events_user_idx').on(table.userId)
+  ]
 )
 
 // One creator program application per account. The review sets status and the decision fields;

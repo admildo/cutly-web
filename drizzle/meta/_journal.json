@@ -99,6 +99,13 @@
       "when": 1793500000000,
       "tag": "0013_add_creator_key_disabled_at",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1793600000000,
+      "tag": "0014_add_download_events",
+      "breakpoints": true
     }
   ]
 }

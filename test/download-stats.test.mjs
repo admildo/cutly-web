@@ -15,7 +15,7 @@ const setup = createClient({ url: process.env.TURSO_DATABASE_URL })
 await migrate(drizzle(setup), { migrationsFolder: './drizzle' })
 setup.close()
 
-const { getDownloadStats, isAutomatedAgent, recordDownload } = await import('../lib/download-stats.js')
+const { getDownloadStats, getRecentDownloads, isAutomatedAgent, recordDownload } = await import('../lib/download-stats.js')
 const { versionOfInstaller } = await import('../lib/downloads.js')
 
 const DAY = Date.parse('2026-10-26T12:00:00Z')
@@ -49,4 +49,16 @@ test('the version comes from the installer file name', () => {
   assert.equal(versionOfInstaller('https://files.deynstudio.com/mac-arm/Deyn-1.1.5-arm64.dmg'), '1.1.5')
   assert.equal(versionOfInstaller('https://files.deynstudio.com/windows/Deyn-1.2.0-setup.exe'), '1.2.0')
   assert.equal(versionOfInstaller('https://files.deynstudio.com/mac-intel/Deyn.dmg'), 'unknown')
+})
+
+test('each download keeps its country and signed-in account, newest first', async () => {
+  await recordDownload({ platform: 'windows', version: '2.0.0', country: 'PT', userId: 'user_owner' }, DAY + 5000)
+  await recordDownload({ platform: 'windows', version: '2.0.0' }, DAY + 9000)
+  const rows = (await getRecentDownloads(100)).filter((row) => row.version === '2.0.0')
+  assert.deepEqual(rows.map(({ country, userId, createdAt }) => ({ country, userId, createdAt })), [
+    { country: null, userId: null, createdAt: '2026-10-26 12:00:09' },
+    { country: 'PT', userId: 'user_owner', createdAt: '2026-10-26 12:00:05' }
+  ])
+  const totals = await getDownloadStats(30, DAY)
+  assert.equal(totals.find((row) => row.day === '2026-10-26' && row.platform === 'windows' && row.version === '2.0.0')?.count, 2)
 })

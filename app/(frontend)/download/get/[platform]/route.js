@@ -1,3 +1,5 @@
+import { auth } from '@clerk/nextjs/server'
+import { countryFromRequest } from '@/lib/country'
 import { DOWNLOAD_PLATFORMS, getInstallerUrl, versionOfInstaller } from '@/lib/downloads'
 import { isAutomatedAgent, recordDownload } from '@/lib/download-stats'
 import { enforceRateLimit } from '@/lib/rate-limiting'
@@ -20,7 +22,15 @@ export async function GET(request, { params }) {
     if (!isAutomatedAgent(request.headers.get('user-agent'))) {
       // Three per visitor, platform and hour: repeat clicks and retries of one download count once or twice, not tenfold.
       const limit = await enforceRateLimit(request, { name: `download-${platform}`, limit: 3, windowSeconds: 3600 })
-      if (limit.ok) await recordDownload({ platform, version: versionOfInstaller(installer) })
+      if (limit.ok) {
+        const { userId } = await auth()
+        await recordDownload({
+          platform,
+          version: versionOfInstaller(installer),
+          country: countryFromRequest(request),
+          userId: userId || null
+        })
+      }
     }
   } catch (error) {
     console.error('[download] Could not count a download', error)

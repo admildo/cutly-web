@@ -23,7 +23,6 @@ const RING_SPIN_SECONDS = 64
 const INTRO_END = 3.2
 const headlineWords = ['Deyn', 'Studio,', 'free', 'for', 'creators.']
 const SHINE_FROM = 2
-const highlights = ['Free lifetime license', 'Usage credits for cloud AI', 'Up to two devices']
 
 // Stable pseudo-random values per frame, so the burst looks the same on every load.
 const noise = (index, salt) => {
@@ -259,12 +258,6 @@ export function CreatorProgram({ isSignedIn = false }) {
           <p data-creator-copy className="mx-auto mb-0 mt-6 max-w-[600px] text-[17px] leading-[1.65] text-[#e9ebf2] [text-shadow:0_2px_18px_rgb(0_0_0/.85)] sm:text-[19px]">
             Selected creators get a free Deyn Studio license and usage credits for AI actions. Log in or create an account, then apply from your dashboard.
           </p>
-
-          <ul data-creator-copy className="m-0 mt-7 flex list-none flex-wrap justify-center gap-2.5 p-0">
-            {highlights.map((item) => (
-              <li key={item} className="rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-[13px] font-medium text-[#eef0f6] backdrop-blur-sm sm:px-4 sm:py-2 sm:text-[14px]">{item}</li>
-            ))}
-          </ul>
 
           <div data-creator-copy className="mt-9 flex flex-col items-center gap-4">
             <ApplyLink isSignedIn={isSignedIn} />
