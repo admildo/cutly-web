@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -9,51 +9,60 @@ import { SiteFooter } from '@/app/components/SiteChrome'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-// Frames from the homepage hero. They burst out of the centre and settle into a ring that turns slowly.
-const frames = [
+// Small frames from the homepage hero. They pop in around the copy, kick away from each headline word as it lands, and shy away from the pointer.
+const sources = [
   '/card-media/se-15.webp', '/card-media/se-2.webp', '/card-media/se-16-poster.webp',
   '/card-media/se-3.webp', '/card-media/se-17-poster.webp', '/card-media/se-4.webp',
   '/card-media/se-18-poster.webp', '/card-media/se-5.webp', '/card-media/se-19-poster.webp',
   '/card-media/se-6.webp', '/card-media/se-20-poster.webp', '/card-media/se-7.webp',
   '/card-media/se-21.webp', '/card-media/se-8.webp', '/card-media/se-9.webp',
-  '/card-media/se-10.webp', '/card-media/se-11.webp', '/card-media/se-12.webp'
+  '/card-media/se-10.webp', '/card-media/se-11.webp', '/card-media/se-12.webp',
+  '/card-media/se-13.webp', '/card-media/se-14.webp'
 ]
+const CARD_COUNT = 44
+const cards = Array.from({ length: CARD_COUNT }, (_, index) => sources[index % sources.length])
 
-const RING_SPIN_SECONDS = 64
-const INTRO_END = 3.2
-const headlineWords = ['Deyn', 'Studio,', 'free', 'for', 'creators.']
-const SHINE_FROM = 2
+const headlineWords = ['Free', 'tools', 'for', 'creators', 'who', 'make', 'clips.']
+const SHINE_FROM = 3
+const WORDS_AT = 1.7
+const WORD_STEP = 0.1
 
-// Stable pseudo-random values per frame, so the burst looks the same on every load.
+const REPEL_RADIUS = 170
+const KICK_RADIUS = 300
+
+// Stable pseudo-random values per card, so the layout looks the same on every load.
 const noise = (index, salt) => {
   const value = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453
   return value - Math.floor(value)
 }
 
-const ringRadius = (width, height) => (
-  width < 760 ? Math.max(200, width * 0.7) : Math.max(260, Math.min(width * 0.36, height * 0.6, 560))
-)
+// Card height in px, 46 to 92.
+const cardHeight = (index) => 46 + noise(index, 11) * 46
 
-const ringPose = (index, radius) => {
-  const angle = (index / frames.length) * 360
-  const radians = (angle * Math.PI) / 180
-  return { angle, x: Math.sin(radians) * radius, z: Math.cos(radians) * radius }
+// Spreads the cards evenly over the hero, outside an area kept clear for the copy. Cards that do not fit are left out.
+const scatter = (width, height) => {
+  const halfW = width / 2
+  const halfH = height / 2
+  const clearW = Math.min(halfW - 8, 360)
+  const clearH = Math.min(halfH * 0.7, 230)
+  const placed = []
+  for (let attempt = 0; attempt < 900 && placed.length < CARD_COUNT; attempt += 1) {
+    const x = (noise(attempt, 1) * 2 - 1) * (halfW + 20)
+    const y = (noise(attempt, 2) * 2 - 1) * (halfH + 20)
+    if (Math.abs(x) < clearW && Math.abs(y) < clearH) continue
+    if (y < 76 - halfH) continue // keeps the header links clear
+    if (placed.some((spot) => Math.hypot(spot.x - x, spot.y - y) < 86)) continue
+    placed.push({ x, y })
+  }
+  return placed
 }
-
-const burstPose = (index, width, height) => ({
-  x: (noise(index, 1) * 2 - 1) * width * 0.42,
-  y: (noise(index, 2) * 2 - 1) * height * 0.38,
-  z: noise(index, 3) * 700 - 260,
-  rotationY: (noise(index, 4) * 2 - 1) * 90,
-  scale: 0.9 + noise(index, 5) * 0.35
-})
 
 function ApplyLink({ isSignedIn, className = '' }) {
   const href = isSignedIn ? '/dashboard#creator-program' : `/sign-up?returnTo=${encodeURIComponent('/dashboard#creator-program')}`
   return (
     <Link
       href={href}
-      className={`inline-flex min-h-[56px] min-w-[200px] items-center justify-center rounded-[14px] bg-[#f4f2ec] px-9 text-[16px] font-semibold text-[#15161a] no-underline shadow-[0_10px_40px_rgb(0_0_0/.35)] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff] ${className}`}
+      className={`inline-flex min-h-[56px] min-w-[200px] items-center justify-center rounded-full bg-[#f4f2ec] px-9 text-[16px] font-semibold text-[#15161a] no-underline shadow-[0_10px_40px_rgb(0_0_0/.35)] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9c4ff] ${className}`}
     >
       Apply
     </Link>
@@ -61,12 +70,14 @@ function ApplyLink({ isSignedIn, className = '' }) {
 }
 
 function Frame({ src, index }) {
+  const height = cardHeight(index)
   return (
     <div
       data-creator-frame
-      className="absolute left-0 top-0 aspect-[3/4] h-[clamp(118px,15vw,176px)] overflow-hidden rounded-[18px] bg-[#151619] opacity-0 shadow-[0_24px_60px_rgb(0_0_0/.55)] will-change-transform"
+      style={{ height, width: height * 0.75, opacity: 0 }}
+      className="absolute left-1/2 top-1/2 overflow-hidden rounded-[10px] bg-[#151619] shadow-[0_10px_26px_rgb(0_0_0/.5)] will-change-transform"
     >
-      <img src={src} alt="" loading={index < 10 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover" />
+      <img src={src} alt="" loading={index < 16 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover" />
     </div>
   )
 }
@@ -74,85 +85,154 @@ function Frame({ src, index }) {
 export function CreatorProgram({ isSignedIn = false }) {
   const heroRef = useRef(null)
   const stageRef = useRef(null)
-  const tiltRef = useRef(null)
-  const carouselRef = useRef(null)
   const copyRef = useRef(null)
   const glowRef = useRef(null)
-  const introDoneRef = useRef(false)
 
   useGSAP(() => {
     const hero = heroRef.current
-    const carousel = carouselRef.current
-    const frameNodes = gsap.utils.toArray('[data-creator-frame]', carousel)
+    const nodes = gsap.utils.toArray('[data-creator-frame]', stageRef.current)
+    const wordBoxes = gsap.utils.toArray('[data-creator-word-box]', hero)
     const words = gsap.utils.toArray('[data-creator-word]', hero)
     const shine = gsap.utils.toArray('[data-creator-shine]', hero)
     const copyLines = gsap.utils.toArray('[data-creator-copy]', hero)
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const { innerWidth: width, innerHeight: height } = window
-    const ring = frameNodes.map((_, index) => ringPose(index, ringRadius(width, height)))
-    const burst = frameNodes.map((_, index) => burstPose(index, width, height))
 
-    introDoneRef.current = false
+    // One state object per card. The ticker turns it into a transform every frame.
+    const state = nodes.map((node, index) => ({
+      node,
+      bx: 0,
+      by: 0,
+      kx: 0, // push from a headline word
+      ky: 0,
+      rx: 0, // push from the pointer
+      ry: 0,
+      pulse: 0,
+      show: 0,
+      travel: 0, // 0 far off-screen, 1 home
+      orbit: 8 + noise(index, 15) * 10,
+      speed: 0.3 + noise(index, 16) * 0.4,
+      flip: noise(index, 17) > 0.45,
+      flipSpeed: 0.7 + noise(index, 18) * 0.9,
+      tilt: (noise(index, 8) * 2 - 1) * 22,
+      depth: 0.4 + noise(index, 12) * 1.2,
+      phase: noise(index, 13) * Math.PI * 2,
+      alpha: 0.55 + noise(index, 10) * 0.45,
+      on: false
+    }))
 
-    if (reduced) {
-      // The finished layout with no motion: the ring, dimmed, behind the copy.
-      gsap.set(carousel, { rotationX: -10 })
-      gsap.set(frameNodes, {
-        xPercent: -50,
-        yPercent: -50,
-        x: (index) => ring[index].x,
-        z: (index) => ring[index].z,
-        rotationY: (index) => ring[index].angle,
-        opacity: 0.55
+    const layout = () => {
+      const spots = scatter(hero.clientWidth, hero.clientHeight)
+      state.forEach((card, index) => {
+        const spot = spots[index]
+        card.on = Boolean(spot)
+        if (spot) {
+          card.bx = spot.x
+          card.by = spot.y
+        }
+        card.node.style.display = spot ? '' : 'none'
       })
-      return
     }
 
-    gsap.set(carousel, { rotationX: 86 })
-    gsap.set(frameNodes, { xPercent: -50, yPercent: -50, x: 0, y: 0, z: 0, rotationY: 0, scale: 0.2, opacity: 0, filter: 'blur(14px)' })
+    const pointer = { x: 0, y: 0, active: false, sx: 0, sy: 0 }
+    const draw = (time) => {
+      state.forEach((card) => {
+        if (!card.on) return
+        // Each card pops in place: it grows from nothing with a small overshoot, then settles.
+        card.show = Math.max(0, card.travel)
+        const x = card.bx + card.kx + card.rx + Math.cos(time * card.speed + card.phase) * card.orbit * card.show - pointer.sx * 16 * card.depth
+        const y = card.by + card.ky + card.ry + Math.sin(time * card.speed * 1.3 + card.phase) * card.orbit * 0.6 * card.show - pointer.sy * 10 * card.depth
+        const spin = (1 - Math.min(card.show, 1)) * 40
+        const flipX = card.flip ? 0.25 + 0.75 * Math.abs(Math.cos(time * card.flipSpeed + card.phase)) : 1
+        const scale = card.show * (1 + card.pulse * 0.28)
+        card.node.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${(card.tilt + card.pulse * 8 + spin).toFixed(1)}deg) scale(${(scale * flipX).toFixed(3)}, ${scale.toFixed(3)})`
+        card.node.style.opacity = String(Math.min(1, card.show * card.alpha))
+      })
+    }
+
+    layout()
+
+    if (reduced) {
+      state.forEach((card) => { card.travel = 1 })
+      draw(0)
+      const onStaticResize = () => { layout(); draw(0) }
+      window.addEventListener('resize', onStaticResize)
+      return () => window.removeEventListener('resize', onStaticResize)
+    }
+
+    // Cards shy away from the pointer and drift a little with it.
+    const tick = (time) => {
+      const bounds = hero.getBoundingClientRect()
+      if (bounds.bottom < 0) return
+      pointer.sx += ((pointer.active ? (pointer.x / bounds.width - 0.5) * 2 : 0) - pointer.sx) * 0.06
+      pointer.sy += ((pointer.active ? (pointer.y / bounds.height - 0.5) * 2 : 0) - pointer.sy) * 0.06
+      state.forEach((card) => {
+        let targetX = 0
+        let targetY = 0
+        if (pointer.active && card.on && card.show > 0.9) {
+          const dx = card.bx - (pointer.x - bounds.width / 2)
+          const dy = card.by - (pointer.y - bounds.height / 2)
+          const distance = Math.hypot(dx, dy) || 1
+          if (distance < REPEL_RADIUS) {
+            const push = ((1 - distance / REPEL_RADIUS) ** 2) * 80
+            targetX = (dx / distance) * push
+            targetY = (dy / distance) * push
+          }
+        }
+        card.rx += (targetX - card.rx) * 0.14
+        card.ry += (targetY - card.ry) * 0.14
+      })
+      draw(time)
+    }
+
+    const onPointerMove = (event) => {
+      if (event.pointerType !== 'mouse') return
+      const bounds = hero.getBoundingClientRect()
+      pointer.x = event.clientX - bounds.left
+      pointer.y = event.clientY - bounds.top
+      pointer.active = true
+    }
+    const onPointerLeave = () => { pointer.active = false }
+    const onResize = () => layout()
+
+    // When a headline word lands, the cards near it jump away from it, spring back, and pulse.
+    const kickFrom = (wordIndex) => {
+      const box = wordBoxes[wordIndex]
+      if (!box) return
+      const bounds = hero.getBoundingClientRect()
+      const rect = box.getBoundingClientRect()
+      const wx = rect.left + rect.width / 2 - bounds.left - bounds.width / 2
+      const wy = rect.top + rect.height / 2 - bounds.top - bounds.height / 2
+      const reach = KICK_RADIUS + rect.width / 2
+      state.forEach((card) => {
+        if (!card.on || card.show < 0.9) return
+        const dx = card.bx - wx
+        const dy = card.by - wy
+        const distance = Math.hypot(dx, dy) || 1
+        if (distance > reach) return
+        const strength = 1 - distance / reach
+        gsap.timeline()
+          .to(card, { kx: (dx / distance) * 46 * strength, ky: (dy / distance) * 46 * strength, pulse: strength, duration: 0.22, ease: 'power2.out' })
+          .to(card, { kx: 0, ky: 0, pulse: 0, duration: 1.3, ease: 'elastic.out(1, 0.45)' })
+      })
+    }
+
     gsap.set(shine, { backgroundPosition: '130% 0%' })
 
-    // The ring rises from flat, the frames burst out, then settle into their places on the ring.
-    gsap.timeline({ defaults: { ease: 'expo.out' } })
-      .to(carousel, { rotationX: -12, duration: 2.6, ease: 'expo.inOut' }, 0.1)
-      .to(frameNodes, {
-        x: (index) => burst[index].x,
-        y: (index) => burst[index].y,
-        z: (index) => burst[index].z,
-        rotationY: (index) => burst[index].rotationY,
-        scale: (index) => burst[index].scale,
-        opacity: 1,
-        filter: 'blur(0px)',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: { each: 0.03, from: 'center' }
-      }, 0.2)
-      .to(frameNodes, {
-        x: (index) => ring[index].x,
-        y: 0,
-        z: (index) => ring[index].z,
-        rotationY: (index) => ring[index].angle,
-        scale: 1,
-        duration: 1.7,
-        ease: 'expo.inOut',
-        stagger: { each: 0.025, from: 'center' }
-      }, 1.25)
-      .from(words, { yPercent: 115, opacity: 0, filter: 'blur(12px)', duration: 1.2, stagger: 0.08 }, 1.9)
-      .from(copyLines, { y: 22, opacity: 0, duration: 1, stagger: 0.1, ease: 'power3.out' }, 2.5)
-      .call(() => { introDoneRef.current = true }, null, INTRO_END)
+    const intro = gsap.timeline({ defaults: { ease: 'expo.out' } })
+    intro.to(state, { travel: 1, duration: 0.7, ease: 'back.out(2.4)', stagger: { each: 0.025, from: 'random' } }, 0.2)
+    intro.from(words, { yPercent: 115, opacity: 0, filter: 'blur(12px)', duration: 1.1, stagger: WORD_STEP }, WORDS_AT)
+    words.forEach((_, index) => intro.call(() => kickFrom(index), null, WORDS_AT + 0.45 + index * WORD_STEP))
+    intro.from(copyLines, { y: 22, opacity: 0, duration: 1, stagger: 0.1, ease: 'power3.out' }, WORDS_AT + 0.8)
 
     // Once the words have landed, a light sweep crosses the highlighted words, then repeats now and then.
     gsap.fromTo(shine,
       { backgroundPosition: '130% 0%' },
-      { backgroundPosition: '-30% 0%', duration: 1.6, ease: 'power2.inOut', stagger: 0.08, repeat: -1, repeatDelay: 6, delay: 3 })
-
-    // The ring turns slowly once it has landed.
-    gsap.to(carousel, { rotationY: 360, duration: RING_SPIN_SECONDS, ease: 'none', repeat: -1, delay: INTRO_END })
+      { backgroundPosition: '-30% 0%', duration: 1.6, ease: 'power2.inOut', stagger: 0.08, repeat: -1, repeatDelay: 6, delay: 3.4 })
     gsap.to(glowRef.current, { opacity: 0.7, scale: 1.08, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut' })
 
-    // Scrolling away pushes the ring back and fades the copy.
+    // Scrolling away fades the cards and the copy.
     gsap.to(stageRef.current, {
-      scale: 1.12,
+      scale: 1.08,
       opacity: 0.25,
       ease: 'none',
       scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true }
@@ -163,71 +243,28 @@ export function CreatorProgram({ isSignedIn = false }) {
       ease: 'none',
       scrollTrigger: { trigger: hero, start: 'top top', end: '70% top', scrub: true }
     })
-  }, { scope: heroRef })
 
-  // The ring fades at the back and the whole ring leans toward the pointer. These listeners are removed on unmount.
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) return undefined
-
-    const carousel = carouselRef.current
-    const tilt = tiltRef.current
-    const frameNodes = gsap.utils.toArray('[data-creator-frame]', carousel)
-    const setOpacity = frameNodes.map((node) => gsap.quickSetter(node, 'opacity'))
-    const leanX = gsap.quickTo(tilt, 'rotationX', { duration: 1.4, ease: 'power3.out' })
-    const leanY = gsap.quickTo(tilt, 'rotationY', { duration: 1.4, ease: 'power3.out' })
-
-    const fade = () => {
-      if (!introDoneRef.current) return
-      const spin = gsap.getProperty(carousel, 'rotationY')
-      setOpacity.forEach((set, index) => {
-        const radians = (((index / frameNodes.length) * 360 + spin) * Math.PI) / 180
-        const front = (Math.cos(radians) + 1) / 2
-        set(0.22 + 0.78 * front ** 1.6)
-      })
-    }
-
-    const onPointerMove = (event) => {
-      if (event.pointerType !== 'mouse') return
-      leanY(((event.clientX / window.innerWidth) - 0.5) * 16)
-      leanX(-((event.clientY / window.innerHeight) - 0.5) * 10)
-    }
-
-    // The frames keep their angles; only their distance from the centre changes when the window is resized.
-    const onResize = () => {
-      if (!introDoneRef.current) return
-      const radius = ringRadius(window.innerWidth, window.innerHeight)
-      frameNodes.forEach((node, index) => {
-        const pose = ringPose(index, radius)
-        gsap.set(node, { x: pose.x, z: pose.z })
-      })
-    }
-
-    gsap.ticker.add(fade)
-    window.addEventListener('pointermove', onPointerMove)
+    gsap.ticker.add(tick)
+    hero.addEventListener('pointermove', onPointerMove)
+    hero.addEventListener('pointerleave', onPointerLeave)
     window.addEventListener('resize', onResize)
     return () => {
-      gsap.ticker.remove(fade)
-      window.removeEventListener('pointermove', onPointerMove)
+      gsap.ticker.remove(tick)
+      hero.removeEventListener('pointermove', onPointerMove)
+      hero.removeEventListener('pointerleave', onPointerLeave)
       window.removeEventListener('resize', onResize)
-      gsap.killTweensOf(tilt)
+      gsap.killTweensOf(state)
     }
-  }, [])
+  }, { scope: heroRef })
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#08090c] text-[#f1f3fa]">
       <section ref={heroRef} aria-labelledby="creator-program-title" className="relative isolate flex h-[100svh] min-h-[640px] items-center justify-center overflow-hidden px-6 text-center">
-        <div ref={stageRef} aria-hidden="true" className="pointer-events-none absolute inset-0 [perspective:1800px]">
-          <div ref={tiltRef} className="absolute left-1/2 top-1/2 h-0 w-0 [transform-style:preserve-3d]">
-            <div ref={carouselRef} className="absolute left-0 top-0 h-0 w-0 [transform-style:preserve-3d]">
-              {frames.map((src, index) => <Frame key={src} src={src} index={index} />)}
-            </div>
-          </div>
+        <div ref={stageRef} aria-hidden="true" className="pointer-events-none absolute inset-0">
+          {cards.map((src, index) => <Frame key={`${src}-${index}`} src={src} index={index} />)}
         </div>
 
-        <div ref={glowRef} aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(214_178_112/.22),transparent)] opacity-60" />
-        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[660px] w-[min(1040px,100%)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(8_9_12/.92),rgb(8_9_12/.7)_62%,rgb(8_9_12/0))]" />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(8_9_12/0)_40%,rgb(8_9_12/.7)_100%)]" />
+        <div ref={glowRef} aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(214_178_112/.18),transparent)] opacity-60" />
 
         <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between gap-5 px-6 py-6 sm:px-10">
           <Link href="/" aria-label="Deyn Studio home" className="text-sm font-semibold tracking-[.22em] text-[#f4f5f8] no-underline">DEYN STUDIO</Link>
@@ -238,10 +275,10 @@ export function CreatorProgram({ isSignedIn = false }) {
 
         <div ref={copyRef} className="relative z-10 flex max-w-[880px] flex-col items-center">
           <p data-creator-copy className="m-0 text-[13px] font-semibold uppercase tracking-[.22em] text-[#cbd6f2] [text-shadow:0_2px_16px_rgb(0_0_0/.8)]">Creator program</p>
-          <h1 id="creator-program-title" className="mb-0 mt-5 text-[clamp(44px,7.2vw,94px)] font-semibold leading-[1] tracking-[-.05em] text-[#f7f8fb] [text-shadow:0_4px_40px_rgb(0_0_0/.6)] text-balance">
+          <h1 id="creator-program-title" className="mb-0 mt-5 text-balance text-[30px] font-bold leading-[1.02] tracking-[-.04em] text-[#f7f8fb] [text-shadow:0_4px_40px_rgb(0_0_0/.6)] sm:text-[44px] lg:text-[64px]">
             {headlineWords.map((word, index) => (
-              <span key={word}>
-                <span className="inline-block overflow-hidden pb-[.12em] align-top">
+              <span key={`${word}-${index}`}>
+                <span data-creator-word-box className="inline-block overflow-hidden pb-[.12em] align-top">
                   <span
                     data-creator-word
                     data-creator-shine={index >= SHINE_FROM ? '' : undefined}
@@ -255,8 +292,8 @@ export function CreatorProgram({ isSignedIn = false }) {
             ))}
           </h1>
 
-          <p data-creator-copy className="mx-auto mb-0 mt-6 max-w-[600px] text-[17px] leading-[1.65] text-[#e9ebf2] [text-shadow:0_2px_18px_rgb(0_0_0/.85)] sm:text-[19px]">
-            Selected creators get a free Deyn Studio license and usage credits for AI actions. Log in or create an account, then apply from your dashboard.
+          <p data-creator-copy className="mx-auto mb-0 mt-6 max-w-[560px] text-balance text-[18px] leading-[1.5] text-[#e9ebf2] [text-shadow:0_2px_18px_rgb(0_0_0/.85)] sm:text-[22px]">
+            Show us what you make. If it fits, you get a free lifetime Deyn Studio license and AI usage credits.
           </p>
 
           <div data-creator-copy className="mt-9 flex flex-col items-center gap-4">
