@@ -2,9 +2,9 @@ import { AppAccess } from '@/app/components/AppAccess'
 import { InfoPage, Section } from '@/app/components/InfoPage'
 
 import { getDownloadUrls } from '@/lib/downloads'
-import { createPageMetadata } from '@/lib/seo'
+import { createPageMetadata, socialImage } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'Download', description: 'Download Deyn Studio for macOS and manage your desktop app account. Windows and Linux versions are coming soon.', path: '/download' })
+export const metadata = createPageMetadata({ title: 'Download', description: 'Download Deyn Studio for macOS and manage your desktop app account. Windows and Linux versions are coming soon.', path: '/download', image: socialImage('download', 'Deyn Studio desktop editor with a transcript, captions, and export controls') })
 
 export default async function DownloadPage() {
   const downloadUrls = await getDownloadUrls()

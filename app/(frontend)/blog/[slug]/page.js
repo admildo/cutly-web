@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
       path: `/blog/${post.slug}`,
       image: getCoverImage(post)
         ? { url: getCoverImage(post).absoluteUrl, alt: getCoverImage(post).alt || post.title }
-        : undefined,
+        : { url: `/blog/${post.slug}/og.png`, width: 1200, height: 630, alt: post.title },
       type: 'article',
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt || post.publishedAt
@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }) {
         dateModified: post.updatedAt || post.publishedAt,
         mainEntityOfPage: { '@type': 'WebPage', '@id': url },
         isPartOf: { '@id': `${siteOrigin}/blog#blog` },
-        image: cover?.absoluteUrl,
+        image: cover?.absoluteUrl || `${url}/og.png`,
         wordCount: getWordCount(post),
         inLanguage: 'en',
         author: { '@id': `${siteOrigin}/#organization` },

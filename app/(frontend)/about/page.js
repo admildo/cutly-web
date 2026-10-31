@@ -1,8 +1,8 @@
 import { InfoPage, Section } from '@/app/components/InfoPage'
 
-import { createPageMetadata } from '@/lib/seo'
+import { createPageMetadata, socialImage } from '@/lib/seo'
 
-export const metadata = createPageMetadata({ title: 'About', description: 'Learn how Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.', path: '/about' })
+export const metadata = createPageMetadata({ title: 'About', description: 'Learn how Deyn Studio turns long videos into clips you can review, caption, frame, and export on your desktop.', path: '/about', image: socialImage('about', 'Deyn Studio clip library built from long videos') })
 
 // DECISION: this page says what the product does but not who makes it or why. A short, true note from whoever builds Deyn
 // Studio (a name, what problem started it, one line on how it is made) would earn more trust than another feature line.

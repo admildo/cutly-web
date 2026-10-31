@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createPageMetadata, serializeJsonLd, siteOrigin } from '@/lib/seo'
+import { createPageMetadata, serializeJsonLd, siteOrigin, socialImage } from '@/lib/seo'
 import { formatShortDate, getCoverImage, getPublishedPosts, getReadingMinutes } from '@/lib/blog'
 
 export const dynamic = 'force-dynamic'
@@ -10,7 +10,8 @@ export const metadata = {
   ...createPageMetadata({
     title: 'Journal: Video Editing Tips and Product News',
     description,
-    path: '/blog'
+    path: '/blog',
+    image: socialImage('blog', 'Deyn Studio journal: video editing tips, creator stories, and product news')
   }),
   alternates: {
     canonical: '/blog',
