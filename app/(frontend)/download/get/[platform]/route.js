@@ -9,9 +9,16 @@ export const runtime = 'nodejs'
 const redirect = (location) =>
   new Response(null, { status: 302, headers: { Location: location, 'Cache-Control': 'no-store, max-age=0' } })
 
-// Counts a download from the website, then sends the visitor to the current installer. A visitor always
-// gets the file: counting is best effort and never stands in the way.
+// Installers are offered from the signed-in dashboard only, so anonymous requests (visitors, bots, command-line
+// fetchers) are sent to sign in before anything is counted or served.
+const SIGN_IN_PATH = '/sign-in?returnTo=%2Fdashboard'
+
+// Counts a download from a signed-in account, then sends the visitor to the current installer. The file is
+// always served once the download is allowed: counting is best effort and never stands in the way.
 export async function GET(request, { params }) {
+  const { userId } = await auth()
+  if (!userId) return redirect(new URL(SIGN_IN_PATH, request.url).toString())
+
   const { platform } = await params
   if (!DOWNLOAD_PLATFORMS.includes(platform)) return redirect(new URL('/download', request.url).toString())
 
@@ -23,12 +30,11 @@ export async function GET(request, { params }) {
       // Three per visitor, platform and hour: repeat clicks and retries of one download count once or twice, not tenfold.
       const limit = await enforceRateLimit(request, { name: `download-${platform}`, limit: 3, windowSeconds: 3600 })
       if (limit.ok) {
-        const { userId } = await auth()
         await recordDownload({
           platform,
           version: versionOfInstaller(installer),
           country: countryFromRequest(request),
-          userId: userId || null
+          userId
         })
       }
     }

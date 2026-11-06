@@ -85,7 +85,7 @@ export default async function DownloadsAdminPage() {
               )}
 
               <h2 className="mb-0 mt-10 text-lg font-medium tracking-[-0.02em]">Recent downloads</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a5a6ab]">The latest 100 counted downloads, newest first. Anonymous visitors show their country only. A download from a signed-in account shows that account.</p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a5a6ab]">The latest 100 counted downloads, newest first. Downloads need a signed-in account, which is shown. Older downloads from before sign-in was required show their country only.</p>
               {recent === null ? (
                 <p className="mt-3 text-sm text-[#a5a6ab]">Recent downloads could not be loaded.</p>
               ) : recent.length === 0 ? (
