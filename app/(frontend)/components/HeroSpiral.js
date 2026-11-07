@@ -25,7 +25,7 @@ const DEMO_VIDEO_SRC = `${DEMO_VIDEO_ORIGIN}/embed/7rs6y-qcOlA?enablejsapi=1&aut
 const demoVideoCommand = (func) => JSON.stringify({ event: 'command', func, args: '' })
 
 const uniqueCardAssets = [
-  { src: '/card-media/se-15.webp', type: 'image', label: 'Clip video' },
+  { src: '/card-media/se-15.webp', type: 'image', label: 'Edit video' },
   { src: '/card-media/se-2.webp', type: 'image', label: 'Convert image' },
   { src: '/card-media/se-16.mp4', poster: '/card-media/se-16-poster.webp', type: 'video', label: 'Compress video' },
   { src: '/card-media/se-3.webp', type: 'image', label: 'Compress image' },
@@ -94,7 +94,7 @@ const CARD_FADE_END = 0.68
 // One headline, on purpose: the first of the old rotation was the only one that said something specific.
 // Add more lines here and the rotation starts again by itself.
 const heroHeadlines = [
-  'Stop scrubbing. Find your next clip.',
+  'Edit and export media faster.',
 ]
 
 const publishHeroIslandState = (active) => {
@@ -1060,7 +1060,7 @@ export function HeroSpiral({ downloadUrls }) {
         <div className={styles.vignette} aria-hidden="true" />
         <div ref={lowerMaskRef} className={styles.lowerMask} aria-hidden="true" />
         <div ref={scrollPromptRef} className={styles.scrollPrompt}>
-          <p className={styles.downloadEyebrow}>A video clip maker you pay for once.</p>
+          <p className={styles.downloadEyebrow}>A media editor you pay for once.</p>
           <h1 className={styles.headingContainer}>
             <span className={styles.downloadHeading}>
               {previousHeadlineIndex !== null && (
@@ -1096,10 +1096,10 @@ export function HeroSpiral({ downloadUrls }) {
               </span>
             </span>
           </h1>
-          <p className={styles.mobileDescription}>Deyn finds the moments worth posting, captions them, and frames them for vertical.</p>
+          <p className={styles.mobileDescription}>Edit video, add captions, reframe for vertical, and let AI do the first pass.</p>
           <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={styles.downloadButton}>
             <MacIcon />
-            Download
+            Get Deyn Studio
           </DownloadOptionsButton>
           <p className={styles.mobilePlatforms}>One-time, no subscription. For macOS.</p>
           <p className={styles.keepScrolling}>See how it works <span aria-hidden="true">↓</span></p>
@@ -1124,8 +1124,8 @@ export function HeroSpiral({ downloadUrls }) {
           <div className={`${styles.videoContent} ${isVideoPlaying ? styles.videoContentPlaying : ''}`}>
             <div ref={videoPromptRef} className={styles.videoHeading}>
               <p>Deyn Studio in action</p>
-              <h2>Watch Deyn turn a long video<br className={styles.desktopBreak} /> into clips ready to share.</h2>
-              <p className={styles.videoDescription}>See Deyn find moments, add captions, and frame clips for social.</p>
+              <h2>Watch a file go<br className={styles.desktopBreak} /> from import to export.</h2>
+              <p className={styles.videoDescription}>Edit the transcript, add captions, frame for vertical, and export without switching apps.</p>
             </div>
             <div ref={playPromptRef} className={styles.playPrompt}>
               <button

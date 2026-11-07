@@ -10,12 +10,12 @@ const FAQ_ITEMS = [
   {
     category: 'Product',
     question: 'What is Deyn Studio?',
-    answer: 'Deyn Studio is a desktop app for turning long videos into clips. Find moments, edit captions and framing, then export. It also includes Spot Assistant for quick edits from any app, plus tools for audio, images, and documents.'
+    answer: 'Deyn Studio is a desktop media editor for Mac. Edit video with captions and framing, convert and compress video, audio, and images, and let AI suggest clips from long videos. Spot Assistant runs quick edits from any app.'
   },
   {
     category: 'Pricing & License',
     question: 'Is it really a one-time payment?',
-    answer: `Yes. The ${LIFETIME_LICENSE_PRICE_LABEL} launch license is paid once and includes lifetime access, future desktop updates, and use on up to two devices. There is no subscription and no clip allowance. The only cost that can recur is optional: cloud AI, which you pay your own provider for.`
+    answer: `Yes. The ${LIFETIME_LICENSE_PRICE_LABEL} launch license is paid once and includes lifetime access, future desktop updates, and use on up to two devices. There is no subscription. The only cost that can recur is optional: cloud AI, which you pay your own provider for.`
   },
   {
     category: 'Pricing & License',

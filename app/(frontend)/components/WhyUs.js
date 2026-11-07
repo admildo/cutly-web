@@ -8,7 +8,7 @@ const reasons = [
   {
     label: 'Your budget',
     title: 'Pay once. Pay for AI only when you use it.',
-    description: 'Deyn Studio is a one-time purchase, not another monthly plan with a clip allowance. Cloud AI runs through your own OpenRouter key after the included trial, so you pay only for the work you run. Local transcription costs nothing.'
+    description: 'Deyn Studio is a one-time purchase, not another monthly plan with credits. Cloud AI runs through your own OpenRouter key after the included trial, so you pay only for the work you run. Local transcription costs nothing.'
   },
   {
     label: 'Your files',

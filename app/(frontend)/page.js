@@ -14,8 +14,8 @@ import { LIFETIME_LICENSE_PRICE_EUR, LIFETIME_LICENSE_PRICE_LABEL } from '@/lib/
 import { getDownloadUrls } from '@/lib/downloads'
 
 export const metadata = createPageMetadata({
-  title: 'AI Video Clip Maker for Desktop',
-  description: `Turn long videos into clips with Deyn Studio. Find the best moments, add captions, reframe, and export from one desktop app. ${LIFETIME_LICENSE_PRICE_LABEL} once, no subscription.`,
+  title: 'Media Editor for Mac',
+  description: `Edit, caption, convert and export video, audio and images in one Mac app. AI finds the best moments. ${LIFETIME_LICENSE_PRICE_LABEL} once, no subscription.`,
   path: '/',
   absoluteTitle: true
 })
@@ -36,7 +36,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
             image: new URL(defaultSocialImage.url, siteOrigin).toString(),
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'macOS',
-            description: 'A desktop app for finding moments in long videos, editing captions and framing, and exporting shareable clips.',
+            description: 'A desktop media editor for video, audio and images, with AI for captions, clip suggestions and conversions.',
             creator: { '@id': `${siteOrigin}/#organization` },
             offers: {
               '@type': 'Offer',
@@ -80,9 +80,9 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
               <s aria-label="Regular price €69" className="text-[24px] font-medium leading-none tracking-[-.04em] text-[#b0a0a1] decoration-white decoration-[0.5px] max-[600px]:text-[21px]">€69</s>
               <span className="rounded-full bg-[#8e9b7a]/[0.14] px-2.5 py-1 text-[12px] font-semibold tracking-[.01em] text-[#c9d5b8]">58% off</span>
             </div>
-            <p className="mx-auto mb-0 mt-3 max-w-[400px] text-balance text-[14px] leading-[1.6] text-[#c1c3cc]">Find moments, edit captions, and export from one desktop app.</p>
+            <p className="mx-auto mb-0 mt-3 max-w-[400px] text-balance text-[14px] leading-[1.6] text-[#c1c3cc]">Edit, caption, convert and export media from one desktop app.</p>
             <ul className="mx-auto mb-0 mt-6 grid w-fit list-none gap-3 p-0 text-left text-[14px] text-[#ececf0] max-[600px]:gap-2.5 max-[600px]:text-[13px]">
-              {['Find and edit clips from long videos', 'Caption and reframe each clip', 'Spot Assistant: download, compress, convert and caption from any app', 'Transcribe on your device', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[15px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
+              {['Edit video with captions, framing and export', 'Convert and compress video, audio and images', 'Spot Assistant: download, compress, convert and caption from any app', 'Transcribe on your device', 'Future desktop updates included'].map((benefit) => <li className="flex items-center gap-3" key={benefit}><span className="text-[15px] text-[#c6c9d2]" aria-hidden="true">✓</span>{benefit}</li>)}
             </ul>
             {/* DECISION: the "limited AI trial" disclosure moved out of this card into the FAQ ("What does the AI trial include?"). Put it back here if you want it next to the buy button. */}
             <p className="mx-auto mb-0 mt-5 max-w-[440px] text-[12px] leading-[1.6] text-[#aaa9a3]">No subscription. Pay for AI only when you use it, with your own OpenRouter key. Local transcription is always free.</p>

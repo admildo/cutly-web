@@ -27,10 +27,10 @@ export const metadata = {
   },
   manifest: '/favicon/site.webmanifest',
   title: {
-    default: 'AI Video Clip Maker for Desktop | Deyn Studio',
+    default: 'Media Editor for Mac | Deyn Studio',
     template: '%s | Deyn Studio'
   },
-  description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
+  description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
   creator: 'Deyn Studio',
   publisher: 'Deyn Studio',
   openGraph: {
@@ -38,14 +38,14 @@ export const metadata = {
     url: '/',
     siteName: 'Deyn Studio',
     locale: 'en_US',
-    title: 'AI Video Clip Maker for Desktop | Deyn Studio',
-    description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
+    title: 'Media Editor for Mac | Deyn Studio',
+    description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
     images: [defaultSocialImage]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Video Clip Maker for Desktop | Deyn Studio',
-    description: 'Turn long videos into shareable clips with Deyn Studio. Find standout moments with AI, then add captions, reframe, and export from one desktop app.',
+    title: 'Media Editor for Mac | Deyn Studio',
+    description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
     images: [defaultSocialImage.url]
   },
   robots: {
@@ -103,7 +103,7 @@ export default function RootLayout({ children }) {
                   '@id': `${siteOrigin}/#website`,
                   name: 'Deyn Studio',
                   url: siteOrigin,
-                  description: 'Desktop software for finding moments in long videos, editing captions and framing, and exporting clips.',
+                  description: 'Desktop media editor for video, audio and images, with AI for captions, clip suggestions and conversions.',
                   publisher: { '@id': `${siteOrigin}/#organization` },
                   inLanguage: 'en'
                 }

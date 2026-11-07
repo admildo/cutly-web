@@ -132,9 +132,9 @@ const cards = {
   default: {
     css: '',
     body: `${copy({
-      eyebrow: 'AI video clip maker',
-      title: 'Turn long videos into clips.',
-      lede: 'Find the best moments, add captions, reframe, and export from one desktop app.'
+      eyebrow: 'Media editor for Mac',
+      title: 'Edit and export media faster.',
+      lede: 'Edit video, audio and images with AI help. One payment, no subscription.'
     })}${screenshot('public/app-shots/home-p.webp')}`
   },
   creator: { css: creatorCss, body: creatorBody },

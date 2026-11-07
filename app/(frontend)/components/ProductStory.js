@@ -7,20 +7,20 @@ import styles from './ProductStory.module.css'
 const stories = [
   {
     number: '01',
-    title: 'Drop in a long video',
-    description: 'Import a file or paste a supported public link. Let Deyn suggest clips, search for a moment, or pick the cut yourself.',
+    title: 'Bring in your media',
+    description: 'Import a video, audio file or image, or paste a supported public link to start editing.',
 
     image: '/app-shots/home-p.webp',
     imageBackground: '13 13 13',
-    alt: 'Deyn Studio home screen with a video ready and saved clip sets'
+    alt: 'Deyn Studio home screen with a video ready to edit'
   },
   {
     number: '02',
-    title: 'Skip the scrubbing',
-    description: 'AI reads the transcript and suggests clips with titles and timing. Keep the ones you like, drop the rest.',
+    title: 'Let AI do the first pass',
+    description: 'AI reads the transcript, suggests the moments worth keeping, and adds titles and timing. Keep what you like, drop the rest.',
     image: '/app-shots/clips-p.webp',
     imageBackground: '43 34 117',
-    alt: 'A grid of clips generated from a video in Deyn Studio'
+    alt: 'AI-suggested clips from a video in Deyn Studio'
   },
   {
     number: '03',
@@ -185,7 +185,7 @@ export function ProductStory() {
     >
       <div className="relative z-10 mx-auto w-full max-w-[1420px]">
         <h2 id="product-story-heading" className="relative z-30 mx-auto section-title-gap max-w-[640px] text-balance text-center font-serif section-title text-[#f0efe9]">
-          Turn long videos into clips ready to post
+          From raw footage to a finished file
         </h2>
 
 
