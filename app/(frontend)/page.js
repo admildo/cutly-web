@@ -15,7 +15,7 @@ import { getDownloadUrls } from '@/lib/downloads'
 
 export const metadata = createPageMetadata({
   title: 'Media Editor for Mac',
-  description: `Edit, caption, convert and export video, audio and images in one Mac app. AI finds the best moments. ${LIFETIME_LICENSE_PRICE_LABEL} once, no subscription.`,
+  description: `Edit, color, caption and export video, audio and images in one Mac app. Grade shots automatically and let AI find the best moments. ${LIFETIME_LICENSE_PRICE_LABEL} once, no subscription.`,
   path: '/',
   absoluteTitle: true
 })
@@ -36,7 +36,7 @@ function MarketingPage({ downloadUrls, isSignedIn }) {
             image: new URL(defaultSocialImage.url, siteOrigin).toString(),
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'macOS',
-            description: 'A desktop media editor for video, audio and images, with AI for captions, clip suggestions and conversions.',
+            description: 'A desktop media editor for video, audio and images, with automatic color grading and AI for captions and clip suggestions.',
             creator: { '@id': `${siteOrigin}/#organization` },
             offers: {
               '@type': 'Offer',

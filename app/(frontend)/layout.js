@@ -30,7 +30,7 @@ export const metadata = {
     default: 'Media Editor for Mac | Deyn Studio',
     template: '%s | Deyn Studio'
   },
-  description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
+  description: 'Edit, color and export video, audio and images in one Mac app. Grade shots automatically, add captions, and let AI find the best moments. Pay once, no subscription.',
   creator: 'Deyn Studio',
   publisher: 'Deyn Studio',
   openGraph: {
@@ -39,13 +39,13 @@ export const metadata = {
     siteName: 'Deyn Studio',
     locale: 'en_US',
     title: 'Media Editor for Mac | Deyn Studio',
-    description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
+    description: 'Edit, color and export video, audio and images in one Mac app. Grade shots automatically, add captions, and let AI find the best moments. Pay once, no subscription.',
     images: [defaultSocialImage]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Media Editor for Mac | Deyn Studio',
-    description: 'Edit video, audio and images in one Mac app. Add captions, convert and compress files, and let AI find the best moments. Pay once, no subscription.',
+    description: 'Edit, color and export video, audio and images in one Mac app. Grade shots automatically, add captions, and let AI find the best moments. Pay once, no subscription.',
     images: [defaultSocialImage.url]
   },
   robots: {
