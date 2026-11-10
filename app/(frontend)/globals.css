@@ -7,21 +7,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Account dashboard palette. Kept separate from the landing page so the app can stay flat and quiet. */
-@theme {
-  --color-app-bg: #0c0c0e;
-  --color-app-side: #09090b;
-  --color-app-panel: #121214;
-  --color-app-raised: #19191c;
-  --color-app-line: #242428;
-  --color-app-ink: #ececee;
-  --color-app-mute: #9a9ba1;
-  --color-app-faint: #7b7c83;
-  --color-app-ok: #6fcf97;
-  --color-app-warn: #e0b36a;
-  --color-app-danger: #ec8a85;
-}
-
 @theme {
   --animate-pixel-scene: pixel-scene 42s ease-in-out infinite alternate;
   --animate-pixel-twinkle: pixel-twinkle 3.8s ease-in-out infinite;
