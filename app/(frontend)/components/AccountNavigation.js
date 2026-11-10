@@ -1,40 +1,48 @@
 import Link from 'next/link'
 import { DownloadSimple, House, Key, SlidersHorizontal, UserCircle, UsersThree } from '@phosphor-icons/react/ssr'
 
-const sections = [
+const account = [
   { href: '/dashboard', label: 'Overview', key: 'overview', Icon: House },
-  { href: '/account', label: 'Account settings', key: 'settings', Icon: UserCircle }
+  { href: '/account', label: 'Settings', key: 'settings', Icon: UserCircle }
 ]
 
+const admin = [
+  { href: '/account/trial-settings', label: 'Trial controls', key: 'trial', Icon: SlidersHorizontal },
+  { href: '/account/licenses', label: 'Licenses', key: 'licenses', Icon: Key },
+  { href: '/account/creators', label: 'Creators', key: 'creators', Icon: UsersThree },
+  { href: '/account/downloads', label: 'Downloads', key: 'downloads', Icon: DownloadSimple }
+]
+
+function NavLink({ href, label, Icon, selected }) {
+  return (
+    <Link
+      href={href}
+      aria-current={selected ? 'page' : undefined}
+      className={`flex h-9 items-center gap-2.5 whitespace-nowrap rounded-lg px-2.5 text-sm font-medium no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 ${selected ? 'bg-white/[.07] text-app-ink' : 'text-app-mute hover:bg-white/[.04] hover:text-app-ink'}`}
+    >
+      <Icon aria-hidden="true" className="size-[18px]" weight={selected ? 'fill' : 'regular'} />
+      {label}
+    </Link>
+  )
+}
+
+// One list, laid out as a sidebar on large screens and a scrolling tab strip on small ones.
 export function AccountNavigation({ active, showTrialControls = false }) {
-  const items = showTrialControls
-    ? [
-        ...sections,
-        { href: '/account/trial-settings', label: 'Trial controls', key: 'trial', Icon: SlidersHorizontal },
-        { href: '/account/licenses', label: 'Licenses', key: 'licenses', Icon: Key },
-        { href: '/account/creators', label: 'Creators', key: 'creators', Icon: UsersThree },
-        { href: '/account/downloads', label: 'Downloads', key: 'downloads', Icon: DownloadSimple }
-      ]
-    : sections
+  const groups = showTrialControls ? [{ items: account }, { label: 'Admin', items: admin }] : [{ items: account }]
 
   return (
-    <nav aria-label="Account navigation" className="mt-5 overflow-x-auto rounded-2xl bg-[#111216] p-1.5 shadow-[0_10px_28px_rgb(0_0_0/.16)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <ul className="flex min-w-max list-none gap-1 p-0">
-        {items.map(({ href, label, key, Icon }) => {
-          const selected = active === key
-          return (
-            <li key={key}>
-              <Link
-                href={href}
-                aria-current={selected ? 'page' : undefined}
-                className={`inline-flex min-h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-medium no-underline transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${selected ? 'bg-[#222328] text-[#f2f2ee] shadow-[0_4px_14px_rgb(0_0_0/.2)]' : 'text-[#929399] hover:bg-white/[.04] hover:text-[#e3e3e5]'}`}
-              >
-                <Icon aria-hidden="true" className="h-[17px] w-[17px]" weight={selected ? 'fill' : 'regular'} />
-                {label}
-              </Link>
-            </li>
-          )
-        })}
+    <nav aria-label="Account navigation" className="overflow-x-auto px-3 pb-3 [scrollbar-width:none] lg:overflow-visible lg:px-3 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+      <ul className="m-0 flex list-none items-center gap-1 p-0 lg:flex-col lg:items-stretch lg:gap-0.5">
+        {groups.map(({ label, items }, index) => (
+          <li key={label || 'account'} className={`contents ${index ? 'lg:mt-6 lg:block' : ''}`}>
+            {label ? <p className="m-0 hidden px-2.5 pb-1.5 text-xs font-medium text-app-faint lg:block">{label}</p> : null}
+            <ul className="m-0 flex list-none gap-1 p-0 lg:flex-col lg:gap-0.5">
+              {items.map(({ key, ...item }) => (
+                <li key={key}><NavLink {...item} selected={active === key} /></li>
+              ))}
+            </ul>
+          </li>
+        ))}
       </ul>
     </nav>
   )

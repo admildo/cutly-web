@@ -3,11 +3,10 @@ import { AppAccess } from '@/app/components/AppAccess'
 import { BuyLicenseButton } from '@/app/components/BuyLicenseButton'
 import { RefreshLicenseStatusButton } from '@/app/components/RefreshLicenseStatusButton'
 import { RefreshTrialUsageButton } from '@/app/components/RefreshTrialUsageButton'
-import { AccountMenu } from '@/app/components/AccountMenu'
 import { CreatorProgramPanel } from '@/app/components/CreatorProgramPanel'
-import { AccountNavigation } from '@/app/components/AccountNavigation'
-import { AccountAvatar } from '@/app/components/AccountAvatar'
-import { SiteFooter, SiteHeader } from '@/app/components/SiteChrome'
+import { AccountShell, accountProfile } from '@/app/components/AccountShell'
+import { Check, Laptop } from '@phosphor-icons/react/ssr'
+import { CardHeader, Note, Row, Rows, Status, button, card } from '@/app/components/dashboard-ui'
 
 const displayDate = (value) => {
   if (!value) return 'No expiry'
@@ -39,8 +38,6 @@ const displayPlatform = (value) => ({
   linux: 'Linux'
 })[String(value || '').toLowerCase()] || value || 'Desktop app'
 
-const surface = 'rounded-[24px] bg-[#151619] shadow-[0_18px_54px_rgb(0_0_0/.2)]'
-
 const trialFeatures = [
   { key: 'clip_generation', name: 'Clip suggestions' },
   { key: 'smart_clean', name: 'Smart Clean' },
@@ -51,14 +48,12 @@ const trialFeatures = [
 function TrialUsagePanel({ snapshot, error }) {
   if (error || !snapshot?.trial) {
     return (
-      <section className={`${surface} mt-5 p-5 sm:p-6`} aria-labelledby="trial-usage-title">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 id="trial-usage-title" className="text-base font-medium text-[#ededeb]">Free trial usage</h2>
-            <p className="mt-1 text-sm text-[#a5a6ab]">Couldn’t load your remaining actions. Refresh to try again.</p>
-          </div>
-          <RefreshTrialUsageButton />
+      <section className={`${card} flex flex-wrap items-center justify-between gap-4 p-5 sm:px-6`} aria-labelledby="trial-usage-title">
+        <div>
+          <h2 id="trial-usage-title" className="m-0 text-[15px] font-semibold">Free trial</h2>
+          <p className="m-0 mt-1 text-sm text-app-mute">Couldn’t load your remaining actions. Refresh to try again.</p>
         </div>
+        <RefreshTrialUsageButton />
       </section>
     )
   }
@@ -69,6 +64,7 @@ function TrialUsagePanel({ snapshot, error }) {
   const isReady = trial.enabled && !trial.startedAt
   const isPaused = !trial.enabled
   const status = isActive ? 'Active' : isComplete ? 'Used up' : isReady ? 'Ready to start' : isPaused ? 'Paused' : 'Unavailable'
+  const tone = isActive ? 'ok' : isPaused ? 'warn' : 'neutral'
   const description = isComplete
     ? 'All trial actions have been used.'
     : isReady
@@ -81,143 +77,122 @@ function TrialUsagePanel({ snapshot, error }) {
   const remainingTotal = Math.max(0, Number(trial.remainingTotal || 0))
 
   return (
-    <section className={`${surface} mt-5 p-5 sm:p-6`} aria-labelledby="trial-usage-title">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h2 id="trial-usage-title" className="text-base font-medium text-[#ededeb]">Free trial</h2>
-            <span className="rounded-full bg-white/[.07] px-2.5 py-1 text-xs font-medium text-[#c7c7cb]">{status}</span>
-          </div>
-          <p className="mt-1.5 text-sm leading-6 text-[#a5a6ab]">{description}</p>
-        </div>
-        <RefreshTrialUsageButton />
-      </header>
+    <section className={card} aria-labelledby="trial-usage-title">
+      <CardHeader id="trial-usage-title" title="Free trial" status={<Status tone={tone}>{status}</Status>} description={description} action={<RefreshTrialUsageButton />} />
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(175px,.8fr)_minmax(0,2fr)]">
-        <div className="flex min-h-28 items-center gap-4 rounded-2xl bg-[#1d1e22] px-5 py-4 shadow-[inset_0_1px_0_rgb(255_255_255/.025)]">
-          <p className="text-5xl font-medium leading-none tracking-[-0.07em] text-[#f2f2ee]">{remainingTotal}</p>
-          <div>
-            <p className="text-sm font-medium text-[#ededeb]">{isReady ? 'actions available' : 'actions left'}</p>
-            <p className="mt-1 text-xs text-[#929399]">Across all trial tools</p>
-          </div>
-        </div>
+      <div className="px-5 pb-2 pt-5 sm:px-6">
+        <p className="m-0 flex items-baseline gap-2">
+          <span className="text-4xl font-semibold leading-none tracking-[-0.04em] tabular-nums">{remainingTotal}</span>
+          <span className="text-sm text-app-mute">{isReady ? 'actions available' : 'actions left'} across all trial tools</span>
+        </p>
 
-        <div className="grid grid-cols-1 gap-2 min-[460px]:grid-cols-2 xl:grid-cols-4">
+        <ul className="m-0 mt-4 list-none divide-y divide-app-line p-0">
           {trialFeatures.map(({ key, name }) => {
             const limit = Math.max(0, Number(trial.limits?.[key] || 0))
             const remaining = Math.max(0, Number(trial.remaining?.[key] || 0))
             const progress = limit ? Math.min(100, Math.round((remaining / limit) * 100)) : 0
 
             return (
-              <article key={key} className="rounded-2xl bg-[#1b1c20] px-4 py-3.5 shadow-[inset_0_1px_0_rgb(255_255_255/.02)]">
-                <h3 className="text-xs leading-5 text-[#a5a6ab]">{name}</h3>
-                <p className={`mt-2 text-sm font-medium ${remaining === 0 ? 'text-[#a5a6ab]' : 'text-[#f2f2ee]'}`}>
-                  {remaining}<span className="font-normal text-[#85868c]"> / {limit} left</span>
-                </p>
-                <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-white/[.08]" aria-hidden="true">
-                  <div className="h-full rounded-full bg-[#bfc0c4] transition-[width]" style={{ width: `${progress}%` }} />
+              <li key={key} className="py-3.5">
+                <div className="flex items-baseline justify-between gap-4 text-sm">
+                  <span className={remaining === 0 ? 'text-app-mute' : 'text-app-ink'}>{name}</span>
+                  <span className="tabular-nums text-app-ink">{remaining}<span className="text-app-faint"> / {limit}</span></span>
                 </div>
-              </article>
+                <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/[.08]" role="img" aria-label={`${remaining} of ${limit} left`}>
+                  <div className="h-full rounded-full bg-app-ink/80 transition-[width]" style={{ width: `${progress}%` }} />
+                </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </div>
 
       {(trial.startedAt || trial.usageUpdatedAt) ? (
-        <footer className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-[#85868c]">
-          {trial.startedAt ? <p>Started {displayDate(trial.startedAt)}</p> : null}
-          {trial.usageUpdatedAt ? <p>Usage updated {displayDate(trial.usageUpdatedAt)}</p> : null}
-        </footer>
+        <p className="m-0 flex flex-wrap gap-x-5 gap-y-1 border-t border-app-line px-5 py-3 text-xs text-app-faint sm:px-6">
+          {trial.startedAt ? <span>Started {displayDate(trial.startedAt)}</span> : null}
+          {trial.usageUpdatedAt ? <span>Usage updated {displayDate(trial.usageUpdatedAt)}</span> : null}
+        </p>
       ) : null}
+    </section>
+  )
+}
+
+function DevicePips({ used, limit }) {
+  const total = Math.min(Math.max(Number(limit) || 0, 0), 10)
+  if (!total) return null
+  return (
+    <span aria-hidden="true" className="mr-2.5 inline-flex gap-1 align-middle">
+      {Array.from({ length: total }, (_, index) => <span key={index} className={`h-1.5 w-4 rounded-full ${index < used ? 'bg-app-ink' : 'bg-white/[.12]'}`} />)}
+    </span>
+  )
+}
+
+function Message({ title, children, actions }) {
+  return (
+    <section className={`${card} p-5 sm:p-6`}>
+      <h2 className="m-0 text-[15px] font-semibold">{title}</h2>
+      <p className="m-0 mt-1.5 max-w-xl text-sm leading-6 text-app-mute">{children}</p>
+      {actions ? <div className="mt-5 flex flex-wrap items-center gap-3">{actions}</div> : null}
     </section>
   )
 }
 
 function LicensePanel({ license, licenseError, checkoutState, autoBuy = false, priceLabel, devices = [], devicesError = false }) {
   if (licenseError) {
-    return (
-      <section className={`${surface} mt-7 p-6 sm:p-8`}>
-        <p className="font-medium">We couldn’t check your license.</p>
-        <p className="mt-2 text-sm leading-6 text-[#a5a6ab]">Your account is signed in. Please try again; we won’t ask you to buy while the status is unavailable.</p>
-      </section>
-    )
+    return <Message title="We couldn’t check your license.">Your account is signed in. Please try again; we won’t ask you to buy while the status is unavailable.</Message>
   }
 
   if (license?.licensed) {
     const isLifetime = license.type === 'lifetime'
     return (
-      <section className={`${surface} mt-7 overflow-hidden`} aria-labelledby="license-title">
-        <div className="flex flex-wrap items-start justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.14em] text-[#929399]">YOUR LICENSE</p>
-            <h2 id="license-title" className="mt-2 text-2xl font-medium tracking-[-0.045em]">{license.plan || 'Deyn Studio license'}</h2>
-            <p className="mt-1.5 text-sm text-[#a5a6ab]">{isLifetime ? 'One-time desktop license with future software updates.' : 'Your Deyn Studio license is active.'}</p>
-          </div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/[.08] px-3 py-1.5 text-xs font-medium text-[#e5e5e7]">
-            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#c9cace]" />Active
-          </span>
-        </div>
+      <section className={`${card} overflow-hidden`} aria-labelledby="license-title">
+        <CardHeader
+          id="license-title"
+          title={license.plan || 'Deyn Studio license'}
+          status={<Status tone="ok">Active</Status>}
+          description={isLifetime ? 'One-time desktop license with future software updates.' : 'Your Deyn Studio license is active.'}
+        />
 
-        <dl className="grid gap-2 px-5 pb-5 sm:grid-cols-3 sm:px-7 sm:pb-6">
-          <div className="rounded-2xl bg-[#1d1e22] px-4 py-3.5">
-            <dt className="text-xs text-[#929399]">Devices in use</dt>
-            <dd className="mt-1.5 text-base font-medium">{license.devicesUsed} <span className="font-normal text-[#929399]">of {license.deviceLimit}</span></dd>
-          </div>
-          <div className="rounded-2xl bg-[#1d1e22] px-4 py-3.5">
-            <dt className="text-xs text-[#929399]">License type</dt>
-            <dd className="mt-1.5 text-base font-medium capitalize">{license.type || '—'}</dd>
-          </div>
-          <div className="rounded-2xl bg-[#1d1e22] px-4 py-3.5">
-            <dt className="text-xs text-[#929399]">Access</dt>
-            <dd className="mt-1.5 text-base font-medium">{license.type === 'lifetime' ? 'Lifetime' : displayDate(license.expiresAt)}</dd>
-          </div>
-        </dl>
+        <Rows className="mx-5 mt-4 border-t border-app-line sm:mx-6">
+          <Row label="License type"><span className="capitalize">{license.type || '—'}</span></Row>
+          <Row label="Access">{isLifetime ? 'Lifetime' : displayDate(license.expiresAt)}</Row>
+          <Row label="Devices"><DevicePips used={license.devicesUsed} limit={license.deviceLimit} /><span className="tabular-nums">{license.devicesUsed} of {license.deviceLimit}</span></Row>
+        </Rows>
 
-        <div className="mx-5 h-px bg-white/[.07] sm:mx-7" />
-        <div className="px-5 py-5 sm:px-7 sm:py-6">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-medium">Activated devices</h3>
-              <p className="mt-1 text-sm text-[#929399]">Devices currently using this license.</p>
-            </div>
-            <p className="text-xs text-[#a5a6ab]">{license.devicesUsed} of {license.deviceLimit} activations</p>
-          </div>
+        <div className="border-t border-app-line px-5 py-5 sm:px-6">
+          <h3 className="m-0 text-[13px] font-semibold">Activated devices</h3>
 
           {devicesError ? (
-            <p role="status" className="mt-4 text-sm leading-6 text-[#a5a6ab]">Device details are temporarily unavailable. Refresh the page to try again.</p>
+            <p role="status" className="m-0 mt-3 text-sm leading-6 text-app-mute">Device details are temporarily unavailable. Refresh the page to try again.</p>
           ) : devices.length ? (
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            <ul className="m-0 mt-1 list-none divide-y divide-app-line p-0">
               {devices.map((device, index) => (
-                <li key={`${device.platform || 'desktop'}-${device.appVersion || 'unknown'}-${device.lastSeenAt || index}`} className="flex items-center justify-between gap-4 rounded-2xl bg-[#1d1e22] px-4 py-3.5">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#ededeb]">Device {index + 1}</p>
-                    <p className="mt-1 truncate text-xs text-[#929399]">{displayPlatform(device.platform)}{device.appVersion ? ` · Deyn Studio ${device.appVersion}` : ''}</p>
+                <li key={`${device.platform || 'desktop'}-${device.appVersion || 'unknown'}-${device.lastSeenAt || index}`} className="flex items-center gap-3 py-3">
+                  <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-lg border border-app-line bg-app-raised text-app-mute"><Laptop className="size-[18px]" /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="m-0 truncate text-sm font-medium">{displayPlatform(device.platform)}{device.appVersion ? <span className="font-normal text-app-mute"> · Deyn Studio {device.appVersion}</span> : null}</p>
+                    {displayLastActivity(device.lastSeenAt) ? <p className="m-0 text-xs text-app-faint">Last active {displayLastActivity(device.lastSeenAt)}</p> : <p className="m-0 text-xs text-app-faint">Device {index + 1}</p>}
                   </div>
-                  {displayLastActivity(device.lastSeenAt) ? <p className="shrink-0 text-right text-[11px] leading-4 text-[#85868c]">Last active<br />{displayLastActivity(device.lastSeenAt)}</p> : null}
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-4 text-sm text-[#a5a6ab]">No devices have activated this license yet.</p>
+            <p className="m-0 mt-3 text-sm text-app-mute">No devices have activated this license yet.</p>
           )}
 
-          <p className="mt-4 text-xs leading-5 text-[#85868c]">Need to move an activation? <Link href="/support" className="text-[#dedee1] underline underline-offset-2">Contact support</Link>.</p>
+          <p className="m-0 mt-3 text-xs leading-5 text-app-faint">Need to move an activation? <Link href="/support" className="text-app-mute underline underline-offset-2 hover:text-app-ink">Contact support</Link>.</p>
         </div>
-        <div className="bg-white/[.025] px-5 py-4 sm:px-7">
-          <p className="text-sm font-medium text-[#d4d4d7]">AI usage is separate from your desktop license.</p>
-          <p className="mt-1 text-xs leading-5 text-[#929399]">The license doesn’t include cloud AI credits. After sponsored trial access, use your own OpenRouter key; provider charges may apply. Local tools remain available on your device.</p>
-        </div>
+
+        <Note title="AI usage is separate from your desktop license.">The license doesn’t include cloud AI credits. After sponsored trial access, use your own OpenRouter key; provider charges may apply. Local tools remain available on your device.</Note>
       </section>
     )
   }
 
   if (checkoutState === 'success') {
     return (
-      <section className={`${surface} mt-7 p-6 sm:p-8`}>
-        <p className="font-medium">Payment received. Your license is being activated.</p>
-        <p className="mt-2 text-sm leading-6 text-[#a5a6ab]">It can take a short moment for the payment confirmation to reach your account.</p>
-        <div className="mt-5"><RefreshLicenseStatusButton /></div>
-      </section>
+      <Message title="Payment received. Your license is being activated." actions={<RefreshLicenseStatusButton />}>
+        It can take a short moment for the payment confirmation to reach your account.
+      </Message>
     )
   }
 
@@ -230,32 +205,39 @@ function LicensePanel({ license, licenseError, checkoutState, autoBuy = false, p
           ? 'Revoked'
           : 'Inactive'
     return (
-      <section className={`${surface} mt-7 p-6 sm:p-8`}>
-        <p className="inline-flex rounded-full bg-white/[.07] px-3 py-1.5 text-xs font-medium text-[#d4d4d7]">License {state.toLowerCase()}</p>
-        <h2 className="mt-3 text-2xl font-medium tracking-[-0.03em]">Your previous license is {state.toLowerCase()}.</h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#a5a6ab]">{license.message || 'Contact Deyn Studio support if you think this status is incorrect.'}</p>
-        <div className="mt-5 flex flex-wrap items-center gap-3">
+      <section className={card} aria-labelledby="license-state-title">
+        <CardHeader
+          id="license-state-title"
+          title={`Your previous license is ${state.toLowerCase()}.`}
+          status={<Status tone="danger">{state}</Status>}
+          description={license.message || 'Contact Deyn Studio support if you think this status is incorrect.'}
+        />
+        <div className="flex flex-wrap items-center gap-3 px-5 pb-5 pt-5 sm:px-6">
           {license.status === 'refunded' || license.status === 'expired' ? <BuyLicenseButton priceLabel={priceLabel} autoStart={autoBuy && !checkoutState} /> : null}
-          <Link href="/support" className="inline-flex min-h-11 items-center rounded-full bg-[#242529] px-5 text-sm font-medium text-[#e1e1e3] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#2d2e33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white">Contact support</Link>
+          <Link href="/support" className={button.secondary}>Contact support</Link>
         </div>
       </section>
     )
   }
 
   return (
-    <section className={`${surface} mt-7 p-6 sm:p-8`} aria-labelledby="lifetime-license-title">
-      <p className="text-xs font-semibold tracking-[0.14em] text-[#929399]">LIFETIME DESKTOP LICENSE</p>
-      <h2 id="lifetime-license-title" className="mt-3 max-w-lg text-2xl font-medium tracking-[-0.04em] sm:text-3xl">Own your media toolkit.</h2>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-[#a5a6ab]">One purchase includes Deyn Studio’s desktop media tools, future software updates, and use on up to two devices. There’s no recurring desktop license fee.</p>
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+    <section className={`${card} overflow-hidden`} aria-labelledby="lifetime-license-title">
+      <CardHeader
+        id="lifetime-license-title"
+        title="Lifetime desktop license"
+        description="Own Deyn Studio’s desktop media tools. There’s no recurring desktop license fee."
+      />
+      <ul className="m-0 grid list-none gap-2.5 p-0 px-5 pt-4 text-sm sm:px-6">
+        {['Every desktop media tool', 'Future software updates', 'Use on up to two devices'].map((item) => (
+          <li key={item} className="flex items-center gap-2.5 text-app-ink"><Check aria-hidden="true" weight="bold" className="size-3.5 text-app-ok" />{item}</li>
+        ))}
+      </ul>
+      <div className="flex flex-wrap items-start gap-3 px-5 pb-5 pt-5 sm:px-6">
         <BuyLicenseButton priceLabel={priceLabel} autoStart={autoBuy && !checkoutState && !licenseError} />
-        <Link href="/support" className="inline-flex min-h-12 items-center rounded-full bg-[#242529] px-5 text-sm font-medium text-[#d4d4d7] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#2d2e33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white">Contact support</Link>
+        <Link href="/support" className={button.quiet + ' !h-10 !px-3 !text-sm'}>Contact support</Link>
       </div>
-      {checkoutState === 'cancelled' ? <p className="mt-4 text-sm text-[#a5a6ab]">Checkout was canceled. You haven’t been charged.</p> : null}
-      <div className="mt-6 rounded-2xl bg-[#1d1e22] px-4 py-4 sm:px-5">
-        <p className="text-sm font-medium text-[#d4d4d7]">AI usage is separate from desktop ownership.</p>
-        <p className="mt-1 text-xs leading-5 text-[#929399]">The lifetime license doesn’t add cloud AI credits. Sponsored trial actions are limited; after the trial or after purchase, cloud AI uses your own OpenRouter key and may incur provider charges. Local tools such as on-device transcription don’t use those credits.</p>
-      </div>
+      {checkoutState === 'cancelled' ? <p className="m-0 -mt-1 px-5 pb-5 text-sm text-app-mute sm:px-6">Checkout was canceled. You haven’t been charged.</p> : null}
+      <Note title="AI usage is separate from desktop ownership.">The lifetime license doesn’t add cloud AI credits. Sponsored trial actions are limited; after the trial or after purchase, cloud AI uses your own OpenRouter key and may incur provider charges. Local tools such as on-device transcription don’t use those credits.</Note>
     </section>
   )
 }
@@ -265,34 +247,18 @@ export function AccountDashboard({ user, license, licenseError, trialSnapshot, t
   // The creator program is for accounts without a license; an existing application stays visible either way.
   const showCreatorProgram = Boolean(creatorApplication || creatorError || !license?.licensed)
 
+  const licensePanel = <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
+
   return (
-    <main className="relative min-h-screen overflow-hidden [color-scheme:dark] bg-[#08090c] px-5 py-5 text-[#f2f2ee] sm:px-8 sm:py-7">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(ellipse_at_50%_-20%,rgb(255_255_255/.045),transparent_68%)]" />
-      <div className="relative mx-auto max-w-5xl">
-        <SiteHeader dashboard><div className="flex items-center gap-3"><AccountAvatar firstName={user?.firstName} lastName={user?.lastName} email={user?.primaryEmailAddress?.emailAddress} /><AccountMenu /></div></SiteHeader>
-        <AccountNavigation active="overview" showTrialControls={isTrialAdmin} />
-        <section className="pb-10 pt-8 sm:pb-14 sm:pt-10">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.14em] text-[#929399]">ACCOUNT OVERVIEW</p>
-            <h1 className="mt-2 text-3xl font-medium tracking-[-0.055em] sm:text-4xl">Your Deyn Studio account</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a5a6ab]">Your license, trial usage, and desktop access in one place.</p>
-          </div>
-          {showTrial ? (
-            <>
-              <div className="mt-5"><AppAccess downloadUrls={downloadUrls} licensed={false} /></div>
-              <TrialUsagePanel snapshot={trialSnapshot} error={trialError} />
-              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
-            </>
-          ) : (
-            <>
-              <LicensePanel license={license} licenseError={licenseError} priceLabel={priceLabel} devices={licenseDevices} devicesError={devicesError} checkoutState={checkoutState} autoBuy={autoBuy} />
-              <div className="mt-5"><AppAccess downloadUrls={downloadUrls} licensed={Boolean(license?.licensed)} /></div>
-            </>
-          )}
-          {showCreatorProgram ? <div className="mt-5"><CreatorProgramPanel application={creatorApplication} keyUsage={creatorKeyUsage} error={creatorError} /></div> : null}
-        </section>
-        <SiteFooter dark />
+    <AccountShell active="overview" profile={accountProfile(user)} isAdmin={isTrialAdmin} title="Overview" description="Your license, trial usage, and desktop access in one place." width="max-w-5xl">
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_288px]">
+        <div className="order-first lg:order-last"><AppAccess variant="panel" downloadUrls={downloadUrls} licensed={Boolean(license?.licensed)} /></div>
+        <div className="grid gap-5">
+          {showTrial ? <TrialUsagePanel snapshot={trialSnapshot} error={trialError} /> : null}
+          {licensePanel}
+          {showCreatorProgram ? <CreatorProgramPanel application={creatorApplication} keyUsage={creatorKeyUsage} error={creatorError} /> : null}
+        </div>
       </div>
-    </main>
+    </AccountShell>
   )
 }

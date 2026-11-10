@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 
-const inputClass = 'min-h-11 w-full rounded-xl bg-[#0d0e11] px-3 text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]'
-const primaryButton = 'min-h-11 rounded-full bg-[#f2f2ee] px-5 text-sm font-semibold text-[#171716] shadow-[0_6px_20px_rgb(0_0_0/.24)] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60'
-const quietButton = 'min-h-9 rounded-full bg-[#222328] px-4 text-xs font-medium text-[#e3e3e5] transition hover:bg-[#2a2b31] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60'
+const inputClass = 'min-h-10 w-full rounded-lg border border-app-line bg-app-bg px-3 text-sm text-[#f2f2ee] outline-none focus-visible:border-app-mute focus-visible:ring-2 focus-visible:ring-white/15'
+const primaryButton = 'min-h-10 rounded-lg bg-app-ink px-4 text-sm font-medium text-[#0c0c0e] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60'
+const quietButton = 'min-h-9 rounded-lg border border-app-line bg-app-raised px-4 text-xs font-medium text-[#e3e3e5] transition hover:bg-[#212125] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60'
 
 const describe = (license) => {
   const expiry = license.expiresAt ? `, until ${license.expiresAt.slice(0, 10)}` : ''
@@ -80,9 +80,9 @@ export function LicenseGrantForm() {
   const hasActive = found?.licenses.some((license) => license.status === 'active')
 
   return (
-    <div className="mt-6 overflow-hidden rounded-[24px] bg-[#151619] shadow-[0_18px_54px_rgb(0_0_0/.2)]">
+    <div className="mt-6 overflow-hidden rounded-xl border border-app-line bg-app-panel">
       <form onSubmit={lookup} className="grid gap-3 px-5 py-5 sm:grid-cols-[1fr_auto] sm:px-7 sm:py-6">
-        <label className="grid gap-2 text-sm font-medium text-[#f2f0ef]">
+        <label className="grid gap-2 text-sm font-medium text-app-ink">
           Account email
           <input type="email" required autoComplete="off" value={email} onChange={(event) => setEmail(event.target.value)} className={inputClass} />
         </label>
@@ -90,18 +90,18 @@ export function LicenseGrantForm() {
       </form>
 
       {found ? (
-        <div className="divide-y divide-white/[.07] border-t border-white/[.07] px-5 sm:px-7">
+        <div className="divide-y divide-app-line border-t border-white/[.07] px-5 sm:px-7">
           <div className="py-5">
-            <p className="m-0 text-sm font-medium text-[#f2f0ef]">{found.user.name || found.user.email}</p>
-            <p className="mb-0 mt-1 text-xs text-[#a6a4a4]">
+            <p className="m-0 text-sm font-medium text-app-ink">{found.user.name || found.user.email}</p>
+            <p className="mb-0 mt-1 text-xs text-app-mute">
               {found.user.email} · {found.user.emailVerified ? 'email verified' : 'email not verified'} · {found.user.id}
             </p>
           </div>
 
           <ul className="m-0 list-none p-0">
-            {found.licenses.length === 0 ? <li className="py-4 text-sm text-[#a6a4a4]">No licenses yet.</li> : null}
+            {found.licenses.length === 0 ? <li className="py-4 text-sm text-app-mute">No licenses yet.</li> : null}
             {found.licenses.map((license) => (
-              <li key={license.id} className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm text-[#d4d4d7]">
+              <li key={license.id} className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm text-app-ink">
                 <span>{describe(license)}</span>
                 {license.status === 'active' && license.paymentProvider === 'admin' ? (
                   <button type="button" disabled={busy} onClick={() => revoke(license)} className={quietButton}>Revoke</button>
@@ -111,11 +111,11 @@ export function LicenseGrantForm() {
           </ul>
 
           {hasActive ? (
-            <p className="m-0 py-5 text-sm text-[#a6a4a4]">This account already has an active license. Revoke a granted one to replace it; paid licenses end through Stripe.</p>
+            <p className="m-0 py-5 text-sm text-app-mute">This account already has an active license. Revoke a granted one to replace it; paid licenses end through Stripe.</p>
           ) : (
             <form onSubmit={grant} className="grid gap-4 py-5">
-              <p className="m-0 text-sm text-[#a6a4a4]">Grants the same lifetime license as a purchase, on 2 devices.</p>
-              <label className="grid gap-2 text-sm font-medium text-[#f2f0ef]">
+              <p className="m-0 text-sm text-app-mute">Grants the same lifetime license as a purchase, on 2 devices.</p>
+              <label className="grid gap-2 text-sm font-medium text-app-ink">
                 Reason (kept in the audit log)
                 <input type="text" required minLength={3} maxLength={200} value={reason} onChange={(event) => setReason(event.target.value)} className={inputClass} />
               </label>
@@ -129,7 +129,7 @@ export function LicenseGrantForm() {
 
       <div aria-live="polite" className="min-h-5 px-5 pb-5 text-sm sm:px-7">
         {error ? <p role="alert" className="m-0 text-[#e5a5a5]">{error}</p> : null}
-        {message ? <p role="status" className="m-0 text-[#d4d4d7]">{message}</p> : null}
+        {message ? <p role="status" className="m-0 text-app-ink">{message}</p> : null}
       </div>
     </div>
   )

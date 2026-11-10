@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { button } from './dashboard-ui'
 
 export function BuyLicenseButton({ priceLabel, autoStart = false }) {
   const [loading, setLoading] = useState(false)
@@ -39,10 +40,10 @@ export function BuyLicenseButton({ priceLabel, autoStart = false }) {
 
   return (
     <div>
-      <button type="button" onClick={startCheckout} disabled={loading} className="min-h-12 rounded-full bg-[#f2f2ee] px-6 text-sm font-semibold text-[#17171a] shadow-[0_6px_20px_rgb(0_0_0/.24)] transition hover:bg-white hover:shadow-[0_9px_26px_rgb(0_0_0/.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60">
+      <button type="button" onClick={startCheckout} disabled={loading} className={button.primary}>
         {loading ? 'Opening checkout…' : priceLabel ? `Buy lifetime · ${priceLabel}` : 'Buy lifetime license'}
       </button>
-      {error ? <p className="mt-3 text-sm text-[#f2f2ee]">{error}</p> : null}
+      {error ? <p role="alert" className="m-0 mt-3 text-sm text-app-danger">{error}</p> : null}
     </div>
   )
 }

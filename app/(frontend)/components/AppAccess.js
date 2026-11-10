@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { DownloadOptionsButton } from './DownloadOptionsButton'
 import { MacIcon } from './MacIcon'
+import { button, card } from './dashboard-ui'
 
-export function AppAccess({ downloadUrls, compact = false, allowReleasePage = true, licensed = false, dark = true }) {
+export function AppAccess({ downloadUrls, compact = false, allowReleasePage = true, licensed = false, dark = true, variant = 'banner' }) {
   const [opening, setOpening] = useState(false)
   const [launchMessage, setLaunchMessage] = useState('')
   const shell = dark ? 'bg-[#151619] text-[#f2f2ee] shadow-[0_18px_54px_rgb(0_0_0/.2)]' : 'bg-white text-[#171717] shadow-[0_14px_40px_rgb(0_0_0/.08)]'
@@ -19,6 +20,29 @@ export function AppAccess({ downloadUrls, compact = false, allowReleasePage = tr
       setOpening(false)
       setLaunchMessage('If Deyn Studio didn’t open, check the installation or download the app.')
     }, 1800)
+  }
+
+  if (variant === 'panel') {
+    const hasDownload = downloadUrls?.silicon || downloadUrls?.intel
+    return (
+      <section className={`${card} p-5`} aria-labelledby="desktop-app-title">
+        <h2 id="desktop-app-title" className="m-0 text-[15px] font-semibold">Desktop app</h2>
+        <p className="m-0 mt-1.5 text-sm leading-6 text-app-mute">
+          {licensed ? 'Use your lifetime desktop license in the app.' : 'Open the app to use your editing tools and account.'}
+        </p>
+        <div className="mt-4 grid gap-2">
+          <button type="button" onClick={openApp} disabled={opening} className={`${button.primary} w-full`}>
+            {opening ? 'Opening Deyn Studio…' : 'Open Deyn Studio'}
+          </button>
+          {hasDownload ? (
+            <DownloadOptionsButton intelUrl={downloadUrls.intel} siliconUrl={downloadUrls.silicon} className={`${button.secondary} w-full`}><MacIcon className="size-4" />Download for Mac</DownloadOptionsButton>
+          ) : allowReleasePage ? (
+            <a href="/download" className={`${button.secondary} w-full`}><MacIcon className="size-4" />Download for Mac</a>
+          ) : null}
+        </div>
+        {launchMessage ? <p role="status" className="m-0 mt-3 text-xs leading-5 text-app-mute">{launchMessage}</p> : null}
+      </section>
+    )
   }
 
   return (

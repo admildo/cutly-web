@@ -1,9 +1,11 @@
 'use client'
 
 import { useClerk } from '@clerk/nextjs'
+import { SignOut } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { button } from './dashboard-ui'
 
-export function AccountMenu() {
+export function AccountMenu({ className = '' }) {
   const { signOut } = useClerk()
   const [signingOut, setSigningOut] = useState(false)
 
@@ -18,10 +20,9 @@ export function AccountMenu() {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <button type="button" onClick={handleSignOut} disabled={signingOut} className="min-h-10 rounded-full bg-[#1b1c20] px-4 text-sm font-medium text-[#c7c7cb] shadow-[0_4px_14px_rgb(0_0_0/.16)] transition hover:bg-[#25262a] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60">
-        {signingOut ? 'Signing out…' : 'Sign out'}
-      </button>
-    </div>
+    <button type="button" onClick={handleSignOut} disabled={signingOut} className={`${button.quiet} ${className}`}>
+      <SignOut aria-hidden="true" className="size-4" />
+      {signingOut ? 'Signing out…' : 'Sign out'}
+    </button>
   )
 }

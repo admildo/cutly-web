@@ -65,13 +65,13 @@ export function TrialSettingsForm({ initialConfig }) {
   }
 
   return (
-    <form onSubmit={save} className="mt-6 overflow-hidden rounded-[24px] bg-[#151619] shadow-[0_18px_54px_rgb(0_0_0/.2)]">
+    <form onSubmit={save} className="mt-6 overflow-hidden rounded-xl border border-app-line bg-app-panel">
       <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
         <div>
           <h2 className="m-0 text-lg font-medium tracking-[-0.02em]">Trial availability</h2>
-          <p className="mb-0 mt-1 text-sm text-[#a6a4a4]">Pause every sponsored AI action at once.</p>
+          <p className="mb-0 mt-1 text-sm text-app-mute">Pause every sponsored AI action at once.</p>
         </div>
-        <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full bg-[#202125] px-4 text-sm font-medium text-[#f2f2ee] shadow-[0_4px_14px_rgb(0_0_0/.16)] focus-within:shadow-[0_0_0_2px_rgb(242_242_238/.4)]">
+        <label className="inline-flex min-h-10 cursor-pointer items-center gap-3 rounded-lg border border-app-line bg-app-raised px-4 text-sm font-medium text-[#f2f2ee] focus-within:">
           <input
             type="checkbox"
             checked={values.enabled}
@@ -82,14 +82,14 @@ export function TrialSettingsForm({ initialConfig }) {
         </label>
       </div>
 
-      <div className="divide-y divide-white/[.07] px-5 sm:px-7">
+      <div className="divide-y divide-app-line px-5 sm:px-7">
         {allowanceFields.map(({ key, label, help }) => (
           <label key={key} className="grid gap-3 py-5 sm:grid-cols-[1fr_112px] sm:items-center">
             <span>
-              <span className="block text-sm font-medium text-[#f2f0ef]">{label}</span>
-              <span className="mt-1 block max-w-xl text-xs leading-5 text-[#a6a4a4]">{help}</span>
+              <span className="block text-sm font-medium text-app-ink">{label}</span>
+              <span className="mt-1 block max-w-xl text-xs leading-5 text-app-mute">{help}</span>
             </span>
-            <span className="flex items-center gap-3 text-sm text-[#a6a4a4] sm:justify-end">
+            <span className="flex items-center gap-3 text-sm text-app-mute sm:justify-end">
               <input
                 aria-label={`${label} per account`}
                 type="number"
@@ -100,7 +100,7 @@ export function TrialSettingsForm({ initialConfig }) {
                 required
                 value={values[key]}
                 onChange={(event) => update(key, event.target.value)}
-                className="min-h-11 w-20 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
+                className="min-h-10 w-20 rounded-lg border border-app-line bg-app-bg px-3 text-center text-sm text-[#f2f2ee] outline-none focus-visible:border-app-mute focus-visible:ring-2 focus-visible:ring-white/15"
               />
               per account
             </span>
@@ -109,10 +109,10 @@ export function TrialSettingsForm({ initialConfig }) {
 
         <label className="grid gap-3 py-5 sm:grid-cols-[1fr_160px] sm:items-center">
           <span>
-            <span className="block text-sm font-medium text-[#f2f0ef]">Daily AI spend ceiling</span>
-            <span className="mt-1 block max-w-xl text-xs leading-5 text-[#a6a4a4]">Requests stop when the shared trial budget is reached. The default is $1 per UTC day.</span>
+            <span className="block text-sm font-medium text-app-ink">Daily AI spend ceiling</span>
+            <span className="mt-1 block max-w-xl text-xs leading-5 text-app-mute">Requests stop when the shared trial budget is reached. The default is $1 per UTC day.</span>
           </span>
-          <span className="flex items-center gap-2 text-sm text-[#a6a4a4] sm:justify-end">
+          <span className="flex items-center gap-2 text-sm text-app-mute sm:justify-end">
             <span aria-hidden="true">$</span>
             <input
               aria-label="Daily AI spend ceiling in US dollars"
@@ -124,7 +124,7 @@ export function TrialSettingsForm({ initialConfig }) {
               required
               value={values.dailyBudgetDollars}
               onChange={(event) => update('dailyBudgetDollars', event.target.value)}
-              className="min-h-11 w-28 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
+              className="min-h-10 w-28 rounded-lg border border-app-line bg-app-bg px-3 text-center text-sm text-[#f2f2ee] outline-none focus-visible:border-app-mute focus-visible:ring-2 focus-visible:ring-white/15"
             />
             USD / day
           </span>
@@ -132,10 +132,10 @@ export function TrialSettingsForm({ initialConfig }) {
 
         <label className="grid gap-3 py-5 sm:grid-cols-[1fr_160px] sm:items-center">
           <span>
-            <span className="block text-sm font-medium text-[#f2f0ef]">Monthly AI spend ceiling</span>
-            <span className="mt-1 block max-w-xl text-xs leading-5 text-[#a6a4a4]">A second global cap limits total sponsored usage through the end of each UTC month. The default is $10.</span>
+            <span className="block text-sm font-medium text-app-ink">Monthly AI spend ceiling</span>
+            <span className="mt-1 block max-w-xl text-xs leading-5 text-app-mute">A second global cap limits total sponsored usage through the end of each UTC month. The default is $10.</span>
           </span>
-          <span className="flex items-center gap-2 text-sm text-[#a6a4a4] sm:justify-end">
+          <span className="flex items-center gap-2 text-sm text-app-mute sm:justify-end">
             <span aria-hidden="true">$</span>
             <input
               aria-label="Monthly AI spend ceiling in US dollars"
@@ -147,7 +147,7 @@ export function TrialSettingsForm({ initialConfig }) {
               required
               value={values.monthlyBudgetDollars}
               onChange={(event) => update('monthlyBudgetDollars', event.target.value)}
-              className="min-h-11 w-28 rounded-xl bg-[#0d0e11] px-3 text-center text-sm text-[#f2f2ee] shadow-[inset_0_2px_5px_rgb(0_0_0/.35)] outline-none focus-visible:shadow-[0_0_0_2px_rgb(242_242_238/.5),inset_0_2px_5px_rgb(0_0_0/.25)]"
+              className="min-h-10 w-28 rounded-lg border border-app-line bg-app-bg px-3 text-center text-sm text-[#f2f2ee] outline-none focus-visible:border-app-mute focus-visible:ring-2 focus-visible:ring-white/15"
             />
             USD / month
           </span>
@@ -157,9 +157,9 @@ export function TrialSettingsForm({ initialConfig }) {
       <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-7">
         <div aria-live="polite" className="min-h-5 text-sm">
           {error ? <p role="alert" className="m-0 text-[#e5a5a5]">{error}</p> : null}
-          {message ? <p role="status" className="m-0 text-[#d4d4d7]">{message}</p> : null}
+          {message ? <p role="status" className="m-0 text-app-ink">{message}</p> : null}
         </div>
-        <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-[#f2f2ee] px-5 text-sm font-semibold text-[#171716] shadow-[0_6px_20px_rgb(0_0_0/.24)] transition hover:bg-white hover:shadow-[0_9px_26px_rgb(0_0_0/.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60">
+        <button type="submit" disabled={saving} className="min-h-10 rounded-lg bg-app-ink px-4 text-sm font-medium text-[#0c0c0e] transition hover:bg-white hover: focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-wait disabled:opacity-60">
           {saving ? 'Saving…' : 'Save trial settings'}
         </button>
       </div>
